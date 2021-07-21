@@ -310,9 +310,10 @@ module.exports = msgHandler = async (client, message) => {
 
             break
 
+        case '!buscamemes':
         case '!buscameme':
 
-            await meme.reply(from, `Vasculhando a internet... pera um pouco`, id)
+            await client.reply(from, `Vasculhando a internet... pera um pouco`, id)
 
             let meme = await axios.get(`https://api.imgflip.com/get_memes`)
 
@@ -336,10 +337,11 @@ module.exports = msgHandler = async (client, message) => {
             if (args.length === 1) return client.reply(from, 'Preciso de 2 textos e o ID da imagem para montar o meme... procure uma imagem !buscameme', id)
 
             let queryMeme = body.split('.');
+            if(queryMeme.length <= 3) return client.reply(from, 'Preciso de todos os parametros para montar o meme', id)
 
-            if (queryMeme[1].length == 0) return client.reply(from, 'Preciso de mais um texto...', id)
-            if (queryMeme[2].length == 0) return client.reply(from, 'Preciso de mais um texto...', id)
-            if (queryMeme[3].length == 0) return client.reply(from, 'Preciso do ID da imagem...', id)
+            if (queryMeme[1].length == 0) return client.reply(from, 'Preciso do texto 1...', id)
+            if (queryMeme[2].length == 0) return client.reply(from, 'Preciso do texto 2...', id)
+            if (queryMeme[3].length == 0 && queryMeme[3].length <= 3 ) return client.reply(from, 'Preciso de um ID...', id)
 
             let text0 = queryMeme[1] ?? 'Como eu vou adivinhar'
             let text1 = queryMeme[2] ?? 'O que devo escrever?'
@@ -353,6 +355,7 @@ module.exports = msgHandler = async (client, message) => {
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             })
 
+            if(makeMeme?.data?.success != true) return client.reply(from, `${makeMeme?.data?.error_message}`, id)
             await client.sendImage(from, `${makeMeme?.data?.data?.url}`, `bot do jhon`, `Pronto, meme gerado com sucesso. você pode visualizar ele aqui nesse site ${makeMeme?.data?.data?.page_url}` )
 
             break
@@ -360,24 +363,28 @@ module.exports = msgHandler = async (client, message) => {
         case '!clima':
 
             if (args.length === 1) return client.reply(from, 'Ainda não adivinho coisas... preciso saber a cidade também', id)
-            let cidade = body.split('|');
 
-            await client.reply(from, `Verificando com São Pedro como está o clima em ${cidade[1]}... pera um pouco`, id)
+            let cidade = body.split('.');
+            console.log(typeof(cidade[1]))
 
-            let clima = await axios.get(`http://clima-bksoft.apibrasil.com.br/api/weather/city/?city=${ encodeURI(cidade[1]) }`)
+            if(typeof(cidade[1]) !== 'undefined'){
+                if (cidade[1].length == 0) return client.reply(from, 'Preciso de uma cidade...', id)
 
-            if(clima?.data?.cod == '404'){
-                await client.reply(from, `Vixxx... ${clima?.data?.message}`, id)
-            }else{
+                await client.reply(from, `Verificando com São Pedro como está o clima em ${cidade[1]}... pera um pouco`, id)
+    
+                let clima = await axios.get(`http://clima-bksoft.apibrasil.com.br/api/weather/city/?city=${ encodeURI(cidade[1]) }`)
+    
+                if(clima?.data?.cod == '404') return  await client.reply(from, `Uai... ${clima?.data?.message}`, id)
 
-                console.log(clima?.data?.cod, clima?.data?.cod == '404')
-
-            await client.sendText(from, `*Temperatura:* ${clima?.data?.main?.temp} ºC \n*Sensação térmica:* ${clima?.data?.main?.feels_like} ºC \n*Temperatura mínima:* ${clima?.data?.main?.temp_min} ºC \n*Temperatura máxima:* ${clima?.data?.main?.temp_max} ºC \n*Pressão atmosférica:* ${clima?.data?.main?.pressure}\n*Umidade:* ${clima?.data?.main?.humidity}%
+                await client.sendText(from, `*Temperatura:* ${clima?.data?.main?.temp} ºC \n*Sensação térmica:* ${clima?.data?.main?.feels_like} ºC \n*Temperatura mínima:* ${clima?.data?.main?.temp_min} ºC \n*Temperatura máxima:* ${clima?.data?.main?.temp_max} ºC \n*Pressão atmosférica:* ${clima?.data?.main?.pressure}\n*Umidade:* ${clima?.data?.main?.humidity}%
 ----------------------\n${clima?.data?.name} - lat: ${clima?.data?.coord?.lat} lon: ${clima?.data?.coord?.lon}
-            `)
-                
-            }
+                `)
 
+            }else{
+                
+                return client.reply(from, 'Preciso de uma cidade...', id)
+            }
+                
             break
         case '!bateria':
 
