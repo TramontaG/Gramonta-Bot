@@ -91,11 +91,9 @@ module.exports = msgHandler = async (client, message) => {
         console.log('ALGUEM FALOU DE MIM =====>', color(falas.indexOf("bruce") != -1) )
         
         if( falas.indexOf("bruce") != -1 ){
-
             await client.reply(from, 'Oi? ta falando de mim? é só digitar: *me ajuda*', id)
             const gif4 = await fs.readFileSync('./media/pensando.webp', { encoding: "base64" })
             await client.sendImageAsSticker(from, `data:image/gif;base64,${gif4.toString('base64')}`)
-
         }
 
         switch(falas) {
@@ -115,6 +113,30 @@ module.exports = msgHandler = async (client, message) => {
                 await client.sendFile(from, './media/berrante.mpeg', 'Toca o berrante seu moço', 'AAAAAAAAAUHHH', id)
                 break
 
+            case 'trem bala':
+                await client.sendFile(from, './media/trembala.mpeg', 'Trem bala', 'AAAAAAAAAUHHH', id)
+                break
+
+            case 'vamos acordar':
+                await client.sendFile(from, './media/vamoacordar.mpeg', 'Vamos acordar porra', 'AAAAAAAAAUHHH', id)
+                break
+
+            case 'bom dia':
+                await client.sendFile(from, './media/bomdia.mpeg', 'Bom dia', 'AAAAAAAAAUHHH', id)
+                brea
+
+            case 'acorda corno':
+                await client.sendFile(from, './media/acordaCorno.mpeg', 'Acorda corno', 'AAAAAAAAAUHHH', id)
+                brea
+
+            case 'acorda':
+                await client.sendFile(from, './media/acorda.mpeg', 'Acorda', 'AAAAAAAAAUHHH', id)
+                brea
+
+            case 'garibalda sua safada':
+                client.sendText(from, 'Esse comando foi desativado!', id)
+            break
+            
             case 'sexto':
             case 'sextou':
             case 'sextô':
@@ -285,6 +307,76 @@ module.exports = msgHandler = async (client, message) => {
                 });
                 await client.reply(from, `Achei isso aqui...\n${resultado}`, id)
             });
+
+            break
+
+        case '!buscameme':
+
+            await meme.reply(from, `Vasculhando a internet... pera um pouco`, id)
+
+            let meme = await axios.get(`https://api.imgflip.com/get_memes`)
+
+            myArray = []
+            meme?.data?.data?.memes.forEach( async(data, index) => {
+                myArray.push({'url': data?.url, 'id': data?.id, 'name': data?.name})
+                myArray = myArray.sort(() => Math.random() - 0.5)
+            });
+
+            myArray.forEach( async(data, index) => {
+                urlRandom = myArray[Math.floor(Math.random()*myArray.length)];
+                if( index < 6 ){
+                    await client.sendImage(from, `${urlRandom?.url}`, `bot do jhon`, `*ID:* ${urlRandom?.id}\n*REF:* ${urlRandom?.name}` )
+                }
+            });
+
+            break
+
+        case '!escrevememe':
+
+            if (args.length === 1) return client.reply(from, 'Preciso de 2 textos e o ID da imagem para montar o meme... procure uma imagem !buscameme', id)
+
+            let queryMeme = body.split('.');
+
+            if (queryMeme[1].length == 0) return client.reply(from, 'Preciso de mais um texto...', id)
+            if (queryMeme[2].length == 0) return client.reply(from, 'Preciso de mais um texto...', id)
+            if (queryMeme[3].length == 0) return client.reply(from, 'Preciso do ID da imagem...', id)
+
+            let text0 = queryMeme[1] ?? 'Como eu vou adivinhar'
+            let text1 = queryMeme[2] ?? 'O que devo escrever?'
+            let text2 = queryMeme[3] ?? '91545132'
+
+            let dataSend = `text0=${encodeURIComponent(text0)}&text1=${encodeURIComponent(text1)}&template_id=${text2}&username=${encodeURIComponent('jhowjhoe')}&password=${encodeURIComponent('sdVKRA2QZm9fQx!')}`
+            let makeMeme = await axios({
+                method: "post",
+                url: "https://api.imgflip.com/caption_image",
+                data: dataSend,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            })
+
+            await client.sendImage(from, `${makeMeme?.data?.data?.url}`, `bot do jhon`, `Pronto, meme gerado com sucesso. você pode visualizar ele aqui nesse site ${makeMeme?.data?.data?.page_url}` )
+
+            break
+
+        case '!clima':
+
+            if (args.length === 1) return client.reply(from, 'Ainda não adivinho coisas... preciso saber a cidade também', id)
+            let cidade = body.split('|');
+
+            await client.reply(from, `Verificando com São Pedro como está o clima em ${cidade[1]}... pera um pouco`, id)
+
+            let clima = await axios.get(`http://clima-bksoft.apibrasil.com.br/api/weather/city/?city=${ encodeURI(cidade[1]) }`)
+
+            if(clima?.data?.cod == '404'){
+                await client.reply(from, `Vixxx... ${clima?.data?.message}`, id)
+            }else{
+
+                console.log(clima?.data?.cod, clima?.data?.cod == '404')
+
+            await client.sendText(from, `*Temperatura:* ${clima?.data?.main?.temp} ºC \n*Sensação térmica:* ${clima?.data?.main?.feels_like} ºC \n*Temperatura mínima:* ${clima?.data?.main?.temp_min} ºC \n*Temperatura máxima:* ${clima?.data?.main?.temp_max} ºC \n*Pressão atmosférica:* ${clima?.data?.main?.pressure}\n*Umidade:* ${clima?.data?.main?.humidity}%
+----------------------\n${clima?.data?.name} - lat: ${clima?.data?.coord?.lat} lon: ${clima?.data?.coord?.lon}
+            `)
+                
+            }
 
             break
         case '!bateria':
@@ -518,18 +610,18 @@ module.exports = msgHandler = async (client, message) => {
             if (!isGroupMsg) return client.reply(from, 'Este comando só pode ser usado em grupos!', id)
             if (!isGroupAdmins) return client.reply(from, 'Este comando só pode ser usado por administradores de grupo', id)
             const groupMem = await client.getGroupMembers(groupId)
-            let hehe = '╔══✪〘 Aviso geral 〙✪══\n'
+            let hehe = '╔══✪〘 Chamada geral 〙✪══\n'
             for (let i = 0; i < groupMem.length; i++) {
                 hehe += '╠➥'
                 hehe += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
             }
-            hehe += '╚═〘 Bot do Jhon 〙'
+            hehe += '╚═〘 Verificação de inatividade 〙'
             await client.sendTextWithMentions(from, hehe)
             break
 
         case '!deixartudo':
 
-            if (!isOwner) return client.reply(from, 'Este comando é apenas para o bot Proprietário', id)
+            if (!isOwner) return client.reply(from, 'Este comando é apenas para o dono do bot', id)
             const allChats = await client.getAllChatIds()
             const allGroups = await client.getAllGroups()
             for (let gclist of allGroups) {
@@ -541,7 +633,7 @@ module.exports = msgHandler = async (client, message) => {
 
         case '!limpartudo':
 
-            if (!isOwner) return client.reply(from, 'Este comando é apenas para o bot Proprietário', id)
+            if (!isOwner) return client.reply(from, 'Este comando é apenas para o dono do bot', id)
             const allChatz = await client.getAllChats()
             for (let dchat of allChatz) {
                 await client.deleteChat(dchat.id)
@@ -622,6 +714,7 @@ module.exports = msgHandler = async (client, message) => {
             break
 
         case '!ajuda':
+        case '!menu':
         case '!help':
             await client.sendText(from, help)
             let batteryLevel = await client.getBatteryLevel()
