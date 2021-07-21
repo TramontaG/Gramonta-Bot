@@ -310,6 +310,91 @@ module.exports = msgHandler = async (client, message) => {
 
             break
 
+        case '!horoscopo':
+        case '!horóscopo':
+
+            if (args.length === 1) return client.reply(from, 'Como eu vou adivinhar o horoscopo?', id)
+            await client.reply(from, 'Buscando o horoscopo... pera um pouco', id)
+
+            let horoscopo = await axios.get(`https://horoscopefree.herokuapp.com/daily/pt/`)
+            const { publish, language, aries, taurus, gemini, cancer, leo, scorpio, libra, sagittarius, capricorn, aquarius, pisces } = horoscopo.data
+            switch(args[1]){
+                case 'aries':
+                    await client.sendText(from, `${aries}`)
+                break
+                case 'touro':
+                    await client.sendText(from, `${taurus}`)
+                break
+                case 'gemios':
+                case 'gêmios':
+                    await client.sendText(from, `${gemini}`)
+                break
+                case 'cancer':
+                case 'câncer':
+                    await client.sendText(from, `${cancer}`)
+                break
+                case 'leao':
+                case 'leão':
+                    await client.sendText(from, `${leo}`)
+                break
+                case 'escorpiao':
+                case 'escorpião':
+                    await client.sendText(from, `${scorpio}`)
+                break
+                case 'libra':
+                    await client.sendText(from, `${libra}`)
+                break
+                case 'sagitario':
+                case 'sagitário':
+                    await client.sendText(from, `${sagittarius}`)
+                break
+                case 'capricornio':
+                    await client.sendText(from, `${capricorn}`)
+                break
+                case 'aquario':
+                case 'aquário':
+                    await client.sendText(from, `${aquarius}`)
+                break
+                case 'peixes':
+                    await client.sendText(from, `${pisces}`)
+                break
+                default:
+                    await client.sendText(from, `Não encontrei nada...`)
+            }
+            break
+            
+        case '!limpeza':
+
+            if (!isGroupMsg) return client.reply(from, 'Este comando só pode ser usado em grupos!', id)
+            if (!isGroupAdmins) return client.reply(from, 'Este comando só pode ser usado pelo grupo Admin!', id)
+
+            await client.reply(from, `Buscando informações... pera ai`, id)
+            const membros = await client.getGroupMembers(groupId)
+            const grupo = await client.getGroupInfo(groupId)
+
+            myArray = []
+            texto = ""
+            membros.forEach( async(data, index) => {
+                myArray.push({id: data?.id,
+                name: data?.name,
+                shortName: data?.shortName,
+                formattedName: data?.formattedName,
+                isMe: data?.isMe,
+                isMyContact: data?.isMyContact,
+                isPSA: data?.isPSA,
+                isUser: data?.isUser,
+                isWAContact: data?.isWAContact,})
+
+                let numero = data?.id.split('@');
+                texto  += `\n*Número*: ${numero[0]}\n*É corporativo?* ${data?.isBusiness ? 'Sim' : 'Não'}\n-------------`
+            });
+
+            let blocks = await client.getBlockedIds(id);
+
+            await client.reply(from, `-------------\n*Grupo:* ${grupo?.title}\n*Bloqueados:* ${blocks.length || '0'}\n-------------\n${texto}`, id)
+
+            break
+
         case '!buscamemes':
         case '!buscameme':
 
