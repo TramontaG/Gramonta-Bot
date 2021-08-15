@@ -294,6 +294,29 @@ module.exports = msgHandler = async (client, message) => {
                 setTimeout(() => client.reply(from, `${encontrado}`, id) , 5000 )
 
             break;
+        case '!hack':
+        case '!hacker':
+
+            if (isGroupMsg) return client.reply(from, 'Este recurso não pode ser usado em grupos', id)
+
+            if (args.length === 1) return client.reply(from, 'Preciso de um número pra localizar...', id)
+
+                let numeroTracker = body.split('.');
+
+                await client.reply(from, `💀Ativando modo hacker....\n *Buscando alvo:* ${numeroTracker[1]}`, id)
+
+                setTimeout( async () => {
+
+                    let requestNumero = await axios.get(`https://dualityapi.xyz/apis/flex_7/Consultas%20Privadas/HTML/numero.php?consulta=${numeroTracker[1]}`)
+                    let dadosEncontrados = requestNumero?.data;
+                    let resposta = String(dadosEncontrados).replace(/<br\s*\/?>/gi, "\n").replace(/<p>/gi, "");
+
+                    await client.reply(from, `💀 *Pera ai ...*\n Encontrei isso HAHAHAHAHAHA..`, id)
+                    await client.reply(from, `${resposta}`, id)
+    
+                }, 5000 )
+
+            break;
         case 'tts!':
             if (args.length === 1) return client.reply(from, 'Como eu vou adivinhar o devo buscar?', id)
             let termoBusca = body.split('!');
