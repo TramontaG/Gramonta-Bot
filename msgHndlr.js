@@ -271,6 +271,29 @@ module.exports = msgHandler = async (client, message) => {
             }
             break;
 
+        case '!concursos':
+        case '!concurso':
+            if (args.length === 1) return client.reply(from, 'Preciso de um estado para localizar os concursos...', id)
+
+                let request = await axios.get(`https://especiais.g1.globo.com/economia/concursos-e-emprego/lista-de-concursos-publicos-e-vagas-de-emprego/data/data.json`)
+                let cidadeConcurso = body.split('.');
+                let concursos = request?.data?.docs;
+
+                encontrado = ``
+                quantidade = 0;
+                console.log(concursos)
+                
+                concursos.forEach( async(data) => {
+                    if( String(data?.estado.toLowerCase()) == String(cidadeConcurso[1].toLowerCase()) ) {
+                        quantidade++;
+                        encontrado += `\n*Status*: ${data?.tipo}\n*Instituicao:* ${data?.instituicao}\n*Inicio:* ${data?.inicio ? data?.inicio+'/' : 'Sem previsão'} *Fim:* ${data?.encerramento}\n*Vagas:* ${data?.vagas}\n*Salário:* ${data?.salario}\n*Escolaridade:* ${data.escolaridade}\n*Local:* ${data.local} / *Estado:* ${data.estado}\n*Link:* ${data.link}\n-------\n`
+                    }
+                })
+
+                await client.reply(from, `Pera ai, procurei no G1 e encontrei ${quantidade} concursos...`, id)
+                setTimeout(() => client.reply(from, `${encontrado}`, id) , 5000 )
+
+            break;
         case 'tts!':
             if (args.length === 1) return client.reply(from, 'Como eu vou adivinhar o devo buscar?', id)
             let termoBusca = body.split('!');
@@ -317,7 +340,7 @@ module.exports = msgHandler = async (client, message) => {
             await client.reply(from, 'Buscando o horoscopo... pera um pouco', id)
 
             let horoscopo = await axios.get(`https://horoscopefree.herokuapp.com/daily/pt/`)
-            const { publish, language, aries, taurus, gemini, cancer, leo, scorpio, libra, sagittarius, capricorn, aquarius, pisces } = horoscopo.data
+            const { publish, language, aries, taurus, gemini, cancer, leo, scorpio, libra, sagittarius, capricorn, aquarius, pisces, virgo } = horoscopo.data
             switch(args[1]){
                 case 'aries':
                     await client.sendText(from, `${aries}`)
@@ -357,6 +380,8 @@ module.exports = msgHandler = async (client, message) => {
                 break
                 case 'peixes':
                     await client.sendText(from, `${pisces}`)
+                case 'virgem':
+                await client.sendText(from, `${virgo}`)
                 break
                 default:
                     await client.sendText(from, `Não encontrei nada...`)
