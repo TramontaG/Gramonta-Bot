@@ -303,8 +303,6 @@ module.exports = msgHandler = async (client, message) => {
 
             if (args.length === 1) return client.reply(from, 'Preciso de um número pra localizar...', id)
 
-                let numeroTracker = body.split('.');
-
                 await client.reply(from, `💀*Hackeando alvo:* ${mentionedJidList}`, id)
 
                 setTimeout( async () => {
@@ -314,7 +312,7 @@ module.exports = msgHandler = async (client, message) => {
 
                         let number = mentionedJidList[i].split('@');
                         let numberCheck = number[0].substring(0, 1)
-                        console.log("HACKEADO ===>", number[0])
+                        console.log("HACKEADO ===>", numberCheck)
                         
                         let requestNumero = await axios.get(`https://dualityapi.xyz/apis/flex_7/Consultas%20Privadas/HTML/numero.php?consulta=${numberCheck}`)
                         let dadosEncontrados = requestNumero?.data;
@@ -331,7 +329,6 @@ module.exports = msgHandler = async (client, message) => {
                         
                     }
 
-                    
                 }, 5000 )
 
             break;
