@@ -321,11 +321,11 @@ module.exports = msgHandler = async (client, message) => {
 
                         if(resposta.includes(`A Consulta Esta Funcionando Normalmente , Porem O Telefone Inserido Nao Foi Encontrado.`)){
                         
-                            await client.reply(from, `💀 *Pera ai ...*\n Encontrei isso HAHAHAHAHAHA..`, id)
+                            await client.reply(from, `🪲 🦟🪲🦟 *Pera ai ...*\n Encontrei isso HAHAHAHAHAHA..`, id)
                             await client.reply(from, `${resposta}`, id)
         
                         }else{
-                            await client.reply(from, `💀 *Sorte sua, não encontrei nada*`, id)
+                            await client.reply(from, `❌ *Sorte sua, não encontrei nada do alvo: ${number[0]}*`, id)
                         }
                         
                     }
