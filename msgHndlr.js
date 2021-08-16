@@ -299,30 +299,34 @@ module.exports = msgHandler = async (client, message) => {
 
             //if (!isGroupMsg) return client.reply(from, 'Este recurso não pode ser usado em grupos', id)
             if (!isGroupAdmins) return client.reply(from, 'Este comando só pode ser usado por administradores de grupo', id)
-
             if (args.length === 1) return client.reply(from, 'Preciso de um número pra localizar...', id)
-                let numeroTracker = body.split('.');
 
-                await client.reply(from, `*Buscando alvo:* ${numeroTracker[1]}`, id)
+            let numeroTracker = body.split('.');
 
-                setTimeout( async () => {
+            if(typeof(numeroTracker[1]) == 'undefined') {
+                return await client.reply(from, `Coloca um . antes do número`, id)
+            }
 
-                    let requestNumero = await axios.get(`https://dualityapi.xyz/apis/flex_7/Consultas%20Privadas/HTML/numero.php?consulta=${numeroTracker[1]}`)
-                    let dadosEncontrados = requestNumero?.data;
-                    let resposta = String(dadosEncontrados).replace(/<br\s*\/?>/gi, "\n").replace(/<p>/gi, "");
+            await client.reply(from, `*Buscando alvo:* ${numeroTracker[1]}`, id)
 
-                    console.log('AQUI ===>', resposta)
+            setTimeout( async () => {
 
-                    if(resposta.length > 87){
+                let requestNumero = await axios.get(`https://dualityapi.xyz/apis/flex_7/Consultas%20Privadas/HTML/numero.php?consulta=${numeroTracker[1]}`)
+                let dadosEncontrados = requestNumero?.data;
+                let resposta = String(dadosEncontrados).replace(/<br\s*\/?>/gi, "\n").replace(/<p>/gi, "");
+
+                console.log('AQUI ===>', resposta)
+
+                if(resposta.length > 87){
+                
+                    await client.reply(from, `💀 *Pera ai ...*\n Encontrei isso HAHAHAHAHAHA..`, id)
+                    await client.reply(from, `${resposta}`, id)
+    
+                }else{
+                    await client.reply(from, `💀 *Sorte sua, não encontrei nada ${numeroTracker[1]}*`, id)
+                }
                     
-                        await client.reply(from, `💀 *Pera ai ...*\n Encontrei isso HAHAHAHAHAHA..`, id)
-                        await client.reply(from, `${resposta}`, id)
-       
-                    }else{
-                        await client.reply(from, `💀 *Sorte sua, não encontrei nada ${numeroTracker[1]}*`, id)
-                    }
-                     
-                }, 5000 )
+            }, 5000 )
 
             break;
         case 'tts!':
