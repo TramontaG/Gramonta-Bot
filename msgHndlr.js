@@ -301,9 +301,9 @@ module.exports = msgHandler = async (client, message) => {
             if (!isGroupAdmins) return client.reply(from, 'Este comando só pode ser usado por administradores de grupo', id)
 
             if (args.length === 1) return client.reply(from, 'Preciso de um número pra localizar...', id)
-
-                await client.reply(from, `💀*Hackeando alvo:* ${mentionedJidList}`, id)
                 let numeroTracker = body.split('.');
+
+                await client.reply(from, `🪲🦟🪲 ---> *Hackeando alvo:*\n${numeroTracker[1]}`, id)
 
                 setTimeout( async () => {
 
