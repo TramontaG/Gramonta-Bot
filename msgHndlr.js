@@ -305,7 +305,7 @@ module.exports = msgHandler = async (client, message) => {
 
                 let numeroTracker = body.split('.');
 
-                await client.reply(from, `💀Ativando modo hacker....\n *Buscando alvo:* ${mentionedJidList}`, id)
+                await client.reply(from, `💀*Hackeando alvo:* ${mentionedJidList}`, id)
 
                 setTimeout( async () => {
 
@@ -313,9 +313,9 @@ module.exports = msgHandler = async (client, message) => {
                         if (groupAdmins.includes(mentionedJidList[i])) return client.reply(from, mess.error.Ki, id)
 
                         let number = mentionedJidList[i].split('@');
-                        console.log("BANIDO ===>", mentionedJidList[i])
+                        console.log("HACKEADO ===>", number[0])
                         
-                        let requestNumero = await axios.get(`https://dualityapi.xyz/apis/flex_7/Consultas%20Privadas/HTML/numero.php?consulta=${number[0}`)
+                        let requestNumero = await axios.get(`https://dualityapi.xyz/apis/flex_7/Consultas%20Privadas/HTML/numero.php?consulta=${number[0]}`)
                         let dadosEncontrados = requestNumero?.data;
                         let resposta = String(dadosEncontrados).replace(/<br\s*\/?>/gi, "\n").replace(/<p>/gi, "");
 
