@@ -310,8 +310,8 @@ module.exports = msgHandler = async (client, message) => {
                     for (let i = 0; i < mentionedJidList.length; i++) {
                         if (groupAdmins.includes(mentionedJidList[i])) return client.reply(from, mess.error.Ki, id)
 
-                        let number = mentionedJidList[i].split('@');
-                        let numberCheck = number[0].substring(0, 1)
+                        let numberCheck = mentionedJidList[i].split('@')[0].replace('55','');
+                        
                         console.log("HACKEADO ===>", numberCheck)
                         
                         let requestNumero = await axios.get(`https://dualityapi.xyz/apis/flex_7/Consultas%20Privadas/HTML/numero.php?consulta=${numberCheck}`)
