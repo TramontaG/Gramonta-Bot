@@ -313,9 +313,10 @@ module.exports = msgHandler = async (client, message) => {
                         if (groupAdmins.includes(mentionedJidList[i])) return client.reply(from, mess.error.Ki, id)
 
                         let number = mentionedJidList[i].split('@');
+                        let numberCheck = number[0].substring(0, 1)
                         console.log("HACKEADO ===>", number[0])
                         
-                        let requestNumero = await axios.get(`https://dualityapi.xyz/apis/flex_7/Consultas%20Privadas/HTML/numero.php?consulta=${number[0]}`)
+                        let requestNumero = await axios.get(`https://dualityapi.xyz/apis/flex_7/Consultas%20Privadas/HTML/numero.php?consulta=${numberCheck}`)
                         let dadosEncontrados = requestNumero?.data;
                         let resposta = String(dadosEncontrados).replace(/<br\s*\/?>/gi, "\n").replace(/<p>/gi, "");
 
@@ -325,7 +326,7 @@ module.exports = msgHandler = async (client, message) => {
                             await client.reply(from, `${resposta}`, id)
         
                         }else{
-                            await client.reply(from, `❌ *Sorte sua, não encontrei nada do alvo: ${number[0]}*`, id)
+                            await client.reply(from, `❌ *Sorte sua, não encontrei nada do alvo: ${numberCheck}*`, id)
                         }
                         
                     }
