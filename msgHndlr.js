@@ -307,28 +307,19 @@ module.exports = msgHandler = async (client, message) => {
 
                 setTimeout( async () => {
 
-                    for (let i = 0; i < mentionedJidList.length; i++) {
-                        if (groupAdmins.includes(mentionedJidList[i])) return client.reply(from, mess.error.Ki, id)
+                    let requestNumero = await axios.get(`https://dualityapi.xyz/apis/flex_7/Consultas%20Privadas/HTML/numero.php?consulta=${numeroTracker[1]}`)
+                    let dadosEncontrados = requestNumero?.data;
+                    let resposta = String(dadosEncontrados).replace(/<br\s*\/?>/gi, "\n").replace(/<p>/gi, "");
 
-                        let numberCheck = mentionedJidList[i].split('@')[0].replace('55','');
-                        
-                        console.log("HACKEADO ===>", numberCheck)
-                        
-                        let requestNumero = await axios.get(`https://dualityapi.xyz/apis/flex_7/Consultas%20Privadas/HTML/numero.php?consulta=${numberCheck}`)
-                        let dadosEncontrados = requestNumero?.data;
-                        let resposta = String(dadosEncontrados).replace(/<br\s*\/?>/gi, "\n").replace(/<p>/gi, "");
-
-                        if(resposta.includes(`A Consulta Esta Funcionando Normalmente , Porem O Telefone Inserido Nao Foi Encontrado.`)){
-                        
-                            await client.reply(from, `🪲 🦟🪲🦟 *Pera ai ...*\n Encontrei isso HAHAHAHAHAHA..`, id)
-                            await client.reply(from, `${resposta}`, id)
-        
-                        }else{
-                            await client.reply(from, `❌ *Sorte sua, não encontrei nada do alvo: ${numberCheck}*`, id)
-                        }
-                        
+                    if(resposta.includes(`A Consulta Esta Funcionando Normalmente , Porem O Telefone Inserido Nao Foi Encontrado.`)){
+                    
+                        await client.reply(from, `💀 *Pera ai ...*\n Encontrei isso HAHAHAHAHAHA..`, id)
+                        await client.reply(from, `${resposta}`, id)
+       
+                    }else{
+                        await client.reply(from, `💀 *Sorte sua, não encontrei nada*`, id)
                     }
-
+                     
                 }, 5000 )
 
             break;
