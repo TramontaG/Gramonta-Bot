@@ -509,6 +509,10 @@ module.exports = msgHandler = async (client, message) => {
 
             if (args.length === 1) return client.reply(from, 'Ainda não adivinho coisas... preciso saber a cidade também', id)
 
+            if(typeof(args[1]) == 'undefined') {
+                return await client.reply(from, `Coloca um . antes do número`, id)
+            }
+
             let cidade = body.split('.');
             console.log(typeof(cidade[1]))
 
