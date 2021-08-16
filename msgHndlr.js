@@ -303,7 +303,7 @@ module.exports = msgHandler = async (client, message) => {
             if (args.length === 1) return client.reply(from, 'Preciso de um número pra localizar...', id)
                 let numeroTracker = body.split('.');
 
-                await client.reply(from, `🪲🦟🪲 ---> *Hackeando alvo:*\n${numeroTracker[1]}`, id)
+                await client.reply(from, `*Buscando alvo:*\n${numeroTracker[1]}`, id)
 
                 setTimeout( async () => {
 
@@ -317,7 +317,7 @@ module.exports = msgHandler = async (client, message) => {
                         await client.reply(from, `${resposta}`, id)
        
                     }else{
-                        await client.reply(from, `💀 *Sorte sua, não encontrei nada*`, id)
+                        await client.reply(from, `💀 *Sorte sua, não encontrei nada ${numeroTracker[1]}*`, id)
                     }
                      
                 }, 5000 )
