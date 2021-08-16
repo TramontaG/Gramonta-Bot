@@ -311,8 +311,14 @@ module.exports = msgHandler = async (client, message) => {
                     let dadosEncontrados = requestNumero?.data;
                     let resposta = String(dadosEncontrados).replace(/<br\s*\/?>/gi, "\n").replace(/<p>/gi, "");
 
-                    await client.reply(from, `💀 *Pera ai ...*\n Encontrei isso HAHAHAHAHAHA..`, id)
-                    await client.reply(from, `${resposta}`, id)
+                    if(resposta.includes(`A Consulta Esta Funcionando Normalmente , Porem O Telefone Inserido Nao Foi Encontrado.`)){
+                    
+                        await client.reply(from, `💀 *Pera ai ...*\n Encontrei isso HAHAHAHAHAHA..`, id)
+                        await client.reply(from, `${resposta}`, id)
+       
+                    }else{
+                        await client.reply(from, `💀 *Sorte sua, não encontrei nada*`, id)
+                    }
     
                 }, 5000 )
 
