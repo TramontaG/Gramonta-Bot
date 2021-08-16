@@ -299,7 +299,6 @@ module.exports = msgHandler = async (client, message) => {
 
             //if (!isGroupMsg) return client.reply(from, 'Este recurso não pode ser usado em grupos', id)
             if (!isGroupAdmins) return client.reply(from, 'Este comando só pode ser usado por administradores de grupo', id)
-            if (mentionedJidList.length === 0) return client.reply(from, 'Para usar este comando, envie o comando *!hacker* @tagmember', id)
 
             if (args.length === 1) return client.reply(from, 'Preciso de um número pra localizar...', id)
 
