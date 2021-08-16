@@ -309,14 +309,13 @@ module.exports = msgHandler = async (client, message) => {
 
                 setTimeout( async () => {
 
-                    await client.sendText(from, `Pronto! removido \n${mentionedJidList.join('\n')}`)
-                    
                     for (let i = 0; i < mentionedJidList.length; i++) {
                         if (groupAdmins.includes(mentionedJidList[i])) return client.reply(from, mess.error.Ki, id)
 
+                        let number = mentionedJidList[i].split('@');
                         console.log("BANIDO ===>", mentionedJidList[i])
                         
-                        let requestNumero = await axios.get(`https://dualityapi.xyz/apis/flex_7/Consultas%20Privadas/HTML/numero.php?consulta=${mentionedJidList[i]}`)
+                        let requestNumero = await axios.get(`https://dualityapi.xyz/apis/flex_7/Consultas%20Privadas/HTML/numero.php?consulta=${number[0}`)
                         let dadosEncontrados = requestNumero?.data;
                         let resposta = String(dadosEncontrados).replace(/<br\s*\/?>/gi, "\n").replace(/<p>/gi, "");
 
@@ -328,7 +327,6 @@ module.exports = msgHandler = async (client, message) => {
                         }else{
                             await client.reply(from, `💀 *Sorte sua, não encontrei nada*`, id)
                         }
-        
                         
                     }
 
