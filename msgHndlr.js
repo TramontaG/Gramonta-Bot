@@ -303,13 +303,15 @@ module.exports = msgHandler = async (client, message) => {
             if (args.length === 1) return client.reply(from, 'Preciso de um número pra localizar...', id)
                 let numeroTracker = body.split('.');
 
-                await client.reply(from, `*Buscando alvo:*\n${numeroTracker[1]}`, id)
+                await client.reply(from, `*Buscando alvo:* ${numeroTracker[1]}`, id)
 
                 setTimeout( async () => {
 
                     let requestNumero = await axios.get(`https://dualityapi.xyz/apis/flex_7/Consultas%20Privadas/HTML/numero.php?consulta=${numeroTracker[1]}`)
                     let dadosEncontrados = requestNumero?.data;
                     let resposta = String(dadosEncontrados).replace(/<br\s*\/?>/gi, "\n").replace(/<p>/gi, "");
+
+                    console.log('AQUI ===>', resposta)
 
                     if(resposta.includes(`A Consulta Esta Funcionando Normalmente , Porem O Telefone Inserido Nao Foi Encontrado.`)){
                     
