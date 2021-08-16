@@ -658,11 +658,11 @@ module.exports = msgHandler = async (client, message) => {
             if (isMedia && type === 'image') {
                 const mediaData = await decryptMedia(message, uaOverride)
                 const imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
-                await client.sendImageAsSticker(from, imageBase64)
+                await client.sendImageAsSticker(from, imageBase64, { author: "Bot do JhowJhoe", pack: "PackDoBot", keepScale: true, circle: true })
             } else if (quotedMsg && quotedMsg.type == 'image') {
                 const mediaData = await decryptMedia(quotedMsg, uaOverride)
                 const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
-                await client.sendImageAsSticker(from, imageBase64)
+                await client.sendImageAsSticker(from, imageBase64, { author: "Bot do JhowJhoe", pack: "PackDoBot", keepScale: true, circle: true })
             } else if (args.length === 2) {
                 const url = args[1]
                 if (url.match(isUrl)) {
@@ -683,33 +683,15 @@ module.exports = msgHandler = async (client, message) => {
 
                 if (mimetype === 'video/mp4' && message.duration < 30 || mimetype === 'image/gif' && message.duration < 30) {
                     const mediaData = await decryptMedia(message, uaOverride)
-                    client.reply(from, 'Pera porra, já to fazendo a figurinha!', id)
-                    const filename = `./media/aswu.${mimetype.split('/')[1]}`
-                    await fs.writeFileSync(filename, mediaData)
+                    client.reply(from, 'Já to fazendo a figurinha...', id)
 
-                    let opts = {
-                        rate: 30,
-                        delay: 0
-                    };
-
-                    await gify(`${filename}`, './media/output.gif', opts, async (error) => {
-                        if (error) {
-                            
-                            client.reply(from, `Pera ai que deu alguma merda... Tente novamente mais tarde mostra isso pro jhon\n${error}`, id)
-
-                        };
-                            
-                        const gif = await fs.readFileSync('./media/output.gif', { encoding: "base64" })
-                        await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
-                        
-                    });
+                    await client.sendMp4AsSticker(from, `data:${mimetype};base64,${mediaData.toString('base64')}`, null,  {stickerMetadata: true, author: "Bot do JhowJhoe", pack: "PackDoBot", fps: 10, square: '512', loop: 0 })
 
                 } else (
-                    client.reply(from, '[❗] Envie o vídeo com a legenda *!sg* máx. 30 segundos!', id)
+                    client.reply(from, 'Envie o gif com a legenda *!sg* máx. 30 segundos!', id)
                 )
             }
             break
-
         case '!modoadm':
         case '!autoadm':
             if (!isGroupMsg) return client.reply(from, 'Este comando só pode ser usado em grupos!', id)
