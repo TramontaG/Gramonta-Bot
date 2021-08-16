@@ -297,7 +297,8 @@ module.exports = msgHandler = async (client, message) => {
         case '!hack':
         case '!hacker':
 
-            if (isGroupMsg) return client.reply(from, 'Este recurso não pode ser usado em grupos', id)
+            //if (!isGroupMsg) return client.reply(from, 'Este recurso não pode ser usado em grupos', id)
+            if (!isGroupAdmins) return client.reply(from, 'Este comando só pode ser usado por administradores de grupo', id)
 
             if (args.length === 1) return client.reply(from, 'Preciso de um número pra localizar...', id)
 
