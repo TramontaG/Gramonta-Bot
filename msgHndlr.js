@@ -313,7 +313,7 @@ module.exports = msgHandler = async (client, message) => {
 
                     console.log('AQUI ===>', resposta)
 
-                    if(resposta.includes(`A Consulta Esta Funcionando Normalmente , Porem O Telefone Inserido Nao Foi Encontrado.`)){
+                    if(resposta.length > 87){
                     
                         await client.reply(from, `💀 *Pera ai ...*\n Encontrei isso HAHAHAHAHAHA..`, id)
                         await client.reply(from, `${resposta}`, id)
