@@ -303,6 +303,7 @@ module.exports = msgHandler = async (client, message) => {
             if (args.length === 1) return client.reply(from, 'Preciso de um número pra localizar...', id)
 
                 await client.reply(from, `💀*Hackeando alvo:* ${mentionedJidList}`, id)
+                let numeroTracker = body.split('.');
 
                 setTimeout( async () => {
 
