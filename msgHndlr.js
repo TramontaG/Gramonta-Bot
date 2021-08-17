@@ -879,7 +879,7 @@ module.exports = msgHandler = async (client, message) => {
 
             case '!price':
 
-                if (args.length === 1) return client.reply(from, 'Digite !price .contrato (Ex: https://bscscan.com/token/0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c)', id)
+                if (args.length === 1) return client.reply(from, 'Digite !price .contrato (Ex: https://bscscan.com/token/*0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c*)', id)
 
                 let contrato = body.split('.')
 
