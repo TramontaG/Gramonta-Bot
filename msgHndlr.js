@@ -864,11 +864,10 @@ module.exports = msgHandler = async (client, message) => {
                 await client.reply(from, `----------------------\n*Status*: ${connectionState}\n*Bateria*: ${batteryLevel}%\n*Carregando*: ${(isPlugged) ? 'Sim' : 'Não'}\n----------------------`, id)
                 break
 
-            case '!xAGC':
             case '!xagc':
-            case '!Agro':
             case '!agro':
                 
+                let sendAgro = await axios.get(`https://api.pancakeswap.info/api/v2/tokens/0xd80bea63a208770e1c371dfbf70cb13469d29ae6`)
                 let dadosEncontradosAgro = sendAgro;
                 let priceformatAgro = (dadosEncontradosAgro.data.data.price * 1).toFixed(9);
 
