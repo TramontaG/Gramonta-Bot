@@ -869,7 +869,6 @@ module.exports = msgHandler = async (client, message) => {
             case '!Agro':
             case '!agro':
                 
-                let sendAgro = await axios.get(`https://api.pancakeswap.info/api/v2/tokens/0xd80bea63a208770e1c371dfbf70cb13469d29ae6`)
                 let dadosEncontradosAgro = sendAgro;
                 let priceformatAgro = (dadosEncontradosAgro.data.data.price * 1).toFixed(9);
 
@@ -879,7 +878,7 @@ module.exports = msgHandler = async (client, message) => {
 
             case '!price':
 
-                if (args.length === 1) return client.reply(from, 'Digite !price .contrato (Ex: https://bscscan.com/token/*0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c*)', id)
+                if (args.length === 1) return client.reply(from, 'Digite !price .contrato (Ex: bscscan.com/token/>>>0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c<<<)', id)
 
                 let contrato = body.split('.')
 
