@@ -865,7 +865,7 @@ module.exports = msgHandler = async (client, message) => {
                 break
 
             case '!xAGC':
-            case '!xAGC':
+            case '!xagc':
             case '!Agro':
             case '!agro':
                 
