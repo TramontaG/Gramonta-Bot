@@ -885,7 +885,7 @@ module.exports = msgHandler = async (client, message) => {
 
                 let send = await axios.get(`https://api.pancakeswap.info/api/v2/tokens/${contrato[1]}`)
                 let dadosEncontrados = send;
-                let priceformat = (dadosEncontradosAgro.data.data.price * 1).toFixed(9);
+                let priceformat = (dadosEncontrados.data.data.price * 1).toFixed(9);
 
                 await client.reply(from, `Nome: ${dadosEncontrados.data.data.name}\nToken: ${dadosEncontrados.data.data.symbol}\nPreço: ${priceformat}`, id)
 
