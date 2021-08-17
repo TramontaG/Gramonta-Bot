@@ -888,6 +888,31 @@ module.exports = msgHandler = async (client, message) => {
                 await client.reply(from, `Nome: ${dadosEncontrados.data.data.name}\nToken: ${dadosEncontrados.data.data.symbol}\nPreço: ${priceformat}`, id)
 
                 break;
+
+            case '!cotacao':
+
+                try {
+
+                    let coinmarketcap = await axios({
+                        method: "post",
+                        url: "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=10&convert=USD",
+                        data: dataSend,
+                        headers: { 'Content-Type': 'application/json', 'X-CMC_PRO_API_KEY': 'b2776f73-fbda-4b91-8d8b-221be52eb5ff' },
+                    })
+
+                    console.log(coinmarketcap)
+
+                    await client.sendText(`achei isso ${JSON.stringify(err)}`)
+                    
+                    break;
+                    
+                } catch (error) {
+
+                    await client.sendText(`Puts, deu merda... chama o @5531995360492 e mostra essa merda aqui.... ${err}`)
+                    
+                }
+
+                break;
         }
 
     } catch (err) {
