@@ -906,7 +906,7 @@ module.exports = msgHandler = async (client, message) => {
 
                 let coinmarketcapData = coinmarketcap?.data?.data
 
-                await client.reply(from, `${coinmarketcapData}`, id);
+                await client.reply(from, `${JSON.stringify(coinmarketcapData)}`, id);
                 
                 break;
         }
