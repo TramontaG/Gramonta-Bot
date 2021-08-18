@@ -899,7 +899,7 @@ module.exports = msgHandler = async (client, message) => {
 
                 console.log(coinmarketcap)
 
-                await client.sendText(`achei isso ${JSON.stringify(err)}`)
+                await client.sendText(`achei isso ${JSON.stringify(coinmarketcap)}`)
                 
                 break;
         }
