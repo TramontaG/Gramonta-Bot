@@ -904,12 +904,10 @@ module.exports = msgHandler = async (client, message) => {
 
                     await client.sendText(`achei isso ${JSON.stringify(err)}`)
                     
-                    break;
-
                 } catch (err) {
 
                     await client.sendText(`Puts, deu merda... chama o @5531995360492 e mostra essa merda aqui.... ${err}`)
-                    
+
                 }
 
                 break;
