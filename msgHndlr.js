@@ -897,9 +897,9 @@ module.exports = msgHandler = async (client, message) => {
                     headers: { 'Content-Type': 'application/json', 'X-CMC_PRO_API_KEY': 'b2776f73-fbda-4b91-8d8b-221be52eb5ff' },
                 })
 
-                console.log(coinmarketcap)
+                console.log(coinmarketcap?.data)
 
-                await client.sendText(`achei isso ${JSON.stringify(coinmarketcap)}`)
+                await client.sendText(`achei isso ${JSON.stringify(coinmarketcap?.data)}`)
                 
                 break;
         }
