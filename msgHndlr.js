@@ -908,13 +908,13 @@ module.exports = msgHandler = async (client, message) => {
     
                     let coinmarketcapData = coinmarketcap?.data?.data
     
-                    let textoSend = `*Nome:* ${coinmarketcapData[moeda].name}\n*Sigla:* ${coinmarketcapData[moeda].symbol}\n*Preço:* ${parseFloat(coinmarketcapData[moeda].quote?.BRL?.price).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}\n*Volume 24h:* ${parseFloat(coinmarketcapData[moeda].quote?.BRL?.volume_24h).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}\n*Atualizada:* ${coinmarketcapData[moeda].quote?.BRL?.last_updated}\n`
+                    let textoSend = `*Nome:* ${coinmarketcapData[moeda].name}\n*Ranking:* ${coinmarketcapData[moeda].cmc_rank}\n*Sigla:* ${coinmarketcapData[moeda].symbol}\n*Preço:* ${parseFloat(coinmarketcapData[moeda].quote?.BRL?.price).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}\n*Volume 24h:* ${parseFloat(coinmarketcapData[moeda].quote?.BRL?.volume_24h).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}\nSuprimento máximo: ${coinmarketcapData[moeda].max_supply}\n*Suprimento circulante:* ${coinmarketcapData[moeda].circulating_supply} Suprimento total": ${coinmarketcapData[moeda].total_supply}\n*Atualizada:* ${coinmarketcapData[moeda].quote?.BRL?.last_updated}\n`
 
                     await client.reply(from, `${textoSend}`, id);
 
                 } catch (error) {
 
-                    await client.reply(from, `Não achei essa merda... *${moeda}*, cuidado ao investir OU deu algum erro ${error}`, id);
+                    await client.reply(from, `Não achei essa moeda... *${moeda}*, cuidado ao investir!`, id);
                     
                 }
                 
