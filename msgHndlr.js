@@ -907,7 +907,7 @@ module.exports = msgHandler = async (client, message) => {
                 console.log(coinmarketcap?.data)
                 let coinmarketcapData = coinmarketcap?.data?.moeda.data
 
-                coinmarketcapData?.data.forEach(async (data, indice) => {
+                coinmarketcapData?.forEach(async (data, indice) => {
 
                     let message = `---------\n${data?.indice.name}\n-------------\nSymbol: ${data?.indice.symbol} / ${data?.indice.slug}\nPreço: ${data?.indice.quote?.BRL?.price.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}\nVolume_24h: ${data?.indice.quote?.BRL?.volume_24h}\nPercent_change_1h : ${data?.indice.quote?.BRL?.percent_change_1h}%\nPercent_change_24h : ${data?.indice.quote?.BRL?.percent_change_24h}%\nPercent_change_30d : ${data?.indice.quote?.BRL?.percent_change_30d}%\nPercent_change_90d : ${data?.indice.quote?.BRL?.percent_change_90d}%\nDiluted no mercado : ${data?.indice.quote?.BRL?.fully_diluted_market_cap}\nAtualizado": ${data?.indice.quote?.BRL?.last_updated}\n`
                     await client.reply(from, message, id);
