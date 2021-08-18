@@ -908,10 +908,13 @@ module.exports = msgHandler = async (client, message) => {
     
                     let coinmarketcapData = coinmarketcap?.data?.data
     
-                    await client.reply(from, `${JSON.stringify(coinmarketcapData)}`, id);
+                    let textoSend = `*Nome:* ${coinmarketcapData['DOGE'].name}\n*Sigla:* ${coinmarketcapData['DOGE'].symbol}\n*Preço:* ${coinmarketcapData['DOGE'].price.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}\n*Volume 24h:* ${coinmarketcapData['DOGE'].volume_24h}\n`
+
+                    await client.reply(from, `${textoSend}`, id);
 
                 } catch (error) {
-                    await client.reply(from, `Não achei essa merda... ${moeda}, cuidado ao investir!`, id);
+
+                    await client.reply(from, `Não achei essa merda... *${moeda}*, cuidado ao investir!`, id);
                     
                 }
                 
