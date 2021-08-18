@@ -894,15 +894,17 @@ module.exports = msgHandler = async (client, message) => {
             case '!cot':
             case '!cotacao':
 
-                if (args.length === 1) return client.reply(from, 'Digite !converter .BTC', id)
+                if (args.length === 1) return client.reply(from, 'Digite !converter .BTCxUSD', id)
                 let parametro = body.split('.')
                 let moeda = parametro[1]
+
+                moeda = parametro.split('x')
 
                 try {
                     
                     let coinmarketcap = await axios({
                         method: "GET",
-                        url: `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${moeda}&convert=BRL`,
+                        url: `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${moeda[0]}&convert=${moeda[1]}`,
                         headers: { 'Content-Type': 'application/json', 'X-CMC_PRO_API_KEY': 'b2776f73-fbda-4b91-8d8b-221be52eb5ff' },
                     })
     
