@@ -914,7 +914,7 @@ module.exports = msgHandler = async (client, message) => {
 
                 } catch (error) {
 
-                    await client.reply(from, `Não achei essa merda... *${moeda}*, cuidado ao investir!`, id);
+                    await client.reply(from, `Não achei essa merda... *${moeda}*, cuidado ao investir OU deu algum erro ${error}`, id);
                     
                 }
                 
