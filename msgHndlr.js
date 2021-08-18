@@ -904,7 +904,9 @@ module.exports = msgHandler = async (client, message) => {
                     
                     console.log(parametroBusca[0]);
                     console.log(parametroBusca[1]);
-                    
+
+                    console.error(`https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${parametroBusca[0]}&convert=${parametroBusca[1]}`);
+
                     let coinmarketcap = await axios({
                         method: "GET",
                         url: `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${parametroBusca[0]}&convert=${parametroBusca[1]}`,
@@ -919,6 +921,7 @@ module.exports = msgHandler = async (client, message) => {
 
                 } catch (error) {
 
+                    console.error(error);
                     await client.reply(from, `Não achei essa moeda... *${parametroBusca[0]}*, cuidado ao investir!`, id);
                     
                 }
