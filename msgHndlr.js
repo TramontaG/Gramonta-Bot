@@ -902,7 +902,7 @@ module.exports = msgHandler = async (client, message) => {
 
                 coinmarketcapData.forEach(async (data) => {
 
-                    let message = `---------\nBRL\n-------------\n*price: ${data?.quote?.BRL?.price}\nvolume_24h: ${data?.quote?.BRL?.volume_24h}\npercent_change_1h : ${data?.quote?.BRL?.percent_change_1h}%\npercent_change_24h : ${data?.quote?.BRL?.percent_change_24h}%\npercent_change_30d : ${data?.quote?.BRL?.percent_change_30d}%\npercent_change_90d : ${data?.quote?.BRL?.percent_change_90d}%\nfully_diluted_market_cap : ${data?.quote?.BRL?.fully_diluted_market_cap}\nlast_updated": ${data?.quote?.BRL?.last_updated}\n`
+                    let message = `---------\nBRL\n-------------\n*name: ${data?.name}\nsymbol: ${data?.symbol}\nslug: ${data?.slug}\nnum_market_pairs: ${data?.name}price: ${data?.quote?.BRL?.price}\nvolume_24h: ${data?.quote?.BRL?.volume_24h}\npercent_change_1h : ${data?.quote?.BRL?.percent_change_1h}%\npercent_change_24h : ${data?.quote?.BRL?.percent_change_24h}%\npercent_change_30d : ${data?.quote?.BRL?.percent_change_30d}%\npercent_change_90d : ${data?.quote?.BRL?.percent_change_90d}%\nfully_diluted_market_cap : ${data?.quote?.BRL?.fully_diluted_market_cap}\nlast_updated": ${data?.quote?.BRL?.last_updated}\n`
                     await client.reply(from, message, id);
 
                 })
