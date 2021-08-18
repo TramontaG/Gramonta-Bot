@@ -898,6 +898,23 @@ module.exports = msgHandler = async (client, message) => {
                 })
 
                 console.log(coinmarketcap?.data)
+                let coinmarketcapData = coinmarketcap?.data?.data
+
+                coinmarketcapData.forEach(async (data) => {
+
+                        let message = `---------\nBRL\n-------------\n*
+                        price: ${data?.quote?.BRL?.price}\n
+                        volume_24h: ${data?.quote?.BRL?.volume_24h}\n
+                        percent_change_1h : ${data?.quote?.BRL?.percent_change_1h}%\n
+                        percent_change_24h : ${data?.quote?.BRL?.percent_change_24h}%\n
+                        percent_change_30d : ${data?.quote?.BRL?.percent_change_30}%\n
+                        percent_change_90d : ${data?.quote?.BRL?.percent_change_90}%\n
+                        fully_diluted_market_cap : ${data?.quote?.BRL?.fully_diluted_market_cap}\n
+                        last_updated": ${data?.quote?.BRL?.last_updated}\n`
+                    
+                    await client.reply(from, message, id);
+
+                })
 
                 await client.reply(from, `achei isso ${JSON.stringify(coinmarketcap?.data)}`, id)
                 
