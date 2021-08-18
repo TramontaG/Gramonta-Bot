@@ -898,15 +898,23 @@ module.exports = msgHandler = async (client, message) => {
                 let parametro = body.split('.')
                 let moeda = parametro[1]
 
-                let coinmarketcap = await axios({
-                    method: "GET",
-                    url: `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${moeda}&convert=BRL`,
-                    headers: { 'Content-Type': 'application/json', 'X-CMC_PRO_API_KEY': 'b2776f73-fbda-4b91-8d8b-221be52eb5ff' },
-                })
+                try {
+                    
+                    let coinmarketcap = await axios({
+                        method: "GET",
+                        url: `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${moeda}&convert=BRL`,
+                        headers: { 'Content-Type': 'application/json', 'X-CMC_PRO_API_KEY': 'b2776f73-fbda-4b91-8d8b-221be52eb5ff' },
+                    })
+    
+                    let coinmarketcapData = coinmarketcap?.data?.data
+    
+                    await client.reply(from, `${JSON.stringify(coinmarketcapData)}`, id);
 
-                let coinmarketcapData = coinmarketcap?.data?.data
-
-                await client.reply(from, `${JSON.stringify(coinmarketcapData)}`, id);
+                } catch (error) {
+                    await client.reply(from, `Não achei essa merda... ${moeda}, cuidado ao investir!`, id);
+                    
+                }
+                
                 
                 break;
         }
