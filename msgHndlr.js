@@ -895,7 +895,8 @@ module.exports = msgHandler = async (client, message) => {
             case '!cotacao':
 
                 if (args.length === 1) return client.reply(from, 'Digite !converter .BTC', id)
-                let moeda = body.split('.')
+                let parametro = body.split('.')
+                let moeda = parametro[1]
 
                 let coinmarketcap = await axios({
                     method: "get",
