@@ -891,25 +891,17 @@ module.exports = msgHandler = async (client, message) => {
 
             case '!cotacao':
 
-                try {
+                let coinmarketcap = await axios({
+                    method: "post",
+                    url: "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=10&convert=USD",
+                    data: dataSend,
+                    headers: { 'Content-Type': 'application/json', 'X-CMC_PRO_API_KEY': 'b2776f73-fbda-4b91-8d8b-221be52eb5ff' },
+                })
 
-                    let coinmarketcap = await axios({
-                        method: "post",
-                        url: "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=10&convert=USD",
-                        data: dataSend,
-                        headers: { 'Content-Type': 'application/json', 'X-CMC_PRO_API_KEY': 'b2776f73-fbda-4b91-8d8b-221be52eb5ff' },
-                    })
+                console.log(coinmarketcap)
 
-                    console.log(coinmarketcap)
-
-                    await client.sendText(`achei isso ${JSON.stringify(err)}`)
-                    
-                } catch (err) {
-
-                    await client.sendText(`Puts, deu merda... chama o @5531995360492 e mostra essa merda aqui.... ${err}`)
-
-                }
-
+                await client.sendText(`achei isso ${JSON.stringify(err)}`)
+                
                 break;
         }
 
