@@ -899,13 +899,13 @@ module.exports = msgHandler = async (client, message) => {
                 let moeda = parametro[1]
 
                 let coinmarketcap = await axios({
-                    method: "get",
+                    method: "GET",
                     url: `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${moeda}&convert=BRL`,
                     headers: { 'Content-Type': 'application/json', 'X-CMC_PRO_API_KEY': 'b2776f73-fbda-4b91-8d8b-221be52eb5ff' },
                 })
 
                 console.log(coinmarketcap?.data)
-                let coinmarketcapData = coinmarketcap?.data
+                let coinmarketcapData = coinmarketcap?.data?.data
 
                 coinmarketcapData?.forEach(async (data, indice) => {
 
