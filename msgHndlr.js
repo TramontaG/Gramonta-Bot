@@ -889,11 +889,17 @@ module.exports = msgHandler = async (client, message) => {
 
                 break;
 
+            case '!moeda':
+            case '!converter':
+            case '!cot':
             case '!cotacao':
+
+                if (args.length === 1) return client.reply(from, 'Digite !converter .BTC', id)
+                let moeda = body.split('.')
 
                 let coinmarketcap = await axios({
                     method: "get",
-                    url: "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=10&convert=BRL",
+                    url: `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${moeda}&convert=BRL`,
                     headers: { 'Content-Type': 'application/json', 'X-CMC_PRO_API_KEY': 'b2776f73-fbda-4b91-8d8b-221be52eb5ff' },
                 })
 
@@ -902,7 +908,7 @@ module.exports = msgHandler = async (client, message) => {
 
                 coinmarketcapData.forEach(async (data) => {
 
-                    let message = `---------\n${data?.name}\n-------------\nSymbol: ${data?.symbol} / ${data?.slug}\nPreço: ${data?.quote?.BRL?.price}\nVolume_24h: ${data?.quote?.BRL?.volume_24h}\nPercent_change_1h : ${data?.quote?.BRL?.percent_change_1h}%\nPercent_change_24h : ${data?.quote?.BRL?.percent_change_24h}%\nPercent_change_30d : ${data?.quote?.BRL?.percent_change_30d}%\nPercent_change_90d : ${data?.quote?.BRL?.percent_change_90d}%\nDiluted no mercado : ${data?.quote?.BRL?.fully_diluted_market_cap}\nAtualizado": ${data?.quote?.BRL?.last_updated}\n`
+                    let message = `---------\n${data?.name}\n-------------\nSymbol: ${data?.symbol} / ${data?.slug}\nPreço: ${data?.quote?.BRL?.price.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}\nVolume_24h: ${data?.quote?.BRL?.volume_24h}\nPercent_change_1h : ${data?.quote?.BRL?.percent_change_1h}%\nPercent_change_24h : ${data?.quote?.BRL?.percent_change_24h}%\nPercent_change_30d : ${data?.quote?.BRL?.percent_change_30d}%\nPercent_change_90d : ${data?.quote?.BRL?.percent_change_90d}%\nDiluted no mercado : ${data?.quote?.BRL?.fully_diluted_market_cap}\nAtualizado": ${data?.quote?.BRL?.last_updated}\n`
                     await client.reply(from, message, id);
 
                 })
