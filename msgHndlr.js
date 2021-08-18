@@ -898,7 +898,7 @@ module.exports = msgHandler = async (client, message) => {
                 let parametro = body.split('.')
                 let moeda = parametro[1]
 
-                moeda = parametro.split('x')
+                moeda = moeda.split('x')
 
                 try {
                     
