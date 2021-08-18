@@ -892,9 +892,8 @@ module.exports = msgHandler = async (client, message) => {
             case '!cotacao':
 
                 let coinmarketcap = await axios({
-                    method: "post",
+                    method: "get",
                     url: "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=10&convert=USD",
-                    data: dataSend,
                     headers: { 'Content-Type': 'application/json', 'X-CMC_PRO_API_KEY': 'b2776f73-fbda-4b91-8d8b-221be52eb5ff' },
                 })
 
