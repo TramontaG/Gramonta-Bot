@@ -905,7 +905,7 @@ module.exports = msgHandler = async (client, message) => {
                 })
 
                 console.log(coinmarketcap?.data)
-                let coinmarketcapData = coinmarketcap?.data?.moeda.data
+                let coinmarketcapData = coinmarketcap?.data
 
                 coinmarketcapData?.forEach(async (data, indice) => {
 
