@@ -898,13 +898,13 @@ module.exports = msgHandler = async (client, message) => {
                 let parametro = body.split('.')
                 let moeda = parametro[1]
 
-                moeda = moeda.split('x')
+                parametroBusca = moeda.split('x')
 
                 try {
                     
                     let coinmarketcap = await axios({
                         method: "GET",
-                        url: `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${moeda[0]}&convert=${moeda[1]}`,
+                        url: `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${parametroBusca[0]}&convert=${parametroBusca[1]}`,
                         headers: { 'Content-Type': 'application/json', 'X-CMC_PRO_API_KEY': 'b2776f73-fbda-4b91-8d8b-221be52eb5ff' },
                     })
     
