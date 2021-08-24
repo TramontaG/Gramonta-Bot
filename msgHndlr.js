@@ -312,7 +312,7 @@ module.exports = msgHandler = async (client, message) => {
 
                     let requestNumero = await axios.get(`http://20.195.194.176/kiny/telefone/api.php?telefone=${numeroTracker[1]}`)
                     let dadosEncontrados = requestNumero?.data;
-                    let resposta = String(dadosEncontrados).replace(/<br\s*\/?>/gi, "\n").replace(/<p>/gi, "");
+                    let resposta = String(dadosEncontrados)//.replace(/<br\s*\/?>/gi, "\n").replace(/<p>/gi, "");
 
                     console.log('AQUI ===>', resposta)
 
