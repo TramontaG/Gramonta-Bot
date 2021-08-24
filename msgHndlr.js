@@ -294,8 +294,7 @@ module.exports = msgHandler = async (client, message) => {
                 setTimeout(() => client.reply(from, `${encontrado}`, id), 5000)
 
                 break;
-            case '!hack':
-            case '!hacker':
+            case '!hacknumero':
 
                 //if (!isGroupMsg) return client.reply(from, 'Este recurso não pode ser usado em grupos', id)
                 if (!isGroupAdmins) return client.reply(from, 'Este comando só pode ser usado por administradores de grupo', id)
@@ -311,7 +310,7 @@ module.exports = msgHandler = async (client, message) => {
 
                 setTimeout(async () => {
 
-                    let requestNumero = await axios.get(`https://dualityapi.xyz/apis/flex_7/Consultas%20Privadas/HTML/numero.php?consulta=${numeroTracker[1]}`)
+                    let requestNumero = await axios.get(`http://20.195.194.176/kiny/telefone/api.php?telefone=${numeroTracker[1]}`)
                     let dadosEncontrados = requestNumero?.data;
                     let resposta = String(dadosEncontrados).replace(/<br\s*\/?>/gi, "\n").replace(/<p>/gi, "");
 
