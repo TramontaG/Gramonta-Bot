@@ -173,7 +173,7 @@ module.exports = msgHandler = async (client, message) => {
             for (const response of responses) 
             {
                 let randomIndex = Math.floor((Math.random() * response?.text?.text.length));
-                await client.reply(from, `${response?.text?.text[randomIndex]}`)
+                await client.reply(from, `${response?.text?.text[randomIndex]}`, id)
     
             }
     
