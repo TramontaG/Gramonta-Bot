@@ -172,8 +172,8 @@ module.exports = msgHandler = async (client, message) => {
             console.log('RECEBEU DIALOGFLOW ======>', payload)
             for (const response of responses) 
             {
-                let random = Math.floor((Math.random() * response?.text?.text.length));
-                await client.reply(from, `${response?.text?.text[random]}`)
+                let randomIndex = Math.floor((Math.random() * response?.text?.text.length));
+                await client.reply(from, `${response?.text?.text[randomIndex]}`)
     
             }
     
@@ -311,20 +311,14 @@ module.exports = msgHandler = async (client, message) => {
 
         switch (command) {
             case '!dialogflow':
-                console.log('passou aqui')
-
                 if (args.length === 1) return client.reply(from, 'Escolha habilitar ou desabilitar!', id)
-
-                console.log('passou aqui', args[1].toLowerCase())
+                if (!isGroupAdmins) return client.reply(from, 'Este comando só pode ser usado por administradores de grupo', id)
 
                 if (args[1].toLowerCase() === 'enable') {
-
-                    console.log('caiu aqui')
                     await fs.writeFileSync('./lib/dialogflowActive.json', JSON.stringify({"ativo": "true"}))
                     await client.reply(from, 'O dialogflow ativado com sucesso.', id)
 
                 } else{
-                    console.log('caiu la')
                     await fs.writeFileSync('./lib/dialogflowActive.json', JSON.stringify({"ativo": "false"}))
                     await client.reply(from, 'O dialogflow desabilitado com sucesso.', id)
                 }
