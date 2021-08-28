@@ -41,6 +41,7 @@ const sessionClient = new dialogflow.SessionsClient({
  * @param {string} projectId The project to be used
  */
 async function sendToDialogFlow(msg, session, params) {
+
   let textToDialogFlow = msg;
   try {
     const sessionPath = sessionClient.sessionPath(
@@ -92,6 +93,7 @@ async function sendToDialogFlow(msg, session, params) {
     console.log("error");
     console.log(e);
   }
+
 }
 
 module.exports = msgHandler = async (client, message) => {
@@ -142,7 +144,7 @@ module.exports = msgHandler = async (client, message) => {
         const groupAdmins = isGroupMsg ? await client.getGroupAdmins(groupId) : ''
         const isGroupAdmins = isGroupMsg ? groupAdmins.includes(sender.id) : false
         const isBotGroupAdmins = isGroupMsg ? groupAdmins.includes(botNumber + '@c.us') : false
-        const ownerNumber = ["5531984928178@c.us", "5531984928178"] // replace with your whatsapp number
+        const ownerNumber = ["+8616238650161@c.us", "+8616238650161"] // replace with your whatsapp number
         const isOwner = ownerNumber.includes(sender.id)
         const isBlocked = blockNumber.includes(sender.id)
         const uaOverride = 'WhatsApp/2.2029.4 Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
@@ -160,19 +162,23 @@ module.exports = msgHandler = async (client, message) => {
         console.log('COMANDO ====>', color(command))
         console.log('ALGUEM FALOU DE MIM =====>', color(falas.indexOf("bruce") != -1))
 
-        const payload = await sendToDialogFlow(falas, from, 'params')
-        const responses = payload.fulfillmentMessages
+        let objeto = JSON.parse(await fs.readFileSync('./lib/dialogflowActive.json', {encoding:'utf8', flag:'r'}))
 
-        console.log('RECEBEU DIALOGFLOW ======>', responses)
-        //console.log('RECEBEU ======>', reponses)
-
+        if(objeto?.ativo == "true") {
         
-        for (const response of responses) 
-        {
-            await client.reply(from, response?.text?.text[Math.floor((Math.random() * response?.text?.text.length))], id)
-
+            const payload = await sendToDialogFlow(falas, from, 'params')
+            const responses = payload?.fulfillmentMessages
+        
+            console.log('RECEBEU DIALOGFLOW ======>', payload)
+            for (const response of responses) 
+            {
+                let random = Math.floor((Math.random() * response?.text?.text.length));
+                await client.reply(from, `${response?.text?.text[random]}`)
+    
+            }
+    
         }
-
+        
         if (falas.indexOf("bruce") != -1) {
             await client.reply(from, 'Oi? ta falando de mim? é só digitar: *me ajuda*', id)
             const gif4 = await fs.readFileSync('./media/pensando.webp', { encoding: "base64" })
@@ -180,11 +186,10 @@ module.exports = msgHandler = async (client, message) => {
         }
 
         switch (falas) {
-
             case 'me ajuda bot':
             case 'me ajuda':
             case 'bot me ajuda':
-                client.sendText(from, help)
+                await client.sendText(from, help)
                 break
 
             case '!berrante':
@@ -239,6 +244,7 @@ module.exports = msgHandler = async (client, message) => {
             case 'o bot viado':
             case 'bot otario':
             case 'o é bot otario':
+            case 'fuder bot':
             case 'o bot otario':
             case 'bot lixo':
             case 'fodas bot':
@@ -304,6 +310,26 @@ module.exports = msgHandler = async (client, message) => {
         }
 
         switch (command) {
+            case '!dialogflow':
+                console.log('passou aqui')
+
+                if (args.length === 1) return client.reply(from, 'Escolha habilitar ou desabilitar!', id)
+
+                console.log('passou aqui', args[1].toLowerCase())
+
+                if (args[1].toLowerCase() === 'enable') {
+
+                    console.log('caiu aqui')
+                    await fs.writeFileSync('./lib/dialogflowActive.json', JSON.stringify({"ativo": "true"}))
+                    await client.reply(from, 'O dialogflow ativado com sucesso.', id)
+
+                } else{
+                    console.log('caiu la')
+                    await fs.writeFileSync('./lib/dialogflowActive.json', JSON.stringify({"ativo": "false"}))
+                    await client.reply(from, 'O dialogflow desabilitado com sucesso.', id)
+                }
+        
+                break
 
             case 'y0':
                 if ((typeof (teste) != 'undefined')) {
@@ -788,15 +814,12 @@ module.exports = msgHandler = async (client, message) => {
                     fs.writeFileSync('./lib/welcome.json', JSON.stringify(welkom))
                     await client.reply(from, 'O modo auto-adm foi ativado com sucesso neste grupo!', id)
 
-                } else if (args[1].toLowerCase() === 'disable') {
-
+                } else{
                     welkom.splice(chat.id, 1)
                     fs.writeFileSync('./lib/welcome.json', JSON.stringify(welkom))
                     await client.reply(from, 'O recurso de auto-adm foi desabilitado com sucesso neste grupo!', id)
-
-                } else {
-                    await client.reply(from, 'Selecione habilitar ou desabilitar!', id)
                 }
+
                 break
 
             case '!linkdogrupo':
