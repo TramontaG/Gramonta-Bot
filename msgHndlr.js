@@ -19,10 +19,80 @@ const YoutubeMp3Downloader = require("youtube-mp3-downloader");
 const YTsearch = require('youtube-search');
 const googleTTS = require('google-tts-api'); // CommonJS
 
-//const dialogflow = require('@google-cloud/dialogflow');
+const dialogflow = require("dialogflow");
+const config = require("./config");
+
 const uuid = require('uuid');
 
 moment.tz.setDefault('America/Sao_Paulo').locale('id')
+
+const credentials = {
+  client_email: config.GOOGLE_CLIENT_EMAIL,
+  private_key: config.GOOGLE_PRIVATE_KEY,
+};
+
+const sessionClient = new dialogflow.SessionsClient({
+  projectId: config.GOOGLE_PROJECT_ID,
+  credentials,
+});
+
+/**
+ * Send a query to the dialogflow agent, and return the query result.
+ * @param {string} projectId The project to be used
+ */
+async function sendToDialogFlow(msg, session, params) {
+  let textToDialogFlow = msg;
+  try {
+    const sessionPath = sessionClient.sessionPath(
+      config.GOOGLE_PROJECT_ID,
+      session
+    );
+
+    const request = {
+      session: sessionPath,
+      queryInput: {
+        text: {
+          text: textToDialogFlow,
+          languageCode: config.DF_LANGUAGE_CODE,
+        },
+      },
+      queryParams: {
+        payload: {
+          data: params,
+        },
+      },
+    };
+
+    const responses = await sessionClient.detectIntent(request);
+    const result = responses[0].queryResult;
+    console.log("INTENT ENCONTRADO: ", result.intent.displayName);
+    let defaultResponses = [];
+
+    if (result.action !== "input.unknown") {
+      result.fulfillmentMessages.forEach((element) => {
+        defaultResponses.push(element);
+      });
+    }
+
+    if (defaultResponses.length === 0) {
+      result.fulfillmentMessages.forEach((element) => {
+        if (element.platform === "PLATFORM_UNSPECIFIED") {
+          defaultResponses.push(element);
+        }
+      });
+    }
+
+    result.fulfillmentMessages = defaultResponses;
+
+    //console.log("se enviara el resultado: ", result);
+
+    return result;
+    
+  } catch (e) {
+    console.log("error");
+    console.log(e);
+  }
+}
 
 module.exports = msgHandler = async (client, message) => {
     try {
@@ -89,6 +159,19 @@ module.exports = msgHandler = async (client, message) => {
         console.log('FALAS ====>', color(falas))
         console.log('COMANDO ====>', color(command))
         console.log('ALGUEM FALOU DE MIM =====>', color(falas.indexOf("bruce") != -1))
+
+        const payload = await sendToDialogFlow(falas, from, 'params')
+        const responses = payload.fulfillmentMessages
+
+        console.log('RECEBEU DIALOGFLOW ======>', responses)
+        //console.log('RECEBEU ======>', reponses)
+
+        
+        for (const response of responses) 
+        {
+            await client.reply(from, response?.text?.text[Math.floor((Math.random() * response?.text?.text.length))], id)
+
+        }
 
         if (falas.indexOf("bruce") != -1) {
             await client.reply(from, 'Oi? ta falando de mim? é só digitar: *me ajuda*', id)
