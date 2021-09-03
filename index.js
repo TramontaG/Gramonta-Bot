@@ -2,6 +2,7 @@ const { create, Client, decryptMedia, ev, SimpleListener, smartUserAgent, Notifi
 const welcome = require('./lib/welcome')
 const msgHandler = require('./msgHndlr')
 const options = require('./options')
+const { help } = require('./lib/help')
 
 //const WEBHOOK_ADDRESS = 'https://en6p3ti7f72f9jz.m.pipedream.net'
 
@@ -25,6 +26,24 @@ const start = async (client = new Client()) => {
             })
 
             msgHandler(client, message)
+
+        }))
+        
+        client.onButton((async (chat ) => {
+        
+            switch (chat?.body) {
+                case 'Menu do bot':
+                        await client.sendText(chat?.chatId, help)
+                    break;
+            
+                case 'Quem sou eu?':
+            	        await client.sendTextWithMentions(chat?.chatId, `Eu sou um bot, me chamou Bruce, foi desenvolvido pelo Jhon, meu codigo está disponível pra download em github.com/jhowbhz`)
+                    break;
+
+                default:
+            	        await client.sendText(chat?.chatId, `Blz... Até a próxima`)
+                    break;
+            }
 
         }))
 

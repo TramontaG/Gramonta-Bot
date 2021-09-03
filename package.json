@@ -10,7 +10,7 @@
   "author": "Jonathan",
   "license": "Apache-2.0",
   "dependencies": {
-    "@open-wa/wa-automate": "^4.20.4",
+    "@open-wa/wa-automate": "^4.20.6",
     "@open-wa/wa-decrypt": "^2.0.1",
     "axios": "^0.21.1",
     "brainly-scraper": "^1.0.2",
@@ -41,7 +41,6 @@
   "directories": {
     "lib": "lib"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mhankbarbar/whatsapp-bot.git"
