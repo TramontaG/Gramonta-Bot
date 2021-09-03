@@ -37,7 +37,7 @@ const start = async (client = new Client()) => {
                     break;
             
                 case 'Quem sou eu?':
-            	        await client.sendTextWithMentions(chat?.chatId, `Eu sou um bot, me chamou Bruce, foi desenvolvido pelo Jhon, meu codigo está disponível pra download em github.com/jhowbhz`)
+            	        await client.sendText(chat?.chatId, `Eu sou um bot, me chamou Bruce, foi desenvolvido pelo Jhon, meu codigo está disponível pra download em github.com/jhowbhz`)
                     break;
 
                 default:
