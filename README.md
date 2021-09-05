@@ -1,6 +1,6 @@
 
 <p align="left">
-<a href="https://github.com/jhowbhz/followers"><img title="Seguidores" src="https://img.shields.io/github/followers/jhowbhz?color=blue&style=flat-square"></a>
+<a href="https://github.com/jhowbhz/followers"><img title="Seguidores" src="https://img.shields.io/github/followers/jhowbhz?color=green&style=flat-square"></a>
 <a href="https://github.com/jhowbhz/bot-whatsapp/stargazers/"><img title="Estrelas" src="https://img.shields.io/github/stars/jhowbhz/bot-whatsapp?color=green&style=flat-square"></a>
 <a href="https://github.com/jhowbhz/bot-whatsapp/network/members"><img title="Forks" src="https://img.shields.io/github/forks/jhowbhz/bot-whatsapp?color=green&style=flat-square"></a>
 <a href="https://github.com/jhowbhz/bot-whatsapp/watchers"><img title="Watching" src="https://img.shields.io/github/watchers/jhowbhz/bot-whatsapp?label=Watchers&color=green&style=flat-square"></a>
