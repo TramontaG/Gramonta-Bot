@@ -16,11 +16,11 @@ Depois de clonar instalar o projeto, basta digitar o seguinte, e ler o QR Code e
 ```
 
 ## O que ele pode fazer?
-✅ Send Memes
-
-✅ Send Stickers<br />
-✅ Send Stickert Gif<br />
-✅ Send Audios<br />
+✅ Envia Memes<br />
+✅ Envia Stickers<br />
+✅ Envia Stickert Gif<br />
+✅ Envia Audios<br />
+✅ Fala texto digitado<br />
 ✅ Tradutor<br />
 ✅ Horoscopo <br />
 ✅ Busca CEP<br />
