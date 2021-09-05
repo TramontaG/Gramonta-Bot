@@ -6,7 +6,7 @@
 <a href="https://github.com/jhowbhz/bot-whatsapp/watchers"><img title="Watching" src="https://img.shields.io/github/watchers/jhowbhz/bot-whatsapp?label=Watchers&color=green&style=flat-square"></a>
 </p>
 
-## Clonando e instalando:
+### Clonando e instalando: 📚
 
 ```bash
 > git clone https://github.com/jhowbhz/bot-whatsapp.git
@@ -16,7 +16,7 @@
 > npm install --unsafe-perm
 ```
 
-### Forma de usar:
+### Forma de usar: 💫
 Depois de clonar instalar o projeto, basta digitar o seguinte, e ler o QR Code em seguida... 
 
 ```bash
@@ -31,8 +31,10 @@ Depois de clonar instalar o projeto, basta digitar o seguinte, e ler o QR Code e
 ✅ Fala texto digitado<br />
 ✅ Tradutor<br />
 ✅ Horoscopo <br />
-✅ Busca CEP<br />
-✅ Busca Meme<br />
+✅ Busca Concursos por estado <br />
+✅ Busca CEP Brasil<br />
+✅ Busca Clima por cidade<br />
+✅ Busca Memes e Escreve<br />
 ✅ Busca Youtube<br />
 ✅ Download MP3<br />
 
