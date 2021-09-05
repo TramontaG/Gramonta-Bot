@@ -1,4 +1,4 @@
-## Clonando e instalando
+## Clonando e instalando:
 
 ```bash
 > git clone https://github.com/jhowbhz/bot-whatsapp.git
@@ -8,7 +8,7 @@
 > npm install --unsafe-perm
 ```
 
-### Forma de usar
+### Forma de usar:
 Depois de clonar instalar o projeto, basta digitar o seguinte, e ler o QR Code em seguida... 
 
 ```bash
@@ -30,10 +30,24 @@ Depois de clonar instalar o projeto, basta digitar o seguinte, e ler o QR Code e
 
 E muito mais....
 
-### Comando inicial
+### Comando inicial: ☕
 
 ```bash
 > Olá, bruce
 ```
+### Merecidos créditos: 🏆
 
 O projeto foi baseado no seguinte repositório https://github.com/MhankBarBar/whatsapp-bot
+
+### Contribuidores: ✨
+
+Obrigado a essas pessoas maravilhosas
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/jhowbhz"><img src="https://avatars.githubusercontent.com/u/31408451?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jonathan Henrique</b></sub></a><br />
+    </td>
+    <td align="center"><a href="https://github.com/bruno-hashimoto"><img src="https://avatars.githubusercontent.com/u/15908424?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Bruno Hashimoto</b></sub></a><br />
+    </td>
+  </tr>
+</table>
+
