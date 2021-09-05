@@ -28,7 +28,7 @@
 ```
 
 ```bash
-> sudo apt -y install node
+> sudo apt -y install nodejs
 ```
 
 ```bash
