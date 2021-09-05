@@ -36,3 +36,4 @@ E muito mais....
 > Olá, bruce
 ```
 
+O projeto foi baseado no seguinte repositório https://github.com/MhankBarBar/whatsapp-bot
