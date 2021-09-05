@@ -1,7 +1,7 @@
 ## Clonando e instalando
 
 ```bash
-> git clone git@github.com:jhowbhz/bot-whatsapp.git
+> git clone https://github.com/jhowbhz/bot-whatsapp.git
 ```
 
 ```bash
@@ -18,23 +18,15 @@ Depois de clonar instalar o projeto, basta digitar o seguinte, e ler o QR Code e
 ## O que ele pode fazer?
 ✅ Send Memes
 
-✅ Send Stickers
-
-✅ Send Stickert Gif
-
-✅ Send Audios
-
-✅ Tradutor
-
-✅ Horoscopo
-
-✅ Busca CEP
-
-✅ Busca Meme
-
-✅ Busca Youtube
-
-✅ Download MP3
+✅ Send Stickers<br />
+✅ Send Stickert Gif<br />
+✅ Send Audios<br />
+✅ Tradutor<br />
+✅ Horoscopo <br />
+✅ Busca CEP<br />
+✅ Busca Meme<br />
+✅ Busca Youtube<br />
+✅ Download MP3<br />
 
 E muito mais....
 
