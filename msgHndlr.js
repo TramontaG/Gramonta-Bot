@@ -637,7 +637,7 @@ module.exports = msgHandler = async (client, message) => {
 
                     await client.reply(from, `Verificando com São Pedro como está o clima em ${cidade[1]}... pera um pouco`, id)
 
-                    let clima = await axios.get(`http://clima-bksoft.apibrasil.com.br/api/weather/city/?city=${encodeURI(cidade[1])}`)
+                    let clima = await axios.get(`https://weather.contrateumdev.com.br/api/weather/city/?city=${encodeURI(cidade[1])}`)
 
                     if (clima?.data?.cod == '404') return await client.reply(from, `Uai... ${clima?.data?.message}`, id)
 
