@@ -23,17 +23,18 @@ const dialogflow = require("dialogflow");
 const config = require("./config");
 
 const uuid = require('uuid');
+const { Console } = require('console')
 
 moment.tz.setDefault('America/Sao_Paulo').locale('id')
 
 const credentials = {
-  client_email: config.GOOGLE_CLIENT_EMAIL,
-  private_key: config.GOOGLE_PRIVATE_KEY,
+    client_email: config.GOOGLE_CLIENT_EMAIL,
+    private_key: config.GOOGLE_PRIVATE_KEY,
 };
 
 const sessionClient = new dialogflow.SessionsClient({
-  projectId: config.GOOGLE_PROJECT_ID,
-  credentials,
+    projectId: config.GOOGLE_PROJECT_ID,
+    credentials,
 });
 
 /**
@@ -42,57 +43,57 @@ const sessionClient = new dialogflow.SessionsClient({
  */
 async function sendToDialogFlow(msg, session, params) {
 
-  let textToDialogFlow = msg;
-  try {
-    const sessionPath = sessionClient.sessionPath(
-      config.GOOGLE_PROJECT_ID,
-      session
-    );
+    let textToDialogFlow = msg;
+    try {
+        const sessionPath = sessionClient.sessionPath(
+            config.GOOGLE_PROJECT_ID,
+            session
+        );
 
-    const request = {
-      session: sessionPath,
-      queryInput: {
-        text: {
-          text: textToDialogFlow,
-          languageCode: config.DF_LANGUAGE_CODE,
-        },
-      },
-      queryParams: {
-        payload: {
-          data: params,
-        },
-      },
-    };
+        const request = {
+            session: sessionPath,
+            queryInput: {
+                text: {
+                    text: textToDialogFlow,
+                    languageCode: config.DF_LANGUAGE_CODE,
+                },
+            },
+            queryParams: {
+                payload: {
+                    data: params,
+                },
+            },
+        };
 
-    const responses = await sessionClient.detectIntent(request);
-    const result = responses[0].queryResult;
-    console.log("INTENT ENCONTRADO: ", result.intent.displayName);
-    let defaultResponses = [];
+        const responses = await sessionClient.detectIntent(request);
+        const result = responses[0].queryResult;
+        console.log("INTENT ENCONTRADO: ", result.intent.displayName);
+        let defaultResponses = [];
 
-    if (result.action !== "input.unknown") {
-      result.fulfillmentMessages.forEach((element) => {
-        defaultResponses.push(element);
-      });
-    }
-
-    if (defaultResponses.length === 0) {
-      result.fulfillmentMessages.forEach((element) => {
-        if (element.platform === "PLATFORM_UNSPECIFIED") {
-          defaultResponses.push(element);
+        if (result.action !== "input.unknown") {
+            result.fulfillmentMessages.forEach((element) => {
+                defaultResponses.push(element);
+            });
         }
-      });
+
+        if (defaultResponses.length === 0) {
+            result.fulfillmentMessages.forEach((element) => {
+                if (element.platform === "PLATFORM_UNSPECIFIED") {
+                    defaultResponses.push(element);
+                }
+            });
+        }
+
+        result.fulfillmentMessages = defaultResponses;
+
+        //console.log("se enviara el resultado: ", result);
+
+        return result;
+
+    } catch (e) {
+        console.log("error");
+        console.log(e);
     }
-
-    result.fulfillmentMessages = defaultResponses;
-
-    //console.log("se enviara el resultado: ", result);
-
-    return result;
-    
-  } catch (e) {
-    console.log("error");
-    console.log(e);
-  }
 
 }
 
@@ -162,38 +163,37 @@ module.exports = msgHandler = async (client, message) => {
         console.log('COMANDO ====>', color(command))
         console.log('ALGUEM FALOU DE MIM =====>', color(falas.indexOf("bruce") != -1))
 
-        let objeto = JSON.parse(await fs.readFileSync('./lib/dialogflowActive.json', {encoding:'utf8', flag:'r'}))
+        let objeto = JSON.parse(await fs.readFileSync('./lib/dialogflowActive.json', { encoding: 'utf8', flag: 'r' }))
 
-        if(objeto?.ativo == "true") {
-        
+        if (objeto?.ativo == "true") {
+
             const payload = await sendToDialogFlow(falas, from, 'params')
             const responses = payload?.fulfillmentMessages
-        
+
             console.log('RECEBEU DIALOGFLOW ======>', payload)
-            for (const response of responses) 
-            {
+            for (const response of responses) {
                 let randomIndex = Math.floor((Math.random() * response?.text?.text.length));
                 await client.reply(from, `${response?.text?.text[randomIndex]}`, id)
-    
+
             }
-    
+
         }
-        
-        if ( falas.indexOf("bruce") != -1 || falas.indexOf("oi bruce") != -1 || falas.indexOf("olá bruce") != -1) {
-            await client.sendButtons(from, 'Esse menu foi ativado, por que você falou o meu nome, em que posso ser útil?',  [
+
+        if (falas.indexOf("bruce") != -1 || falas.indexOf("oi bruce") != -1 || falas.indexOf("olá bruce") != -1) {
+            await client.sendButtons(from, 'Esse menu foi ativado, por que você falou o meu nome, em que posso ser útil?', [
                 {
-                    "id":"id1",
+                    "id": "id1",
                     "text": "Menu do bot"
                 },
                 {
-                    "id":"id2",
+                    "id": "id2",
                     "text": "Quem sou eu?"
                 },
                 {
-                    "id":"id3",
+                    "id": "id3",
                     "text": "Nada, obrigado."
                 }
-            ],"Oi? ta falando de mim? Em que posso te ajudar?")
+            ], "Oi? ta falando de mim? Em que posso te ajudar?")
 
         }
 
@@ -327,14 +327,14 @@ module.exports = msgHandler = async (client, message) => {
                 if (!isGroupAdmins) return client.reply(from, 'Este comando só pode ser usado por administradores de grupo', id)
 
                 if (args[1].toLowerCase() === 'enable') {
-                    await fs.writeFileSync('./lib/dialogflowActive.json', JSON.stringify({"ativo": "true"}))
+                    await fs.writeFileSync('./lib/dialogflowActive.json', JSON.stringify({ "ativo": "true" }))
                     await client.reply(from, 'O dialogflow ativado com sucesso.', id)
 
-                } else{
-                    await fs.writeFileSync('./lib/dialogflowActive.json', JSON.stringify({"ativo": "false"}))
+                } else {
+                    await fs.writeFileSync('./lib/dialogflowActive.json', JSON.stringify({ "ativo": "false" }))
                     await client.reply(from, 'O dialogflow desabilitado com sucesso.', id)
                 }
-        
+
                 break
 
             case 'y0':
@@ -820,7 +820,7 @@ module.exports = msgHandler = async (client, message) => {
                     fs.writeFileSync('./lib/welcome.json', JSON.stringify(welkom))
                     await client.reply(from, 'O modo auto-adm foi ativado com sucesso neste grupo!', id)
 
-                } else{
+                } else {
                     welkom.splice(chat.id, 1)
                     fs.writeFileSync('./lib/welcome.json', JSON.stringify(welkom))
                     await client.reply(from, 'O recurso de auto-adm foi desabilitado com sucesso neste grupo!', id)
@@ -977,7 +977,7 @@ module.exports = msgHandler = async (client, message) => {
 
             case '!xagc':
             case '!agro':
-                
+
                 let sendAgro = await axios.get(`https://api.pancakeswap.info/api/v2/tokens/0xd80bea63a208770e1c371dfbf70cb13469d29ae6`)
                 let dadosEncontradosAgro = sendAgro;
                 let priceformatAgro = (dadosEncontradosAgro.data.data.price * 1).toFixed(9);
@@ -988,7 +988,7 @@ module.exports = msgHandler = async (client, message) => {
 
             case '!price':
 
-                if (args.length === 1) return client.reply(from, 'Digite !price .contrato (Ex: bscscan.com/token/>>>0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c<<<)', id)
+                /* if (args.length === 1) return client.reply(from, 'Digite !price .contrato (Ex: bscscan.com/token/>>>0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c<<<)', id)
 
                 let contrato = body.split('.')
 
@@ -996,7 +996,29 @@ module.exports = msgHandler = async (client, message) => {
                 let dadosEncontrados = send;
                 let priceformat = (dadosEncontrados.data.data.price * 1).toFixed(9);
 
-                await client.reply(from, `Nome: ${dadosEncontrados.data.data.name}\nToken: ${dadosEncontrados.data.data.symbol}\nPreço: ${priceformat}`, id)
+                await client.reply(from, `Nome: ${dadosEncontrados.data.data.name}\nToken: ${dadosEncontrados.data.data.symbol}\nPreço: ${priceformat}`, id) */
+
+                /* url: "https://api.lunarcrush.com/v2?data=assets&key=pow9wvn4xxte3do4az7vq&symbol=" + token */
+
+                try {
+
+                    if (args.length === 1) return client.reply(from, 'Digite !price .ETH', id)
+                    let parametroLunar = body.split('.')
+                    let moedaLunar = parametroLunar[1]
+
+                    let sendLunar = await axios.get(`https://api.lunarcrush.com/v2?data=assets&key=pow9wvn4xxte3do4az7vq&symbol=${moedaLunar}`)
+                    let dadosEncontradosLunar = sendLunar;
+
+                    await client.reply(from, `Nome: ${dadosEncontradosLunar['data']['data'][0]['name']}\nPreço: ${dadosEncontradosLunar['data']['data'][0]['price']}\nMarketCap: ${dadosEncontradosLunar['data']['data'][0]['market_cap']}\nVolume 24h: ${dadosEncontradosLunar['data']['data'][0]['volume_24h']}\nMax Supply: ${dadosEncontradosLunar['data']['data'][0]['max_supply']}\n`, id)
+
+
+                } catch (error) {
+
+                    console.error(error);
+                    await client.reply(from, `Moeda não encontrada!`, id);
+
+                }
+
 
                 break;
 
@@ -1012,7 +1034,7 @@ module.exports = msgHandler = async (client, message) => {
                 parametroBusca = moeda.split('x')
 
                 try {
-                    
+
                     console.log(parametroBusca[0]);
                     console.log(parametroBusca[1]);
 
@@ -1023,10 +1045,10 @@ module.exports = msgHandler = async (client, message) => {
                         url: `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${parametroBusca[0]}&convert=${parametroBusca[1]}`,
                         headers: { 'Content-Type': 'application/json', 'X-CMC_PRO_API_KEY': 'b2776f73-fbda-4b91-8d8b-221be52eb5ff' },
                     })
-    
+
                     let coinmarketcapData = coinmarketcap?.data?.data
-    
-                    let textoSend = `*Nome:* ${coinmarketcapData[parametroBusca[0]].name}\n*Ranking:* ${coinmarketcapData[parametroBusca[0]].cmc_rank != null ? coinmarketcapData[parametroBusca[0]].cmc_rank : 'Sem posição'}\n*Sigla:* ${coinmarketcapData[parametroBusca[0]].symbol}\n*Preço:* ${parseFloat(coinmarketcapData[parametroBusca[0]].quote[parametroBusca[1]].price).toLocaleString('pt-br',{style: 'currency', currency: `${parametroBusca[1]}`})}\n*Volume 24h:* ${parseFloat(coinmarketcapData[parametroBusca[0]].quote[parametroBusca[1]].volume_24h).toLocaleString('pt-br',{style: 'currency', currency: `${parametroBusca[1]}`})}\n*Suprimento máximo:* ${ coinmarketcapData[parametroBusca[0]].max_supply != null ? parseFloat(coinmarketcapData[parametroBusca[0]].max_supply).toLocaleString('pt-br',{style: 'currency', currency: `${parametroBusca[1]}`}) : 'R$ 0,00'}\n*Suprimento circulante:* ${parseFloat(coinmarketcapData[parametroBusca[0]].circulating_supply).toLocaleString('pt-br',{style: 'currency', currency: `${parametroBusca[1]}`})}\n*Suprimento total:* ${parseFloat(coinmarketcapData[parametroBusca[0]].total_supply).toLocaleString('pt-br',{style: 'currency', currency: `${parametroBusca[1]}`})}\n*Atualização:* ${coinmarketcapData[parametroBusca[0]].quote[parametroBusca[1]]?.last_updated}\n`
+
+                    let textoSend = `*Nome:* ${coinmarketcapData[parametroBusca[0]].name}\n*Ranking:* ${coinmarketcapData[parametroBusca[0]].cmc_rank != null ? coinmarketcapData[parametroBusca[0]].cmc_rank : 'Sem posição'}\n*Sigla:* ${coinmarketcapData[parametroBusca[0]].symbol}\n*Preço:* ${parseFloat(coinmarketcapData[parametroBusca[0]].quote[parametroBusca[1]].price).toLocaleString('pt-br', { style: 'currency', currency: `${parametroBusca[1]}` })}\n*Volume 24h:* ${parseFloat(coinmarketcapData[parametroBusca[0]].quote[parametroBusca[1]].volume_24h).toLocaleString('pt-br', { style: 'currency', currency: `${parametroBusca[1]}` })}\n*Suprimento máximo:* ${coinmarketcapData[parametroBusca[0]].max_supply != null ? parseFloat(coinmarketcapData[parametroBusca[0]].max_supply).toLocaleString('pt-br', { style: 'currency', currency: `${parametroBusca[1]}` }) : 'R$ 0,00'}\n*Suprimento circulante:* ${parseFloat(coinmarketcapData[parametroBusca[0]].circulating_supply).toLocaleString('pt-br', { style: 'currency', currency: `${parametroBusca[1]}` })}\n*Suprimento total:* ${parseFloat(coinmarketcapData[parametroBusca[0]].total_supply).toLocaleString('pt-br', { style: 'currency', currency: `${parametroBusca[1]}` })}\n*Atualização:* ${coinmarketcapData[parametroBusca[0]].quote[parametroBusca[1]]?.last_updated}\n`
 
                     await client.reply(from, `${textoSend}`, id);
 
@@ -1034,10 +1056,10 @@ module.exports = msgHandler = async (client, message) => {
 
                     console.error(error);
                     await client.reply(from, `Não achei essa moeda... *${parametroBusca[0]}*, cuidado ao investir!`, id);
-                    
+
                 }
-                
-                
+
+
                 break;
         }
 
