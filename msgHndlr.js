@@ -247,7 +247,7 @@ module.exports = msgHandler = async (client, message) => {
                     const gif1 = await fs.readFileSync('./media/sexto.webp', { encoding: "base64" })
                     await client.sendImageAsSticker(from, `data:image/gif;base64,${gif1.toString('base64')}`)
                 }else{
-                    await client.reply(from, 'Uai, hoje ainda não é sexta-feira....', id)
+                    await client.reply(from, `Uai, hoje ainda e ${ moment().format('dddd') } e você já ta procurando sexta-feira?....`, id)
                 }
                
                 break
