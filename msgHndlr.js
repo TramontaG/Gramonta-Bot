@@ -242,7 +242,7 @@ module.exports = msgHandler = async (client, message) => {
             case 'sextô':
             case 'sextôu':
 
-                if( moment().format('dddd') == 'friday') {
+                if( moment().format('dddd') == 'sexta-feira') {
                     await client.reply(from, 'ôpa, bora??', id)
                     const gif1 = await fs.readFileSync('./media/sexto.webp', { encoding: "base64" })
                     await client.sendImageAsSticker(from, `data:image/gif;base64,${gif1.toString('base64')}`)
