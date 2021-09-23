@@ -25,6 +25,7 @@ const config = require("./config");
 const uuid = require('uuid');
 const { Console } = require('console')
 
+moment.locale('pt-br')
 moment.tz.setDefault('America/Sao_Paulo').locale('id')
 
 const credentials = {
