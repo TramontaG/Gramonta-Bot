@@ -258,6 +258,7 @@ module.exports = msgHandler = async (client, message) => {
             case 'vai tomar no cu bot':
             case 'tomar no cu bot':
             case 'bot viado':
+            case 'bot corno':
             case 'cu bot':
             case 'o bot viado':
             case 'bot otario':
