@@ -25,8 +25,7 @@ const config = require("./config");
 const uuid = require('uuid');
 const { Console } = require('console')
 
-moment.locale('pt-br')
-moment.tz.setDefault('America/Sao_Paulo').locale('id')
+moment.tz.setDefault('America/Sao_Paulo').locale('pt-br')
 
 const credentials = {
     client_email: config.GOOGLE_CLIENT_EMAIL,
