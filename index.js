@@ -39,10 +39,6 @@ const start = async (client = new Client()) => {
                 case 'Quem sou eu?':
             	        await client.sendText(chat?.chatId, `Eu sou um bot, me chamo Bruce, foi desenvolvido pelo Jhon, meu codigo está disponível pra download em https://github.com/jhowbhz/bot-whatsapp`)
                     break;
-
-                default:
-            	        await client.sendText(chat?.chatId, `Blz... Até a próxima`)
-                    break;
             }
 
         }))
