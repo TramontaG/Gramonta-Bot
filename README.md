@@ -109,6 +109,8 @@ Obrigado a essas pessoas maravilhosas
     </td>
     <td align="center"><a href="https://github.com/bruno-hashimoto"><img src="https://avatars.githubusercontent.com/u/15908424?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Bruno Hashimoto</b></sub></a><br />
     </td>
+    <td align="center"><a href="https://github.com/TramontaG"><img src="https://avatars.githubusercontent.com/u/58482342?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Tramonta G.</b></sub></a><br />
+    </td>
   </tr>
 </table>
 
