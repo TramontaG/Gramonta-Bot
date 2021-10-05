@@ -1013,8 +1013,7 @@ module.exports = msgHandler = async (client, message) => {
 
                 try {
 
-
-                    if (args.length < 10) {
+                    if (args.lenght < 10) {
 
                         if (args.length === 1) return client.reply(from, 'Digite !price .contrato (Ex: bscscan.com/token/>>>0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c<<<)', id)
                         let contrato = body.split('.')
@@ -1035,7 +1034,6 @@ module.exports = msgHandler = async (client, message) => {
                         await client.reply(from, `Nome: ${dadosEncontradosLunar['data']['data'][0]['name']}\nPreço: ${dadosEncontradosLunar['data']['data'][0]['price']}\nMarketCap: ${dadosEncontradosLunar['data']['data'][0]['market_cap']}\nVolume 24h: ${dadosEncontradosLunar['data']['data'][0]['volume_24h']}\nMax Supply: ${dadosEncontradosLunar['data']['data'][0]['max_supply']}\n`, id)
 
                     }
-
 
                 } catch (error) {
 
