@@ -476,7 +476,7 @@ module.exports = msgHandler = async (client, message) => {
                     key: 'AIzaSyA53q1WJv1-6IqyCVjqHjlar7pWfKiTOtQ'
                 };
 
-                await YTsearch(args[1], opts, async (err, results) => {
+                await YTsearch(args.slice(1), opts, async (err, results) => {
                     if (err) return console.log(err);
                     let resultado = ``
                     teste = [];
