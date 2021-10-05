@@ -242,14 +242,14 @@ module.exports = msgHandler = async (client, message) => {
             case 'sextô':
             case 'sextôu':
 
-                if( moment().format('dddd') == 'sexta-feira') {
+                if (moment().format('dddd') == 'sexta-feira') {
                     await client.reply(from, 'ôpa, bora??', id)
                     const gif1 = await fs.readFileSync('./media/sexto.webp', { encoding: "base64" })
                     await client.sendImageAsSticker(from, `data:image/gif;base64,${gif1.toString('base64')}`)
-                }else{
-                    await client.reply(from, `Uai, hoje ainda e ${ moment().format('dddd') } e você já ta procurando sexta-feira?....`, id)
+                } else {
+                    await client.reply(from, `Uai, hoje ainda e ${moment().format('dddd')} e você já ta procurando sexta-feira?....`, id)
                 }
-               
+
                 break
 
             case 'bot gay':
@@ -982,6 +982,10 @@ module.exports = msgHandler = async (client, message) => {
                 await client.reply(from, `----------------------\n*Status*: ${connectionState}\n*Bateria*: ${batteryLevel}%\n*Carregando*: ${(isPlugged) ? 'Sim' : 'Não'}\n----------------------`, id)
                 break
 
+            case '':
+
+                break;
+
             case '!xagc':
             case '!agro':
 
@@ -1009,14 +1013,28 @@ module.exports = msgHandler = async (client, message) => {
 
                 try {
 
-                    if (args.length === 1) return client.reply(from, 'Digite !price .ETH', id)
-                    let parametroLunar = body.split('.')
-                    let moedaLunar = parametroLunar[1]
 
-                    let sendLunar = await axios.get(`https://api.lunarcrush.com/v2?data=assets&key=pow9wvn4xxte3do4az7vq&symbol=${moedaLunar}`)
-                    let dadosEncontradosLunar = sendLunar;
+                    if (args.length < 10) {
 
-                    await client.reply(from, `Nome: ${dadosEncontradosLunar['data']['data'][0]['name']}\nPreço: ${dadosEncontradosLunar['data']['data'][0]['price']}\nMarketCap: ${dadosEncontradosLunar['data']['data'][0]['market_cap']}\nVolume 24h: ${dadosEncontradosLunar['data']['data'][0]['volume_24h']}\nMax Supply: ${dadosEncontradosLunar['data']['data'][0]['max_supply']}\n`, id)
+                        if (args.length === 1) return client.reply(from, 'Digite !price .contrato (Ex: bscscan.com/token/>>>0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c<<<)', id)
+                        let contrato = body.split('.')
+                        let send = await axios.get(`https://api.pancakeswap.info/api/v2/tokens/${contrato[1]}`)
+                        let dadosEncontrados = send;
+                        let priceformat = (dadosEncontrados.data.data.price * 1).toFixed(9);
+
+                        await client.reply(from, `Nome: ${dadosEncontrados.data.data.name}\nToken: ${dadosEncontrados.data.data.symbol}\nPreço: ${priceformat}`, id)
+
+                    } else {
+
+                        if (args.length === 1) return client.reply(from, 'Digite !price .ETH', id)
+                        let parametroLunar = body.split('.')
+                        let moedaLunar = parametroLunar[1]
+                        let sendLunar = await axios.get(`https://api.lunarcrush.com/v2?data=assets&key=pow9wvn4xxte3do4az7vq&symbol=${moedaLunar}`)
+                        let dadosEncontradosLunar = sendLunar;
+
+                        await client.reply(from, `Nome: ${dadosEncontradosLunar['data']['data'][0]['name']}\nPreço: ${dadosEncontradosLunar['data']['data'][0]['price']}\nMarketCap: ${dadosEncontradosLunar['data']['data'][0]['market_cap']}\nVolume 24h: ${dadosEncontradosLunar['data']['data'][0]['volume_24h']}\nMax Supply: ${dadosEncontradosLunar['data']['data'][0]['max_supply']}\n`, id)
+
+                    }
 
 
                 } catch (error) {
