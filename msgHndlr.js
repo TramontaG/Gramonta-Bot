@@ -441,6 +441,7 @@ module.exports = msgHandler = async (client, message) => {
                 }, 5000)
 
                 break;
+            case '!tts':
             case 'tts!':
                 if (args.length === 1) return client.reply(from, 'Como eu vou adivinhar o devo buscar?', id)
                 let termoBusca = body.split('!');
@@ -474,7 +475,7 @@ module.exports = msgHandler = async (client, message) => {
                     client.reply(from, YTZaplify(YTResponse), id);
 
                 } catch (e) {
-                    client.reply(from, `Deu merda man, mostra isso aq pro tramonta...\n${e}`, id);
+                    client.reply(from, `Deu merda man, mostra isso aq pro tramonta...\n${JSON.stringify(e)}`, id);
                 }
             break;
 

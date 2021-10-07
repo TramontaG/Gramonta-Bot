@@ -1,5 +1,5 @@
 const YoutubeDownloader = require('./Youtube');
-const key = 'AIzaSyA53q1WJv1-6IqyCVjqHjlar7pWfKiTOtQ'
+const key = 'AIzaSyARsUt7mpnrM__x-uA95qkKAArXop6j2Bo'
 const YTD = new YoutubeDownloader(key);
 
 const inputHandler = {}
