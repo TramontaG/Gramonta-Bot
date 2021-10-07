@@ -5,11 +5,15 @@ const YTD = new YoutubeDownloader(key);
 const inputHandler = {}
 
 inputHandler['-download'] = async (args, options) => {
-    const result = await YTD.downloadFirstResult(args, options);
-    return {
-        responseType: "Download",
-        data: result,
-    }
+   try {
+        const result = await YTD.downloadFirstResult(args, options);
+        return {
+            responseType: "Download",
+            data: result,
+        }
+   }catch (e) {
+       throw e;
+   }
 };
 
 inputHandler['-search'] = async (searchString) => {

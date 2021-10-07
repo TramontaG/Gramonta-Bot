@@ -47,24 +47,29 @@ class YoutubeDownloader {
     }
 
     async downloadVideoFromUrl(videoUrl, options = {}){
-        const YD = new YoutubeMp3Downloader(downloaderOptions);
+        try {
+            const YD = new YoutubeMp3Downloader(downloaderOptions);
+            const ID_VIDEO = videoUrl.split('=')[1];
 
-        const ID_VIDEO = videoUrl.split('=')[1];
-        YD.download(ID_VIDEO);
-        options.onStart?.();
-
-        //precisa ser uma função. Se não existir função na options.onProgress, ele
-        //passa uma função vazia :)
-        YD.on("progress", options.onProgress || (() => {}));
-        YD.on("finished", options.onFinished || (() => {}));
-
-        YD.on("error", options.onError || ((error) => {
-            throw error;
-        }));
-
-
-
-        return `Achei teu video, to baixando já`;
+            console.log("BAIXANDO VIDEO DE ID = ", ID_VIDEO);
+            
+            YD.download(ID_VIDEO);
+            options.onStart?.();
+    
+            //precisa ser uma função. Se não existir função na options.onProgress, ele
+            //passa uma função vazia :)
+            YD.on("progress", options.onProgress || (() => {}));
+            YD.on("finished", options.onFinished || (() => {}));
+    
+            YD.on("error", options.onError || ((error) => {
+                throw error;
+            }));
+    
+    
+            return `Achei teu video, to baixando já`;
+        } catch (e) {
+            return "deu merda, se liga: " + e;
+        }
     }
 
     async downloadFirstResult(searchString, options){
