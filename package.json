@@ -13,7 +13,7 @@
   "dependencies": {
     "@open-wa/wa-automate": "^4.20.6",
     "@open-wa/wa-decrypt": "^2.0.1",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "brainly-scraper": "^1.0.2",
     "chalk": "^4.1.2",
     "dialogflow": "^1.2.0",
