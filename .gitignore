@@ -10,3 +10,7 @@ node_modules
 
 # arquivos de log
 logs
+
+#arquivos mp3
+media/*.mp3
+media/to/*.mp3

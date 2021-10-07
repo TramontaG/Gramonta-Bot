@@ -444,8 +444,13 @@ module.exports = msgHandler = async (client, message) => {
             case '!tts':
             case 'tts!':
                 if (args.length === 1) return client.reply(from, 'Como eu vou adivinhar o devo buscar?', id)
-                let termoBusca = body.split('!');
-                url = await googleTTS.getAudioUrl(`${termoBusca[1]}`, {
+                let string = body.split(' ').slice(1).join(' ');
+                console.log("TTS STRING => ", string);
+                if (string.length >= 200 ){
+                    client.reply(from, `Porra bisho q treco grande, quer me bugar??`, id);
+                    break;
+                }
+                url = await googleTTS.getAudioUrl(`${string}`, {
                     lang: 'pt_BR',
                     slow: false,
                     host: 'https://translate.google.com',
@@ -467,6 +472,7 @@ module.exports = msgHandler = async (client, message) => {
 
                     const YTResponse = await (youtube[command] || youtube.default)(stringTail, {
                         onFinished: (err, data) => {
+
                             client.sendFile(from, data?.file, '', 'AAAAAAAAAUHHH', id)
                         },
                         onProgres: (info) => console.log(info),
