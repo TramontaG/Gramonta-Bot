@@ -470,6 +470,7 @@ module.exports = msgHandler = async (client, message) => {
                             client.sendFile(from, data?.file, '', 'AAAAAAAAAUHHH', id)
                         },
                         onProgres: (info) => console.log(info),
+                        onError: (error) => client.reply(from, `Mano, deu pau. Manda esse erro aqui pro Tramonta:\n${error}`)
                     });
 
                     client.reply(from, YTZaplify(YTResponse), id);
