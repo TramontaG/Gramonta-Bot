@@ -13,6 +13,8 @@ const path = require('path');
 const http = require('http');
 const https = require('https');
 const urlParse = require('url').parse;
+const youtube = require('./youtube/youtubeCommandsHandler');
+const YTZaplify = require('./youtube/YTZaplify');
 
 //const gify = require('gify')
 const YoutubeMp3Downloader = require("youtube-mp3-downloader");
@@ -119,17 +121,6 @@ module.exports = msgHandler = async (client, message) => {
                 }
             }
         }
-
-        const YD = new YoutubeMp3Downloader({
-            "ffmpegPath": "/usr/bin/ffmpeg",        // FFmpeg binary location
-            "outputPath": "./media/to/mp3",    // Output file location (default: the home directory)
-            "youtubeVideoQuality": "highestaudio",  // Desired video quality (default: highestaudio)
-            "queueParallelism": 3,                  // Download parallelism (default: 1)
-            "progressTimeout": 5000,                // Interval in ms for the progress reports (default: 1000)
-            "allowWebm": true,                      // Enable download from WebM sources (default: false)
-            "outputOptions": ["-af", "silenceremove=1:0:-50dB", '-movflags', 'frag_keyframe+empty_moov'], // Additional output options passend to ffmpeg
-            "youtubeVideoQuality": 'lowest'
-        });
 
         const mess = {
             wait: '⏳ Espera porra, já to fazendo a figurinha...',
@@ -462,32 +453,30 @@ module.exports = msgHandler = async (client, message) => {
                 const dest = await path.resolve(__dirname, './media/to/translate.mp3'); // file destination
                 await downloadFile(url, dest);
                 await client.sendFile(from, './media/to/translate.mp3', 'translate', 'AAAAAAAAAUHHH', id)
+                break;
 
-                break
-            case '!buscamusica':
+            case '!yt':
             case '!youtube':
-            case '!bm':
-            case '!buscarmusica':
+            case '!mp3':
+                try {
+                    if (args.length === 1) return client.reply(from, 'Como eu vou adivinhar o devo buscar?', id);
 
-                if (args.length === 1) return client.reply(from, 'Como eu vou adivinhar o devo buscar?', id)
+                    const command = args[1];
+                    const stringTail = args.slice(2).join(' ');
 
-                let opts = {
-                    maxResults: 5,
-                    key: 'AIzaSyA53q1WJv1-6IqyCVjqHjlar7pWfKiTOtQ'
-                };
-
-                await YTsearch(args.slice(1).join(' '), opts, async (err, results) => {
-                    if (err) return console.log(err);
-                    let resultado = ``
-                    teste = [];
-                    results.forEach(async (data, index) => {
-                        teste[`${index}`] = `!yt youtu.be=${data?.id}`;
-                        resultado += `\n*Titulo*: ${data?.title}\n*Link*: https://youtu.be/${data?.id}\n*Baixe:* !yt youtu.be=${data?.id} *[ y${index} ]*\n---\n`;
+                    const YTResponse = await (youtube[command] || youtube.default)(stringTail, {
+                        onFinished: (err, data) => {
+                            client.sendFile(from, data?.file, '', 'AAAAAAAAAUHHH', id)
+                        },
+                        onProgres: (info) => console.log(info),
                     });
-                    await client.reply(from, `Achei isso aqui...\n${resultado}`, id)
-                });
 
-                break
+                    client.reply(from, YTZaplify(YTResponse), id);
+
+                } catch (e) {
+                    client.reply(from, `Deu merda man, mostra isso aq pro tramonta...\n${e}`, id);
+                }
+            break;
 
             case '!horoscopo':
             case '!horóscopo':
@@ -659,45 +648,9 @@ module.exports = msgHandler = async (client, message) => {
 
                 break
             case '!bateria':
-
                 let level = await client.getBatteryLevel()
                 await client.reply(from, `----------------------\nNível de bateria é de: ${JSON.stringify(level)}%\n----------------------`, id)
-
-            case '!yt':
-            case '!baixarvideo':
-
-                if (args.length === 1) return client.reply(from, 'Como eu vou adivinhar o video sem o link?', id)
-
-                try {
-
-                    const url = `${args[1]}`
-                    const ID_VIDEO = url.split('=')[1];
-                    console.log('URL DO VIDEO ====>', url)
-                    console.log('ID DO VIDEO ====>', ID_VIDEO)
-
-                    await client.reply(from, `Baixando e convertendo o video em mp3...`, id)
-                    await YD.download(`${ID_VIDEO}`);
-
-                    await YD.on("finished", async (err, data) => {
-                        await client.sendFile(from, data?.file, '', 'AAAAAAAAAUHHH', id)
-                        await client.reply(from, `_Ufa, eita trem pesado, mas ta na mão..._\n\n*Titulo*: ${data?.title}\n*Link*: https://youtu.be/${ID_VIDEO}\n-----\n*Transferidos*: ${Math.round(data?.stats?.transferredBytes)}kb \n*Velocidade média*: ${Math.round(data?.stats?.averageSpeed)}`, id)
-                    });
-
-                    YD.on("progress", async (progress) => {
-                        let percente = parseInt(progress?.progress?.percentage);
-                        console.log(`BAIXANDO O VIDEO ===> ${percente}%`)
-                    });
-
-                    YD.on("error", async (error) => {
-                        console.log(`ERRO AO BAIXAR VIDEO ===> ${JSON.stringify(error)}`);
-                        await client.reply(from, `Porra bicho, não estou conseguindo baixar, tenta de novo...`, id)
-                    });
-
-                } catch (error) {
-                    await client.reply(from, `Porra bicho, deu merda... tenta de novo. \n\n${JSON.stringify(error)}`, id)
-                }
-
-                break
+                break;
 
             case '!cep':
 

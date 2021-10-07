@@ -11,7 +11,7 @@ module.exports = options = (headless, start) => {
         },
         popup: 3012,
         defaultViewport: null,
-        sessionId: 'BruceLee',
+        sessionId: 'Gramont-Bot',
         headless: headless,
         qrTimeout: 0,
         authTimeout: 60,
