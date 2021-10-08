@@ -124,7 +124,7 @@ inputHandler['-adm'] = (id, participant, isAdmin) => {
 
 inputHandler['-default'] = (id, caller) => {
 	try {
-		throw `Metodo inválido. Utilize "-criar", "-participar", "-desistir", "-sortear", "-cancelar"`;
+		throw `Metodo inválido. Utilize "-criar", "-participar", "-participantes", "-desistir", "-sortear", "-cancelar"`;
 	} catch (e) {
 		return {
 			responseType: 'Fail',
