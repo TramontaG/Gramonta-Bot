@@ -13,12 +13,15 @@ const path = require('path');
 const http = require('http');
 const https = require('https');
 const urlParse = require('url').parse;
+
+
 const youtube = require('./youtube/youtubeCommandsHandler');
 const YTZaplify = require('./youtube/YTZaplify');
 
-//const gify = require('gify')
-const YoutubeMp3Downloader = require("youtube-mp3-downloader");
-const YTsearch = require('youtube-search');
+const Raffle = require('./Raffle/RaffleCommandHandler');
+const RaffleZaplofy = require('./Raffle/RaffleZaplify');
+
+
 const googleTTS = require('google-tts-api'); // CommonJS
 
 const dialogflow = require("dialogflow");
@@ -461,11 +464,29 @@ module.exports = msgHandler = async (client, message) => {
                 await client.sendFile(from, './media/to/translate.mp3', 'translate', 'AAAAAAAAAUHHH', id)
                 break;
 
+            case '!sorteio':
+                try {
+                    if (args.length === 1) return client.reply(from, 'Como eu vou adivinhar o devo fazer?', id);
+
+                    const command = args[1];
+                    const stringTail = args.slice(2)[0];
+                    const number = "@" + from.split('-')[0];
+
+                    const raffleResponse = (Raffle[command] || Raffle['-default'])(stringTail, pushname || number);
+                    
+                    client.reply(from, RaffleZaplofy(raffleResponse), id);
+
+                } catch (e) {
+                    client.reply(from, `Deu merda no sorteio man, mostra isso aq pro tramonta...\n ${e}`, id);
+                }
+
+                break;
+
             case '!yt':
             case '!youtube':
             case '!mp3':
                 try {
-                    if (args.length === 1) return client.reply(from, 'Como eu vou adivinhar o devo buscar?', id);
+                    if (args.length === 1) return client.reply(from, 'Como eu vou adivinhar o devo fazer?', id);
 
                     const command = args[1];
                     const stringTail = args.slice(2).join(' ');
