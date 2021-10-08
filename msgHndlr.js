@@ -470,10 +470,10 @@ module.exports = msgHandler = async (client, message) => {
 
                     const command = args[1];
                     const stringTail = args.slice(2)[0];
-                    
-                    const raffleResponse = (Raffle[command] || Raffle['-default'])(stringTail, pushname);
-                    console.log(raffleResponse);
+                    const number = "@" + from.split('-')[0];
 
+                    const raffleResponse = (Raffle[command] || Raffle['-default'])(stringTail, pushname || number);
+                    
                     client.reply(from, RaffleZaplofy(raffleResponse), id);
 
                 } catch (e) {
