@@ -46,6 +46,7 @@ class Raffle {
     }
 
     cancelRaffle(id, caller){
+        if (!this.raffles[id]) throw `Não existe nenhum sorteio de ${id}`;
         if (caller !== this.raffles[id].raffleMaker) throw `Apenas ${this.raffles[id].raffleMaker} pode cancelar esse sorteio`;
         this.validateRaffleId(id);
         delete this.raffles[id];
