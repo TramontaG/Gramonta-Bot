@@ -1,0 +1,6 @@
+!yt download _pesquisa_ : baixa o primeiro video que encontrar.
+!yt download -url _url_ : baixa video da url pedida
+!yt search _pesquisa_ : devolve uma lista paginada com 3 resultados
+!yt next: proxima página
+!yt previous: página anterior
+*clickar no botão*: baixa o mp3

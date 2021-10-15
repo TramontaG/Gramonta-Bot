@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "ts-node -r tsconfig-paths/register index.ts",
+    "start:prod": "node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "dev": "ts-node-dev --exit-child -r tsconfig-paths/register index.ts"
   },
   "author": "Jonathan",
   "license": "Apache-2.0",
@@ -17,6 +18,7 @@
     "brainly-scraper": "^1.0.2",
     "chalk": "^4.1.2",
     "dialogflow": "^1.2.0",
+    "dotenv": "^10.0.0",
     "emoji-regex": "^9.0.0",
     "fs-extra": "^9.0.1",
     "gify": "^0.2.0",
@@ -24,6 +26,7 @@
     "google-search-results-nodejs": "^2.0.1",
     "google-tts-api": "^2.0.2",
     "got": "^11.7.0",
+    "he": "^1.2.0",
     "moment-timezone": "^0.5.31",
     "needle": "^2.9.0",
     "nhentai-api": "^3.0.2",
@@ -52,5 +55,12 @@
   "bugs": {
     "url": "https://github.com/mhankbarbar/whatsapp-bot/issues"
   },
-  "homepage": "https://github.com/mhankbarbar/whatsapp-bot#readme"
+  "homepage": "https://github.com/mhankbarbar/whatsapp-bot#readme",
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/he": "^1.1.2",
+    "ts-node": "^10.3.0",
+    "ts-node-dev": "^1.1.8",
+    "tsconfig-paths": "^3.11.0"
+  }
 }

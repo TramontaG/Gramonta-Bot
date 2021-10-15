@@ -14,3 +14,12 @@ logs
 #arquivos mp3
 media/*.mp3
 media/to/*.mp3
+
+#App Dist
+dist
+
+#envs
+.env
+
+RecycleBin
+media
