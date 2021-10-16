@@ -14,21 +14,17 @@ const start = async (client: Client) => {
 	const zaplify = new Zaplify(client);
 	ModulesWrapper.registerZaplify(zaplify);
 
-	console.log(process.env.CLIENT_KEY);
-
 	const handleMsg = async (msg: string) => {
-		const parsingResult = parse(msg?.toLowerCase());
+		const parsingResult = parse(msg?.toLowerCase() || 'null');
 
 		if (!parsingResult.isError) {
 			const { command, method, args } = parsingResult.result;
-			ModulesWrapper.getModule(command)?.callMethod(
-				method || 'default',
-				args
-			);
-		}
+			const module = ModulesWrapper.getModule(command);
 
-		if (parsingResult.result && parsingResult.isError) {
-			console.log(parsingResult.errorStack);
+			if (!module) return;
+
+			module.setRequester();
+			module.callMethod(method, args);
 		}
 	};
 
@@ -38,7 +34,6 @@ const start = async (client: Client) => {
 	});
 
 	client.onButton(async (chat: any) => {
-		zaplify.setMessageObject(chat);
 		handleMsg(chat.selectedButtonId);
 	});
 };

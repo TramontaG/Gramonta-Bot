@@ -1,9 +1,4 @@
-import {
-	Client,
-	decryptMedia,
-	Message,
-	useragent,
-} from '@open-wa/wa-automate';
+import { Client, decryptMedia, Message, useragent } from '@open-wa/wa-automate';
 import fs from 'fs/promises';
 
 type Mimetype = 'video/mp4' | 'image/gif' | 'image';
@@ -47,31 +42,25 @@ class Zaplify {
 
 	sendMessage(message: string, requester?: Message) {
 		if (!this.messageObject) throw 'No message object initialized';
-		return this.client.sendText(
-			requester?.from || this.messageObject.from,
-			message
-		);
+		return this.client.sendText(requester?.from || this.messageObject.from, message);
 	}
 
 	sendButtons(
 		caption: string,
 		buttons: Button[],
-		requester?: Message
+		requester?: Message,
+		title?: string
 	) {
 		if (!this.messageObject) throw 'No message object initialized';
 		return this.client.sendButtons(
 			requester?.from || this.messageObject.from,
 			caption,
 			buttons,
-			'Escolha teu vídeo'
+			title || ''
 		);
 	}
 
-	async sendFile(
-		fileAddress: string,
-		caption: string,
-		quotedMessage?: Message
-	) {
+	async sendFile(fileAddress: string, caption: string, quotedMessage?: Message) {
 		if (!this.messageObject) throw 'No message object initialized';
 		console.log(fileAddress);
 		const fileHasBeenSent = await this.client.sendFile(
@@ -103,9 +92,7 @@ class Zaplify {
 	}
 
 	getBase64fromBuffer(buffer: Buffer, mimetype: Mimetype) {
-		const media = `data:${mimetype};base64,${buffer.toString(
-			'base64'
-		)}`;
+		const media = `data:${mimetype};base64,${buffer.toString('base64')}`;
 		return media;
 	}
 
@@ -131,16 +118,9 @@ class Zaplify {
 		);
 	}
 
-	sendVideoSticker(
-		videoBuffer: Buffer,
-		mimetype: Mimetype,
-		requester?: Message
-	) {
+	sendVideoSticker(videoBuffer: Buffer, mimetype: Mimetype, requester?: Message) {
 		if (!this.messageObject) throw 'No message object initialized';
-		const videoBase64 = this.getBase64fromBuffer(
-			videoBuffer,
-			mimetype
-		);
+		const videoBase64 = this.getBase64fromBuffer(videoBuffer, mimetype);
 		return this.client.sendMp4AsSticker(
 			requester?.from || this.messageObject.from,
 			videoBase64,
@@ -159,9 +139,7 @@ class Zaplify {
 	async getSticker(quotedMessage?: Message) {
 		const message = quotedMessage || this.messageObject;
 		if (!message) throw 'No message object initialized';
-		const sticker = await this.client.getStickerDecryptable(
-			message.id
-		);
+		const sticker = await this.client.getStickerDecryptable(message.id);
 		console.log(sticker, message.id);
 		return decryptMedia(sticker);
 	}
@@ -174,11 +152,7 @@ class Zaplify {
 		);
 	}
 
-	sendImageFromUrl(
-		url: string,
-		caption?: string,
-		requester?: Message
-	) {
+	sendImageFromUrl(url: string, caption?: string, requester?: Message) {
 		if (!this.messageObject) throw 'No message object initialized';
 		this.client.sendImage(
 			requester?.from || this.messageObject.from,

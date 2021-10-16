@@ -24,12 +24,12 @@ const deepLog = (obj: any) => {
 };
 
 const command = M.transform(
-	C.sequenceOf([T.str('!'), T.letters]),
+	C.sequenceOf([T.str('!'), T.regexMatch(/^((?! ).)+/)]),
 	({ result }) => result[1]
 );
 
 const method = M.transform(
-	C.sequenceOf([T.whiteSpace, T.letters]),
+	C.sequenceOf([T.whiteSpace, T.regexMatch(/^((?! ).)+/)]),
 	({ result }) => result[1]
 );
 
@@ -39,17 +39,16 @@ const argName = M.transform(
 );
 
 const argValue = M.transform(
-	C.choice([url, T.regexMatch(/^[\w \s]+/)]),
+	C.choice([url, T.regexMatch(/^((?! -).)+/)]),
 	({ result }) => {
 		console.log(result);
 		return result;
 	}
 );
 
-const immediateArg = M.transform(
-	C.sequenceOf([argValue]),
-	({ result }) => ({ immediate: result[0] })
-);
+const immediateArg = M.transform(C.sequenceOf([argValue]), ({ result }) => ({
+	immediate: result[0],
+}));
 
 const namedArg = M.transform(
 	C.sequenceOf([argName, T.whiteSpace, argValue]),

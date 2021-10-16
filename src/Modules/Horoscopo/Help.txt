@@ -1,0 +1,4 @@
+Escreva 
+        !horosocpo *_seu signo_* 
+        
+para saber sua sorte diária!

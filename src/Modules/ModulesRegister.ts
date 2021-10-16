@@ -1,4 +1,4 @@
-import { Client, Message } from '@open-wa/wa-automate';
+import { Client, Message, MessageTypes } from '@open-wa/wa-automate';
 import Zaplify from './Zaplify';
 
 export interface Args {
@@ -17,21 +17,40 @@ type ModuleAddresser = {
 export class Module {
 	publicMethods: PublicMethod[];
 	zaplify: Zaplify | null;
+	requester: Message | unknown;
 
 	constructor() {
 		this.publicMethods = [];
 		this.zaplify = null;
+		this.requester = null;
 	}
 
-	callMethod(methodName: string, args: Args) {
+	callMethod(methodName: string, args: Args): any {
 		const choosenMethod = this.publicMethods.filter(
 			method => method.name === methodName
-		);
-		return choosenMethod[0]?.method(args);
+		)[0];
+		if (!choosenMethod) {
+			if (methodName !== 'default') {
+				return this.callMethod('default', args);
+			} else {
+				return;
+			}
+		}
+		return choosenMethod.method(args);
 	}
 
 	registerPublicMethod(method: PublicMethod) {
 		this.publicMethods.push(method);
+	}
+
+	setRequester() {
+		const message = this.zaplify?.messageObject;
+		if (
+			message?.type &&
+			message?.type !== MessageTypes.BUTTONS_RESPONSE
+		) {
+			this.requester = message;
+		}
 	}
 }
 

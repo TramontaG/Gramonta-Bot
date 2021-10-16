@@ -23,9 +23,12 @@ class Sticker extends Module {
 	async sticker() {
 		try {
 			const messageObject =
-				this.zaplify?.messageObject?.quotedMsgObj ||
-				(this.zaplify?.messageObject as Message);
-			this.requester = messageObject;
+				this.requester?.quotedMsg || this.requester;
+			if (!messageObject) {
+				this.sendError('Mano, algo deu muuuito errado');
+				return;
+			}
+			console.log(messageObject.id);
 
 			const typesAllowed = [MessageTypes.IMAGE, MessageTypes.VIDEO];
 
@@ -37,10 +40,10 @@ class Sticker extends Module {
 			}
 
 			const media = (await this.zaplify?.getMediaBufferFromMessage(
-				this.requester
+				messageObject
 			)) as Buffer;
 
-			if (this.requester.duration && this.requester.duration > 6) {
+			if (messageObject.duration && messageObject.duration > 6) {
 				this.sendError(
 					'Só consigo fazer figurinhas de no máximo 5 segundos'
 				);
