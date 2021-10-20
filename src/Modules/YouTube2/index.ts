@@ -4,6 +4,7 @@ import fs from 'fs/promises';
 import he from 'he';
 import YTSearch from 'youtube-search';
 import YoutubeMp3Downloader from 'youtube-mp3-downloader';
+import YTDownloader from './YTDownloader';
 
 const downloaderOptions = {
 	filter: 'audioonly',
@@ -111,7 +112,7 @@ class Youtube extends Module {
 
 	async downloadVideo(args: YoutubeArgs) {
 		try {
-			const requester = this.requester as Message;
+			const requester = this.requester;
 			const query = args.immediate;
 			const { url, index, req } = args;
 			if (index) return this.downloadByIndex(index, req);
@@ -120,16 +121,25 @@ class Youtube extends Module {
 
 			if (!query) return this.askInfo();
 			const results = await this.searchResults(query);
-			if (!results) return;
+			const YTDown = new YTDownloader();
+			const audioLink = await YTDown.getInfo(results[0].link);
+
+			console.log(audioLink);
+
+			this.zaplify?.sendFileFromUrl(
+				audioLink[0].url,
+				results[0].title + '.mp3',
+				this.requester as Message
+			);
 
 			this.sendVideoMetaData(results[0].title, results[0].thumbnail);
 
-			this.downloadVideoFromUrl(
-				results[0].link,
-				this.requester as Message,
-				results[0].title
-			);
-			setTimeout(() => this.progress(requester), 3000);
+			// this.downloadVideoFromUrl(
+			// 	results[0].link,
+			// 	this.requester as Message,
+			// 	results[0].title
+			// );
+			setTimeout(() => this.progress(requester as Message), 3000);
 		} catch (e) {
 			this.sendErrorMessage('Deu pau', e as string);
 		}
@@ -143,7 +153,6 @@ class Youtube extends Module {
 		this.addRequester(this.requester as Message);
 
 		const results = await this.searchResults(query, token);
-		if (!results) return;
 		this.addVideos(results);
 
 		const message = results.reduce((message: string, result, index) => {
@@ -180,7 +189,7 @@ class Youtube extends Module {
 			choosenVideo.thumbnail
 		);
 
-		return this.downloadVideoFromUrl(
+		this.downloadVideoFromUrl(
 			choosenVideo.link,
 			requester as Message,
 			choosenVideo.title
@@ -188,65 +197,60 @@ class Youtube extends Module {
 	}
 
 	private async searchResults(query: string, token?: string, maxResults = 3) {
-		try {
-			const options = {
-				maxResults,
-				key: process.env.YOUTUBE_KEY,
-				pageToken: token,
-			};
-			const response = await YTSearch(query, options);
+		const options = {
+			maxResults,
+			key: process.env.YOUTUBE_KEY,
+			pageToken: token,
+		};
+		const response = await YTSearch(query, options);
 
-			this.nextPageToken = response.pageInfo.nextPageToken;
-			this.previousPageToken = response.pageInfo.prevPageToken;
+		this.nextPageToken = response.pageInfo.nextPageToken;
+		this.previousPageToken = response.pageInfo.prevPageToken;
 
-			return response.results
-				.filter(result => result.kind === 'youtube#video')
-				.map((result, index) => ({
-					link: result.link,
-					title: he.decode(result.title),
-					thumbnail: result.thumbnails.high?.url,
-				}));
-		} catch (e) {
-			return this.sendErrorMessage('Erro desconhecido', JSON.stringify(e));
-		}
+		return response.results
+			.filter(result => result.kind === 'youtube#video')
+			.map((result, index) => ({
+				link: result.link,
+				title: he.decode(result.title),
+				thumbnail: result.thumbnails.high?.url,
+			}));
 	}
 
 	private downloadVideoFromUrl(url: string, requester: Message, title: string) {
-		try {
-			const YD = new YoutubeMp3Downloader(downloaderOptions);
-			const ID_VIDEO = url.split('=')[1];
-
-			YD.download(ID_VIDEO);
-			this.videosInProgress.push({
-				title,
-				eta: NaN,
-				progress: 0,
-				videoId: ID_VIDEO,
-			});
-			YD.on('finished', (err, data) => {
-				const videoInProgressIndex = this.videosInProgress.indexOf(
-					this.videosInProgress.filter(video => video.videoId === ID_VIDEO)[0]
-				);
-				this.videosInProgress.splice(videoInProgressIndex, 1);
-				this.sendVideo(data, requester);
-			});
-			YD.on('error', err => {
-				const videoInProgressIndex = this.videosInProgress.indexOf(
-					this.videosInProgress.filter(video => video.videoId === ID_VIDEO)[0]
-				);
-				this.videosInProgress.splice(videoInProgressIndex, 1);
-				this.sendErrorMessage('Erro ao baixar mp3', err);
-			});
-			YD.on('progress', info => {
-				const video = this.videosInProgress.filter(
-					video => video.videoId === ID_VIDEO
-				)[0];
-				video.eta = info.progress.eta;
-				video.progress = info.progress.percentage;
-			});
-		} catch (e) {
-			this.sendErrorMessage('Erro desconhecido', JSON.stringify(e));
-		}
+		const YD = new YoutubeMp3Downloader(downloaderOptions);
+		const path = 'media/aaaaa.mp3';
+		const download = new YTDownloader();
+		return download.downloadAudio(url, path).on('close', () => {
+			console.log('FINISHED')!;
+			this.zaplify?.sendFile(path, '', this.requester as Message);
+		});
+		// this.videosInProgress.push({
+		// 	title,
+		// 	eta: NaN,
+		// 	progress: 0,
+		// 	videoId: ID_VIDEO,
+		// });
+		// YD.on('finished', (err, data) => {
+		// 	const videoInProgressIndex = this.videosInProgress.indexOf(
+		// 		this.videosInProgress.filter(video => video.videoId === ID_VIDEO)[0]
+		// 	);
+		// 	this.videosInProgress.splice(videoInProgressIndex, 1);
+		// 	this.sendVideo(data, requester);
+		// });
+		// YD.on('error', err => {
+		// 	const videoInProgressIndex = this.videosInProgress.indexOf(
+		// 		this.videosInProgress.filter(video => video.videoId === ID_VIDEO)[0]
+		// 	);
+		// 	this.videosInProgress.splice(videoInProgressIndex, 1);
+		// 	this.sendErrorMessage('Erro ao baixar mp3', err);
+		// });
+		// YD.on('progress', info => {
+		// 	const video = this.videosInProgress.filter(
+		// 		video => video.videoId === ID_VIDEO
+		// 	)[0];
+		// 	video.eta = info.progress.eta;
+		// 	video.progress = info.progress.percentage;
+		// });
 	}
 
 	private async sendVideo(data: any, message: Message) {

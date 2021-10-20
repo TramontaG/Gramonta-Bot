@@ -22,8 +22,7 @@ class Sticker extends Module {
 
 	async sticker() {
 		try {
-			const messageObject =
-				this.requester?.quotedMsg || this.requester;
+			const messageObject = this.requester?.quotedMsg || this.requester;
 			if (!messageObject) {
 				this.sendError('Mano, algo deu muuuito errado');
 				return;
@@ -44,23 +43,18 @@ class Sticker extends Module {
 			)) as Buffer;
 
 			if (messageObject.duration && messageObject.duration > 6) {
-				this.sendError(
-					'Só consigo fazer figurinhas de no máximo 5 segundos'
-				);
+				this.sendError('Só consigo fazer figurinhas de no máximo 5 segundos');
 				return;
 			}
 
 			if (messageObject.type === MessageTypes.IMAGE) {
-				return this.sendImageSticker(media);
+				return await this.sendImageSticker(media);
 			}
 			if (messageObject.type === MessageTypes.VIDEO) {
-				return this.sendAnimatedSticker(media);
+				return await this.sendAnimatedSticker(media);
 			}
 		} catch (e) {
-			this.sendError(
-				'Erro desconhecido: ' + e,
-				this.requester || undefined
-			);
+			this.sendError('Erro desconhecido: ' + e, this.requester || undefined);
 		}
 	}
 
@@ -77,10 +71,7 @@ class Sticker extends Module {
 	}
 
 	async sendImageSticker(media: Buffer) {
-		return this.zaplify?.sendSticker(
-			media,
-			this.requester || undefined
-		);
+		return this.zaplify?.sendSticker(media, this.requester || undefined);
 	}
 
 	async sendError(error: string | unknown, message?: Message) {
@@ -88,10 +79,9 @@ class Sticker extends Module {
 	}
 
 	async help() {
-		const helpText = await fs.readFile(
-			'src/Modules/Sticker/Help.txt',
-			{ encoding: 'utf-8' }
-		);
+		const helpText = await fs.readFile('src/Modules/Sticker/Help.txt', {
+			encoding: 'utf-8',
+		});
 		this.zaplify?.replyAuthor(helpText);
 	}
 }

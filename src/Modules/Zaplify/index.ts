@@ -144,6 +144,10 @@ class Zaplify {
 		return decryptMedia(sticker);
 	}
 
+	sendFileFromUrl(url: string, fileName: string, requester: Message) {
+		this.client.sendFileFromUrl(requester.from, url, '', fileName, requester.id);
+	}
+
 	sendImageAsSticker(imageBuffer: Buffer, requester?: Message) {
 		if (!this.messageObject) throw 'No message object initialized';
 		this.client.sendMp4AsSticker(

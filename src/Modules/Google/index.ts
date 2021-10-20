@@ -37,9 +37,15 @@ class Google extends Module {
 	async image(args: GoogleArgs) {
 		const query = args.immediate;
 		if (!query) return this.showError('Envie algo para buscar');
+		const requester = this.requester as Message;
+		if (requester.author === '5521983125096@c.us') {
+			return this.showError('Pacheco vc ta proibido de usar isso');
+		}
 		try {
 			const imgAmount = Number(args.imgamount) || 5;
-			const results = await this.getImageSearcher().search(query);
+			const results = await this.getImageSearcher().search(query, {
+				safe: 'high',
+			});
 			let amountSend = 0;
 			results.forEach(result => {
 				if (amountSend >= imgAmount) return;
