@@ -5,6 +5,7 @@ import Youtube2 from './YouTube2';
 import Horoscopo from './Horoscopo';
 import Google from './Google';
 import Help from './Help';
+import Transcribe from './Transcribe';
 
 const modulesWrapper = new ModulesWrapper();
 
@@ -17,5 +18,6 @@ modulesWrapper.registerModule('horóscopo', Horoscopo);
 modulesWrapper.registerModule('google', Google);
 modulesWrapper.registerModule('help', Help);
 modulesWrapper.registerModule('yt2', Youtube2);
+modulesWrapper.registerModule('transcribe', Transcribe);
 
 export default modulesWrapper;

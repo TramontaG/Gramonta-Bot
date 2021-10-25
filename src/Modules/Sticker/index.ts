@@ -42,11 +42,6 @@ class Sticker extends Module {
 				messageObject
 			)) as Buffer;
 
-			if (messageObject.duration && messageObject.duration > 6) {
-				this.sendError('Só consigo fazer figurinhas de no máximo 5 segundos');
-				return;
-			}
-
 			if (messageObject.type === MessageTypes.IMAGE) {
 				return await this.sendImageSticker(media);
 			}

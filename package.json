@@ -12,6 +12,7 @@
   "author": "Jonathan",
   "license": "Apache-2.0",
   "dependencies": {
+    "@google-cloud/speech": "^4.9.0",
     "@open-wa/wa-automate": "^4.20.6",
     "@open-wa/wa-decrypt": "^2.0.1",
     "axios": "^0.21.2",

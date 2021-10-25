@@ -1,4 +1,10 @@
-import { Client, decryptMedia, Message, useragent } from '@open-wa/wa-automate';
+import {
+	Client,
+	decryptMedia,
+	Message,
+	MessageTypes,
+	useragent,
+} from '@open-wa/wa-automate';
 import fs from 'fs/promises';
 
 type Mimetype = 'video/mp4' | 'image/gif' | 'image';
@@ -83,7 +89,8 @@ class Zaplify {
 	async getMediaBufferFromMessage(quotedMessage?: Message) {
 		if (!this.messageObject) throw 'No message object initialized';
 		const message = quotedMessage || this.messageObject;
-		if (message && !message.isMedia) throw 'No media sent on message';
+		if (message && !message.isMedia && !(message.type === MessageTypes.VOICE))
+			throw 'No media sent on message';
 		const mediaData = await decryptMedia(
 			quotedMessage || this.messageObject,
 			this.userAgentOverride
@@ -127,11 +134,12 @@ class Zaplify {
 			{
 				fps: 30,
 				square: 256,
-				endTime: '00:00:10.0',
+				endTime: '00:00:15.0',
 			},
 			{
 				author: 'Bot do tramonta',
 				pack: 'Pack do bot',
+				keepScale: true,
 			}
 		);
 	}
@@ -145,6 +153,8 @@ class Zaplify {
 	}
 
 	sendFileFromUrl(url: string, fileName: string, requester: Message) {
+		const message = requester || this.messageObject;
+		if (!message) throw 'No message object initialized';
 		this.client.sendFileFromUrl(requester.from, url, '', fileName, requester.id);
 	}
 

@@ -1,6 +1,7 @@
 import { Args, Module } from '../ModulesRegister';
 import fs from 'fs/promises';
 import axios from 'axios';
+import { Message } from '@open-wa/wa-automate';
 
 const signos = [
 	'aries',
@@ -44,42 +45,43 @@ class Horoscopo extends Module {
 	}
 
 	async default(signo: string) {
+		const requester = this.zaplify?.messageObject as any;
 		this.zaplify?.replyAuthor('Indo até as estrelas pra buscar sua sorte...');
 		axios.get(`https://horoscopefree.herokuapp.com/daily/pt/`).then(resp => {
 			switch (signo) {
 				case 'aries':
-					return this.zaplify?.replyAuthor(`${resp.data.aries}`);
+					return this.zaplify?.replyAuthor(`${resp.data.aries}`, requester);
 				case 'touro':
-					return this.zaplify?.replyAuthor(`${resp.data.taurus}`);
+					return this.zaplify?.replyAuthor(`${resp.data.taurus}`, requester);
 				case 'gemeos':
 				case 'gêmeos':
-					return this.zaplify?.replyAuthor(`${resp.data.gemini}`);
+					return this.zaplify?.replyAuthor(`${resp.data.gemini}`, requester);
 				case 'cancer':
 				case 'câncer':
-					return this.zaplify?.replyAuthor(`${resp.data.cancer}`);
+					return this.zaplify?.replyAuthor(`${resp.data.cancer}`, requester);
 				case 'leao':
 				case 'leão':
-					return this.zaplify?.replyAuthor(`${resp.data.leo}`);
+					return this.zaplify?.replyAuthor(`${resp.data.leo}`, requester);
 				case 'escorpiao':
 				case 'escorpião':
-					return this.zaplify?.replyAuthor(`${resp.data.scorpio}`);
+					return this.zaplify?.replyAuthor(`${resp.data.scorpio}`, requester);
 				case 'libra':
-					return this.zaplify?.replyAuthor(`${resp.data.libra}`);
+					return this.zaplify?.replyAuthor(`${resp.data.libra}`, requester);
 				case 'sagitario':
 				case 'sagitário':
-					return this.zaplify?.replyAuthor(`${resp.data.sagittarius}`);
+					return this.zaplify?.replyAuthor(`${resp.data.sagittarius}`), requester;
 				case 'capricornio':
 				case 'capricórnio':
-					return this.zaplify?.replyAuthor(`${resp.data.capricorn}`);
+					return this.zaplify?.replyAuthor(`${resp.data.capricorn}`, requester);
 				case 'aquario':
 				case 'aquário':
-					return this.zaplify?.replyAuthor(`${resp.data.aquarius}`);
+					return this.zaplify?.replyAuthor(`${resp.data.aquarius}`, requester);
 				case 'peixes':
-					return this.zaplify?.replyAuthor(`${resp.data.pisces}`);
+					return this.zaplify?.replyAuthor(`${resp.data.pisces}`, requester);
 				case 'virgem':
-					return this.zaplify?.replyAuthor(`${resp.data.virgo}`);
+					return this.zaplify?.replyAuthor(`${resp.data.virgo}`, requester);
 				default:
-					return this.zaplify?.replyAuthor(`Não encontrei nada...`);
+					return this.zaplify?.replyAuthor(`Não encontrei nada...`, requester);
 			}
 		});
 	}

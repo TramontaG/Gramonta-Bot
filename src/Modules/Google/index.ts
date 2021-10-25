@@ -52,6 +52,7 @@ class Google extends Module {
 				if (result.type !== 'image/jpeg') return;
 				if (!result.url.startsWith('https')) return;
 
+				// @ts-ignore
 				const caption = `${result.description}\n\n${result.parentPage}`;
 				this.zaplify?.sendImageFromUrl(
 					result.url,
