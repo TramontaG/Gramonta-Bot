@@ -4,10 +4,11 @@ import fs from 'fs/promises';
 import he from 'he';
 import YTSearch from 'youtube-search';
 import YoutubeMp3Downloader from 'youtube-mp3-downloader';
+import API from '../Lyrics/API,';
 
 const downloaderOptions = {
 	filter: 'audioonly',
-	ffmpegPath: '/usr/bin/ffmpeg', // FFmpeg binary location
+	ffmpegPath: 'C:/ProgramData/chocolatey/lib/ffmpeg/tools/ffmpeg/bin/ffmpeg', // FFmpeg binary location
 	outputPath: 'media/ytDownload', // Output file location (default: the home directory)
 	youtubeVideoQuality: 'highestaudio', // Desired video quality (default: highestaudio)
 	queueParallelism: 3, // Download parallelism (default: 1)
@@ -223,12 +224,16 @@ class Youtube extends Module {
 				progress: 0,
 				videoId: ID_VIDEO,
 			});
-			YD.on('finished', (err, data) => {
+			YD.on('finished', async (err, data) => {
 				const videoInProgressIndex = this.videosInProgress.indexOf(
 					this.videosInProgress.filter(video => video.videoId === ID_VIDEO)[0]
 				);
 				this.videosInProgress.splice(videoInProgressIndex, 1);
 				this.sendVideo(data, requester);
+
+				const lyrics = await API.firstSong(title);
+				if (!lyrics) return;
+				this.zaplify?.replyAuthor(lyrics, requester);
 			});
 			YD.on('error', err => {
 				const videoInProgressIndex = this.videosInProgress.indexOf(

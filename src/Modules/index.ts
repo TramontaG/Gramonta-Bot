@@ -6,6 +6,7 @@ import Horoscopo from './Horoscopo';
 import Google from './Google';
 import Help from './Help';
 import Transcribe from './Transcribe';
+import LyricsFinder from './Lyrics';
 
 const modulesWrapper = new ModulesWrapper();
 
@@ -19,5 +20,6 @@ modulesWrapper.registerModule('google', Google);
 modulesWrapper.registerModule('help', Help);
 modulesWrapper.registerModule('yt2', Youtube2);
 modulesWrapper.registerModule('transcribe', Transcribe);
+modulesWrapper.registerModule('lyrics', LyricsFinder);
 
 export default modulesWrapper;

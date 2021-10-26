@@ -1,0 +1,2 @@
+*|----Letras de música---|*
+!lyrics get "_pesquisa_": Te envia o primeiro resultado que encontrar!

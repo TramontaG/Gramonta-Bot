@@ -17,3 +17,8 @@ Acesso ao módulo: *_!google_*
 *|-------Horóscopo-------|*
 Te dá sua sorte diária!
 Acesso ao módulo: *_!horoscopo_*
+
+*|----Letras de música---|*
+Busca letras de música diretamente do Genius.com!
+Acesso ao módulo: *_!lyrics_*
+

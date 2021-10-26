@@ -1259,7 +1259,7 @@ cheerio@^0.19.0:
     htmlparser2 "~3.8.1"
     lodash "^3.2.0"
 
-cheerio@^1.0.0-rc.2, cheerio@^1.0.0-rc.3:
+cheerio@^1.0.0-rc.2, cheerio@^1.0.0-rc.3, cheerio@^1.0.0-rc.9:
   version "1.0.0-rc.10"
   resolved "https://registry.yarnpkg.com/cheerio/-/cheerio-1.0.0-rc.10.tgz#2ba3dcdfcc26e7956fc1f440e61d51c643379f3e"
   integrity sha512-g0J0q/O6mW8z5zxQ3A8E8J1hUgp4SMOvEoW/x84OwyHKe/Zccz83PVT4y5Crcr530FV6NgmKI1qvGTKVl9XXVw==
@@ -2663,6 +2663,14 @@ gcp-metadata@^4.2.0:
     gaxios "^4.0.0"
     json-bigint "^1.0.0"
 
+genius-lyrics@^4.3.4:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/genius-lyrics/-/genius-lyrics-4.3.4.tgz#0173539d5bdfdffd4b0752805f8f55a848a19862"
+  integrity sha512-EuNrNM+tqRAJwuc78I8f8gtB03WaCtWu7JAxfagafnbNXyjSQQA3cl8sN8AMby+5oAR21WgC7gbJFK6OndZsHg==
+  dependencies:
+    cheerio "^1.0.0-rc.9"
+    got "^11.8.2"
+
 get-caller-file@^2.0.1, get-caller-file@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-2.0.5.tgz#4f94412a82db32f36e3b0b9741f8a97feb031f7e"
@@ -2861,7 +2869,7 @@ google@^2.1.0:
     cheerio "^0.19.0"
     request "^2.54.0"
 
-got@^11.5.1, got@^11.7.0:
+got@^11.5.1, got@^11.7.0, got@^11.8.2:
   version "11.8.2"
   resolved "https://registry.yarnpkg.com/got/-/got-11.8.2.tgz#7abb3959ea28c31f3576f1576c1effce23f33599"
   integrity sha512-D0QywKgIe30ODs+fm8wMZiAcZjypcCodPNuMz5H9Mny7RJ+IjJ10BdmGW7OM7fHXP+O7r6ZwapQ/YQmMSvB0UQ==
