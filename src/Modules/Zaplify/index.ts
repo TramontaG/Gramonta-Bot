@@ -175,6 +175,14 @@ class Zaplify {
 			caption || ''
 		);
 	}
+
+	async isAdmin(requester: Message) {
+		if (!requester.isGroupMsg) return true;
+		const allAdmins = await this.client.getGroupAdmins(
+			requester.chat.groupMetadata.id
+		);
+		return allAdmins.includes(requester.sender.id);
+	}
 }
 
 export default Zaplify;
