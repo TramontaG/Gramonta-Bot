@@ -7,6 +7,7 @@ import Google from './Google';
 import Help from './Help';
 import Transcribe from './Transcribe';
 import LyricsFinder from './Lyrics';
+import CopypastaManager from './Copypasta';
 
 const modulesWrapper = new ModulesWrapper();
 
@@ -21,5 +22,6 @@ modulesWrapper.registerModule('help', Help);
 modulesWrapper.registerModule('yt2', Youtube2);
 modulesWrapper.registerModule('transcribe', Transcribe);
 modulesWrapper.registerModule('lyrics', LyricsFinder);
+modulesWrapper.registerModule('copypasta', CopypastaManager);
 
 export default modulesWrapper;

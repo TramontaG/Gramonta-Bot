@@ -38,9 +38,6 @@ class Google extends Module {
 		const query = args.immediate;
 		if (!query) return this.showError('Envie algo para buscar');
 		const requester = this.requester as Message;
-		if (requester.author === '5521983125096@c.us') {
-			return this.showError('Pacheco vc ta proibido de usar isso');
-		}
 		try {
 			const imgAmount = Number(args.imgamount) || 5;
 			const results = await this.getImageSearcher().search(query, {
