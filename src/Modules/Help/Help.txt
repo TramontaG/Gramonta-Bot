@@ -22,3 +22,6 @@ Acesso ao módulo: *_!horoscopo_*
 Busca letras de música diretamente do Genius.com!
 Acesso ao módulo: *_!lyrics_*
 
+*|------Copypastas!-----|*
+Acervo pessoal do bot com muitas copypastas!
+Acesso ao módulo: *_!copypasta_*

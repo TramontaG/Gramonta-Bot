@@ -10,6 +10,6 @@ export const getCopyPasta = (copypastaName: string) => {
 	});
 };
 
-export const newCopýPasta = (copypastaName: string, copypasta: string) => {
+export const newCopyPasta = (copypastaName: string, copypasta: string) => {
 	return fs.writeFile(`./media/Copypastas/${copypastaName}`, copypasta);
 };
