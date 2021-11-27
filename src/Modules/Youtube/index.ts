@@ -5,6 +5,8 @@ import he from 'he';
 import YTSearch from 'youtube-search';
 import YoutubeMp3Downloader from 'youtube-mp3-downloader';
 import API from '../Lyrics/API,';
+import Logger from '../Logger/Logger';
+import { EntityTypes } from 'src/BigData/JsonDB';
 
 const downloaderOptions = {
 	filter: 'audioonly',
@@ -53,6 +55,7 @@ class Youtube extends Module {
 	requester: Message | null;
 	requesterLine: Message[];
 	videosInProgress: VideoInProgress[];
+	logger: Logger;
 
 	constructor() {
 		super();
@@ -66,6 +69,8 @@ class Youtube extends Module {
 		this.requesterLine = [];
 
 		this.videosInProgress = [];
+
+		this.logger = new Logger();
 
 		this.registerPublicMethod({
 			name: 'default',
@@ -216,6 +221,13 @@ class Youtube extends Module {
 		try {
 			const YD = new YoutubeMp3Downloader(downloaderOptions);
 			const ID_VIDEO = url.split('=')[1];
+
+			this.logger.insertNew(EntityTypes.SONGS, {
+				groupName: requester.isGroupMsg ? requester.chat.name : '_',
+				chatId: requester.chat.id,
+				requester: requester.sender.formattedName,
+				songName: title,
+			});
 
 			YD.download(ID_VIDEO);
 			this.videosInProgress.push({

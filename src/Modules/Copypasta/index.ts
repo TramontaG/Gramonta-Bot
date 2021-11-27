@@ -2,10 +2,15 @@ import { Message } from '@open-wa/wa-automate';
 import { Args, Module } from '../ModulesRegister';
 import * as CopypastaManager from './CopypastaManager';
 import fs from 'fs/promises';
+import Logger from '../Logger/Logger';
+import { EntityTypes } from 'src/BigData/JsonDB';
 
 class Copypasta extends Module {
+	logger: Logger;
+
 	constructor() {
 		super();
+		this.logger = new Logger();
 
 		this.registerPublicMethod({
 			name: 'all',
@@ -91,6 +96,13 @@ class Copypasta extends Module {
 		const requester = this.zaplify?.messageObject as Message;
 		const copypasta = await CopypastaManager.getCopyPasta(copypastaName);
 		this.zaplify?.replyAuthor(copypasta, requester);
+
+		this.logger.insertNew(EntityTypes.COPYPASTAS, {
+			groupName: requester.isGroupMsg ? requester.chat.name : '_',
+			chatId: requester.chat.id,
+			requester: requester.sender.formattedName,
+			copypastaName,
+		});
 	}
 
 	async sendHelp() {

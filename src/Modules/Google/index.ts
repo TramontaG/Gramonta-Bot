@@ -2,6 +2,8 @@ import { Args, Module } from '../ModulesRegister';
 import ImageSearch from 'google-images';
 import { Message } from '@open-wa/wa-automate';
 import GoogleSearch from './GoogleWebSearcher';
+import Logger from '../Logger/Logger';
+import { EntityTypes } from 'src/BigData/JsonDB';
 
 interface GoogleArgs extends Args {
 	imgamount?: string;
@@ -10,11 +12,14 @@ interface GoogleArgs extends Args {
 class Google extends Module {
 	GoogleImage: ImageSearch | null;
 	GoogleSearch: GoogleSearch | null;
+	logger: Logger;
 
 	constructor() {
 		super();
 		this.GoogleImage = null;
 		this.GoogleSearch = null;
+
+		this.logger = new Logger();
 
 		this.registerPublicMethod({
 			name: 'help',
@@ -58,6 +63,16 @@ class Google extends Module {
 				);
 				amountSend++;
 			});
+
+			const requester = this.zaplify?.messageObject as Message;
+
+			this.logger.insertNew(EntityTypes.GOOGLESEARCHES, {
+				groupName: requester.isGroupMsg ? requester.chat.name : '_',
+				chatId: requester.chat.id,
+				requester: requester.sender.formattedName,
+				query,
+				type: 'image',
+			});
 		} catch (e) {
 			console.log(e);
 			this.zaplify?.replyAuthor(`Erro inesperado: ${e}`);
@@ -90,6 +105,16 @@ class Google extends Module {
 		try {
 			if (!args.immediate) return this.showError('Envie algo para eu pesquisar');
 			const query = args.immediate;
+			const requester = this.zaplify?.messageObject as Message;
+
+			this.logger.insertNew(EntityTypes.GOOGLESEARCHES, {
+				groupName: requester.isGroupMsg ? requester.chat.name : '_',
+				chatId: requester.chat.id,
+				requester: requester.sender.formattedName,
+				query: args.immediate,
+				type: 'web',
+			});
+
 			this.getWebSearcher()
 				.search(query)
 				.then(({ data }) => {

@@ -1,7 +1,8 @@
-import { Args, Module } from '../ModulesRegister';
+import { Module } from '../ModulesRegister';
 import fs from 'fs/promises';
 import axios from 'axios';
-import { Message } from '@open-wa/wa-automate';
+import Logger from '../Logger/Logger';
+import { EntityTypes } from 'src/BigData/JsonDB';
 
 const signos = [
 	'aries',
@@ -26,8 +27,11 @@ const signos = [
 ];
 
 class Horoscopo extends Module {
+	logger: Logger;
 	constructor() {
 		super();
+		this.logger = new Logger();
+
 		this.registerPublicMethod({
 			name: 'help',
 			method: this.sendInstructions.bind(this),
@@ -47,6 +51,14 @@ class Horoscopo extends Module {
 	async default(signo: string) {
 		const requester = this.zaplify?.messageObject as any;
 		this.zaplify?.replyAuthor('Indo até as estrelas pra buscar sua sorte...');
+
+		this.logger.insertNew(EntityTypes.HOROSCOPE, {
+			groupName: requester.isGroupMsg ? requester.chat.name : '_',
+			chatId: requester.chat.id,
+			requester: requester.sender.formattedName,
+			sign: signo,
+		});
+
 		axios.get(`https://horoscopefree.herokuapp.com/daily/pt/`).then(resp => {
 			switch (signo) {
 				case 'aries':

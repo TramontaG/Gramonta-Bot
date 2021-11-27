@@ -8,6 +8,7 @@ import Help from './Help';
 import Transcribe from './Transcribe';
 import LyricsFinder from './Lyrics';
 import CopypastaManager from './Copypasta';
+import Logger from './Logger';
 
 const modulesWrapper = new ModulesWrapper();
 
@@ -19,9 +20,11 @@ modulesWrapper.registerModule('horoscopo', Horoscopo);
 modulesWrapper.registerModule('horóscopo', Horoscopo);
 modulesWrapper.registerModule('google', Google);
 modulesWrapper.registerModule('help', Help);
+modulesWrapper.registerModule('menu', Help);
 modulesWrapper.registerModule('yt2', Youtube2);
 modulesWrapper.registerModule('transcribe', Transcribe);
 modulesWrapper.registerModule('lyrics', LyricsFinder);
 modulesWrapper.registerModule('copypasta', CopypastaManager);
+modulesWrapper.registerModule('log', Logger);
 
 export default modulesWrapper;

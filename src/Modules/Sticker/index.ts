@@ -1,13 +1,17 @@
 import { Module } from '../ModulesRegister';
 import { Message, MessageTypes } from '@open-wa/wa-automate';
 import fs from 'fs/promises';
+import Logger from '../Logger/Logger';
+import { EntityTypes } from 'src/BigData/JsonDB';
 
 class Sticker extends Module {
+	logger: Logger;
 	requester: Message | null;
 
 	constructor() {
 		super();
 		this.requester = null;
+		this.logger = new Logger();
 
 		this.registerPublicMethod({
 			name: 'default',
@@ -43,9 +47,21 @@ class Sticker extends Module {
 			)) as Buffer;
 
 			if (messageObject.type === MessageTypes.IMAGE) {
+				this.logger.insertNew(EntityTypes.STICKERS, {
+					animated: false,
+					groupName: messageObject.isGroupMsg ? messageObject.chat.name : '_',
+					chatId: messageObject.chat.id,
+					requester: messageObject.sender.formattedName,
+				});
 				return await this.sendImageSticker(media);
 			}
 			if (messageObject.type === MessageTypes.VIDEO) {
+				this.logger.insertNew(EntityTypes.STICKERS, {
+					animated: true,
+					groupName: messageObject.isGroupMsg ? messageObject.chat.name : '_',
+					chatId: messageObject.chat.id,
+					requester: messageObject.sender.formattedName,
+				});
 				return await this.sendAnimatedSticker(media);
 			}
 		} catch (e) {

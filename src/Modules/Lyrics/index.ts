@@ -2,10 +2,16 @@ import { Message } from '@open-wa/wa-automate';
 import { Args, Module } from '../ModulesRegister';
 import API from './API,';
 import fs from 'fs/promises';
+import Logger from '../Logger/Logger';
+import { EntityTypes } from 'src/BigData/JsonDB';
 
 class LyricsFinder extends Module {
+	logger: Logger;
+
 	constructor() {
 		super();
+		this.logger = new Logger();
+
 		this.registerPublicMethod({
 			name: 'get',
 			method: this.firstSong.bind(this),
@@ -31,6 +37,13 @@ class LyricsFinder extends Module {
 
 			const result = await API.firstSong(query);
 			if (!result) return this.zaplify?.replyAuthor('Não encontrei nada', requester);
+
+			this.logger.insertNew(EntityTypes.SONGS, {
+				songName: query,
+				groupName: requester.isGroupMsg ? requester.chat.name : '_',
+				chatId: requester.chat.id,
+				requester: requester.sender.formattedName,
+			});
 
 			this.zaplify?.replyAuthor(result, requester);
 		} catch (e) {
