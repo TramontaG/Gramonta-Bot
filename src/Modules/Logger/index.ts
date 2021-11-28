@@ -3,6 +3,26 @@ import { AllEntitiesModel, EntityTypes } from 'src/BigData/JsonDB';
 import { Args, Module } from '../ModulesRegister';
 import Logger from './Logger';
 
+type GroupMap = {
+	[key: string]: {
+		groupName: string;
+		amount: number;
+	};
+};
+
+type PersonMap = {
+	[key: string]: number;
+};
+
+const EntitiesArray = [
+	EntityTypes.COPYPASTAS,
+	EntityTypes.GOOGLESEARCHES,
+	EntityTypes.SONGS,
+	EntityTypes.STICKERS,
+	EntityTypes.LYRICS,
+	EntityTypes.HOROSCOPE,
+];
+
 class LoggerModule extends Module {
 	logger: Logger;
 
@@ -10,19 +30,16 @@ class LoggerModule extends Module {
 		super();
 		this.logger = new Logger();
 
-		[
-			EntityTypes.COPYPASTAS,
-			EntityTypes.GOOGLESEARCHES,
-			EntityTypes.SONGS,
-			EntityTypes.STICKERS,
-			EntityTypes.LYRICS,
-			EntityTypes.HOROSCOPE,
-		].forEach(entityType => {
-			console.log('REGISTERING LOG FOR ', entityType);
+		EntitiesArray.forEach(entityType => {
 			this.registerPublicMethod({
 				name: entityType,
 				method: () => this.logAll(entityType),
 			});
+		});
+
+		this.registerPublicMethod({
+			name: 'rank',
+			method: (args: Args) => this.rank(args),
 		});
 
 		this.registerPublicMethod({
@@ -31,87 +48,103 @@ class LoggerModule extends Module {
 		});
 	}
 
-	async logAll(module: EntityTypes) {
+	async logAll(entityType: EntityTypes) {
 		const requester = this.zaplify?.messageObject as Message;
-		const allRegisters = await this.logger.getAllEntities(module);
-
-		console.log(allRegisters);
+		const allRegisters = await this.logger.getAllEntities(entityType);
+		const personMap = this.getPersonMap(allRegisters);
+		const groupMap = this.getGroupMap(allRegisters);
 
 		let message = [
-			`*_Registro de ${module}:_*\n`,
-			`Total de ${module} enviados: *_${allRegisters.length}_*`,
-			`Grupo que mais usou esse comando: *_${this.mostUsedGroup(allRegisters)}_*`,
-			`Pessoa que mais usou esse comando: *_${this.mostUsedPerson(allRegisters)}_*`,
+			`*_Registro de ${entityType}:_*\n`,
+			`Total de ${entityType} enviados: *_${allRegisters.length}_*`,
+			`Grupo que mais usou esse comando: *_${this.mostUsedGroup(groupMap)}_*`,
+			`Pessoa que mais usou esse comando: *_${this.mostUsedPerson(personMap)}_*`,
 		].join('\n');
 
 		this.zaplify?.replyAuthor(message, requester);
 	}
 
-	mostUsedGroup<T extends keyof AllEntitiesModel>(
-		allEntities: AllEntitiesModel[T][]
-	) {
-		//creating hashmap for counting how many uses each group has
-		const usesByGroup = {} as {
-			[key: string]: {
-				groupName: string;
-				amount: number;
-			};
-		};
+	async rank(args: Args) {
+		const requester = this.zaplify?.messageObject as Message;
+		const entityType = args.immediate?.trim() as EntityTypes;
 
-		//filling the hashmap
-		allEntities.forEach(entity => {
-			if (entity.groupName === '_') return;
+		if (!entityType)
+			return this.zaplify?.replyAuthor('Por favor insira algum comando para logar!');
+		if (!EntitiesArray.includes(entityType))
+			return this.zaplify?.replyAuthor('Não consigo logar isso, comando inválido!');
 
-			if (usesByGroup[entity.chatId]) {
-				usesByGroup[entity.chatId].groupName = entity.groupName;
-				usesByGroup[entity.chatId].amount = usesByGroup[entity.chatId].amount + 1;
-				return;
-			}
+		const allEntities = await this.logger.getAllEntities(entityType);
+		const groupMap = this.getGroupMap(allEntities);
+		const personMap = this.getPersonMap(allEntities);
 
-			usesByGroup[entity.chatId] = {
-				amount: 1,
-				groupName: entity.groupName,
-			};
-		});
+		const personRank = this.getPersonRank(personMap);
+		const groupRank = this.getGroupRank(groupMap);
 
-		console.log(usesByGroup);
+		let message = [
+			`*_Ranking de ${entityType}:_*\n`,
+			`Total de ${entityType} enviados: *_${allEntities.length}_*`,
+			'',
 
-		//getting the key with maximum value from the hashmap
+			`*_RANKING DE USOS DE ${entityType.toUpperCase()} POR PESSOA_*`,
+			`${personRank.reduce((acc, person, index) => {
+				return (acc += `*${index + 1}* - ${person.person}\n`);
+			}, '')}`,
+
+			`*_RANKING DE USOS DE ${entityType.toUpperCase()} POR GRUPO_*`,
+			`${groupRank.reduce((acc, group, index) => {
+				return (acc += `*${index + 1}* - ${group.group}\n`);
+			}, '')}`,
+
+			`Total de grupos que já usou esse comando: ${groupRank.length}`,
+			`Total de pessoas que já usaram esse comando: ${personRank.length}`,
+		].join('\n');
+
+		this.zaplify?.replyAuthor(message, requester);
+	}
+
+	private getPersonRank(personMap: PersonMap) {
+		return Object.keys(personMap)
+			.map(person => {
+				return {
+					person,
+					amount: personMap[person],
+				};
+			})
+			.sort((a, b) => a.amount - b.amount);
+	}
+
+	private getGroupRank(groupMap: GroupMap) {
+		return Object.keys(groupMap)
+			.map(group => {
+				return {
+					group: groupMap[group].groupName,
+					amount: groupMap[group].amount,
+				};
+			})
+			.sort((a, b) => a.amount - b.amount);
+	}
+
+	private mostUsedGroup(groupMap: GroupMap) {
 		let mostUses = 0;
 		let mostUsedGroup = '';
 
-		Object.keys(usesByGroup).forEach(key => {
-			if (usesByGroup[key].amount > mostUses) {
-				mostUses = usesByGroup[key].amount;
-				mostUsedGroup = usesByGroup[key].groupName;
+		Object.keys(groupMap).forEach(key => {
+			if (groupMap[key].amount > mostUses) {
+				mostUses = groupMap[key].amount;
+				mostUsedGroup = groupMap[key].groupName;
 			}
 		});
 
 		return mostUsedGroup;
 	}
 
-	mostUsedPerson<T extends keyof AllEntitiesModel>(
-		allEntities: AllEntitiesModel[T][]
-	) {
-		//creating hashmap for counting how many uses each group has
-		const usesByPerson = {} as { [key: string]: number };
-
-		//filling the hashmap
-		allEntities.forEach(entity => {
-			if (usesByPerson[entity.requester])
-				return (usesByPerson[entity.requester] += 1);
-			return (usesByPerson[entity.requester] = 1);
-		});
-
-		console.log(usesByPerson);
-
-		//getting the key with maximum value from the hashmap
+	private mostUsedPerson(personMap: PersonMap) {
 		let mostUses = 0;
 		let mostUsedPerson = '';
 
-		Object.keys(usesByPerson).forEach(key => {
-			if (usesByPerson[key] > mostUses) {
-				mostUses = usesByPerson[key];
+		Object.keys(personMap).forEach(key => {
+			if (personMap[key] > mostUses) {
+				mostUses = personMap[key];
 				mostUsedPerson = key;
 			}
 		});
@@ -119,11 +152,48 @@ class LoggerModule extends Module {
 		return mostUsedPerson;
 	}
 
-	sendError(requester: Message, error: string) {
+	private getGroupMap<T extends keyof AllEntitiesModel>(
+		allEntities: AllEntitiesModel[T][]
+	) {
+		const groupMap: GroupMap = {};
+
+		allEntities.forEach(entity => {
+			if (entity.groupName === '_') return;
+
+			if (groupMap[entity.chatId]) {
+				groupMap[entity.chatId].groupName = entity.groupName;
+				groupMap[entity.chatId].amount = groupMap[entity.chatId].amount + 1;
+				return;
+			}
+
+			groupMap[entity.chatId] = {
+				amount: 1,
+				groupName: entity.groupName,
+			};
+		});
+
+		return groupMap;
+	}
+
+	private getPersonMap<T extends keyof AllEntitiesModel>(
+		allEntities: AllEntitiesModel[T][]
+	) {
+		const usesByPerson: PersonMap = {};
+
+		allEntities.forEach(entity => {
+			if (usesByPerson[entity.requester])
+				return (usesByPerson[entity.requester] += 1);
+			return (usesByPerson[entity.requester] = 1);
+		});
+
+		return usesByPerson;
+	}
+
+	private sendError(requester: Message, error: string) {
 		this.zaplify?.replyAuthor(`Erro: ${error}`, requester);
 	}
 
-	reset() {
+	private reset() {
 		this.logger.clearDatabase();
 		this.zaplify?.replyAuthor('Database limpo');
 	}
