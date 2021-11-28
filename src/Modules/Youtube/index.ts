@@ -227,6 +227,7 @@ class Youtube extends Module {
 				chatId: requester.chat.id,
 				requester: requester.sender.formattedName,
 				songName: title,
+				date: new Date().getTime(),
 			});
 
 			YD.download(ID_VIDEO);

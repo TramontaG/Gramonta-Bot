@@ -52,6 +52,7 @@ class Sticker extends Module {
 					groupName: messageObject.isGroupMsg ? messageObject.chat.name : '_',
 					chatId: messageObject.chat.id,
 					requester: messageObject.sender.formattedName,
+					date: new Date().getTime(),
 				});
 				return await this.sendImageSticker(media);
 			}
@@ -61,6 +62,7 @@ class Sticker extends Module {
 					groupName: messageObject.isGroupMsg ? messageObject.chat.name : '_',
 					chatId: messageObject.chat.id,
 					requester: messageObject.sender.formattedName,
+					date: new Date().getTime(),
 				});
 				return await this.sendAnimatedSticker(media);
 			}

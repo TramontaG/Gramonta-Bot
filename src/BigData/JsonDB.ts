@@ -4,7 +4,7 @@ class Database {
 	DatabaseVersion: number;
 	_RealmInstance: Realm | undefined;
 	constructor() {
-		this.DatabaseVersion = 5;
+		this.DatabaseVersion = 6;
 		this._RealmInstance = undefined;
 	}
 
@@ -48,6 +48,7 @@ class Database {
 				groupName: 'string',
 				requester: 'string',
 				animated: 'bool',
+				date: 'int',
 			},
 		},
 		songs: {
@@ -59,6 +60,7 @@ class Database {
 				groupName: 'string',
 				requester: 'string',
 				songName: 'string',
+				date: 'int',
 			},
 		},
 		copypasta: {
@@ -70,6 +72,7 @@ class Database {
 				groupName: 'string',
 				requester: 'string',
 				copypastaName: 'string',
+				date: 'int',
 			},
 		},
 		googleSearch: {
@@ -82,6 +85,7 @@ class Database {
 				requester: 'string',
 				query: 'string',
 				type: 'string',
+				date: 'int',
 			},
 		},
 		lyrics: {
@@ -93,6 +97,7 @@ class Database {
 				chatId: 'string',
 				requester: 'string',
 				query: 'string',
+				date: 'int',
 			},
 		},
 		horoscope: {
@@ -104,6 +109,7 @@ class Database {
 				chatId: 'string',
 				requester: 'string',
 				sign: 'string',
+				date: 'int',
 			},
 		},
 	};
@@ -115,18 +121,21 @@ export type AllEntitiesModel = {
 		chatId: string;
 		requester: string;
 		copypastaName: string;
+		date: number;
 	};
 	stickers: {
 		groupName: string;
 		chatId: string;
 		requester: string;
 		animated: boolean;
+		date: number;
 	};
 	songs: {
 		groupName: string;
 		chatId: string;
 		requester: string;
 		songName: string;
+		date: number;
 	};
 	googleSearches: {
 		groupName: string;
@@ -134,18 +143,21 @@ export type AllEntitiesModel = {
 		requester: string;
 		query: string;
 		type: string;
+		date: number;
 	};
 	lyrics: {
 		groupName: string;
 		chatId: string;
 		requester: string;
 		query: string;
+		date: number;
 	};
 	horoscope: {
 		groupName: string;
 		chatId: string;
 		requester: string;
 		sign: string;
+		date: number;
 	};
 };
 

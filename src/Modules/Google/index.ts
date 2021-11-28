@@ -72,6 +72,7 @@ class Google extends Module {
 				requester: requester.sender.formattedName,
 				query,
 				type: 'image',
+				date: new Date().getTime(),
 			});
 		} catch (e) {
 			console.log(e);
@@ -113,6 +114,7 @@ class Google extends Module {
 				requester: requester.sender.formattedName,
 				query: args.immediate,
 				type: 'web',
+				date: new Date().getTime(),
 			});
 
 			this.getWebSearcher()

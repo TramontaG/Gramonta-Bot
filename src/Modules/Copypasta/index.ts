@@ -102,6 +102,7 @@ class Copypasta extends Module {
 			chatId: requester.chat.id,
 			requester: requester.sender.formattedName,
 			copypastaName,
+			date: new Date().getTime(),
 		});
 	}
 

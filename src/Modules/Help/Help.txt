@@ -25,3 +25,8 @@ Acesso ao módulo: *_!lyrics_*
 *|------Copypastas!-----|*
 Acervo pessoal do bot com muitas copypastas!
 Acesso ao módulo: *_!copypasta_*
+
+*|--------Logger!-------|*
+*beta*
+Mostra dados sobre utilização do bot
+Acesso ao módulo: *_!log*

@@ -57,6 +57,7 @@ class Horoscopo extends Module {
 			chatId: requester.chat.id,
 			requester: requester.sender.formattedName,
 			sign: signo,
+			date: new Date().getTime(),
 		});
 
 		axios.get(`https://horoscopefree.herokuapp.com/daily/pt/`).then(resp => {

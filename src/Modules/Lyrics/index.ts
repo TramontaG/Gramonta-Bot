@@ -43,6 +43,7 @@ class LyricsFinder extends Module {
 				groupName: requester.isGroupMsg ? requester.chat.name : '_',
 				chatId: requester.chat.id,
 				requester: requester.sender.formattedName,
+				date: new Date().getTime(),
 			});
 
 			this.zaplify?.replyAuthor(result, requester);
