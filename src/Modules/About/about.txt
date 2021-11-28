@@ -2,7 +2,8 @@
 
 Esse é um bot construido do zero por mim, Guillherme Tramontano
 Ele roda no meu celular pessoal e no meu computador. Por isso boa parte do tempo ele pode estar offline.
-Meu numero é 11947952409. Use para reportar bugs e para me avisar sobre mau uso do bot.
+Contato: wa.me/5511947952409
+Use para reportar bugs e para me avisar sobre mau uso do bot.
 
 FAQ:
 *Posso colocar o bot no meu grupo?*

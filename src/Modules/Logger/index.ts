@@ -87,12 +87,16 @@ class LoggerModule extends Module {
 
 			`*_RANKING DE USOS DE ${entityType.toUpperCase()} POR PESSOA_*`,
 			`${personRank.reduce((acc, person, index) => {
-				return (acc += `*${index + 1}* - ${person.person}\n`);
+				return (acc += `*${index + 1}* - ${person.person}:\n\tUsou ${
+					person.amount
+				} vezes\n`);
 			}, '')}`,
 
 			`*_RANKING DE USOS DE ${entityType.toUpperCase()} POR GRUPO_*`,
 			`${groupRank.reduce((acc, group, index) => {
-				return (acc += `*${index + 1}* - ${group.group}\n`);
+				return (acc += `*${index + 1}* - ${group.group}:\n\tUsado ${
+					group.amount
+				} vezes\n`);
 			}, '')}`,
 
 			`Total de grupos que já usou esse comando: ${groupRank.length}`,
