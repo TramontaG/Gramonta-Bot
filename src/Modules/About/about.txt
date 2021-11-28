@@ -1,0 +1,32 @@
+*_GRAMONTA BOT_*
+
+Esse é um bot construido do zero por mim, Guillherme Tramontano
+Ele roda no meu celular pessoal e no meu computador. Por isso boa parte do tempo ele pode estar offline.
+Meu numero é 11947952409. Use para reportar bugs e para me avisar sobre mau uso do bot.
+
+FAQ:
+*Posso colocar o bot no meu grupo?*
+_Não! A não ser que eu pessoalmente permita. Infelizmente não tenho celular só para o bot. Vai travar tudo e lotar meu armazenamento_
+
+*Pode adicionar função X ou Y?*
+_Talvez eu possa. Talvez não. Me mande a sugestão se quiser. Só lembre-se que tem que estar dentro do que o whatsapp suporta_
+
+*Onde posso encontar o repositório do bot?*
+_Aqui ó: https://github.com/TramontaG/Gramonta-Bot_
+
+*Como faço pra rodar minha propria versão do Gramonta Bot?*
+_É um pouco complicadinho. Apesar de o código do bot ser publico, várias chaves de API são privadas e eu NÃO incluo elas no meu código. Isso porque elas tem uma cota de uso gratuita, e se começar a todo mundo usar minhas chaves por ai eu vou ter que ou pagar ou derrubar a chave.
+Se você não tem conhecimento de programação, nem tente. É uma aventura bem complexa pra conseguir rodar sua versão do Gramonta Bot, porque você precisa gerar e vincular as chaves de API ao bot. Além de ter um numero de celular extra.
+Se mesmo assim tiver interessado em rodar seu bot, me chame. Meu número ta ali em cima
+
+*Encontrei um bug no bot*
+_Me mande print que eu vo vê e te aviso :v_
+
+*O que você usa pra fazer o Bot?*
+_Estou usando o OpenWa/Automator. A partir dele eu acoplo módulos Typescript que tem uma referência a um adapter do openWa. Fiz um parser de linha de comando também para interpretar as mensagens. O parser você pode encontrar nesse repo aqui: https://github.com/TramontaG/T-Parser_
+
+*Você guarda o que eu faço com o bot?*
+_SIM! Eu estou logando tudo, armazeno em um banco de dados todas as vezes que alguém usa qualquer comando, quem foi, o número, data e hora, se foi em algum grupo, etc. Além disso, o whatsapp do bot fica rodando no meu celular, então eu consigo ler todas as conversas. Faço isso por medida de segurança. Tem uns maluco mto sem noção ai e eu não quero ser responsavel por mau uso do meu bot. Se vc macaquear eu vou te bloquear e se ficar fazendo merda grande (tipo figurinha de CP) eu vou é mandar tudo pra policia. Teje dito_
+
+*Ainda tenho uma pergunta*
+_Ta, vai, me chama. Só não seja inconveniente pfvr_

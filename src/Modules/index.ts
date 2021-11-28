@@ -1,16 +1,22 @@
 import ModulesWrapper from './ModulesRegister';
+import Help from './Help';
+import About from './About';
+
 import Sticker from './Sticker';
 import Youtube from './Youtube';
 import Youtube2 from './YouTube2';
 import Horoscopo from './Horoscopo';
 import Google from './Google';
-import Help from './Help';
 import Transcribe from './Transcribe';
 import LyricsFinder from './Lyrics';
 import CopypastaManager from './Copypasta';
 import Logger from './Logger';
 
 const modulesWrapper = new ModulesWrapper();
+
+modulesWrapper.registerModule('help', Help);
+modulesWrapper.registerModule('menu', Help);
+modulesWrapper.registerModule('about', About);
 
 modulesWrapper.registerModule('sticker', Sticker);
 modulesWrapper.registerModule('s', Sticker);
@@ -19,8 +25,6 @@ modulesWrapper.registerModule('youtube', Youtube);
 modulesWrapper.registerModule('horoscopo', Horoscopo);
 modulesWrapper.registerModule('horóscopo', Horoscopo);
 modulesWrapper.registerModule('google', Google);
-modulesWrapper.registerModule('help', Help);
-modulesWrapper.registerModule('menu', Help);
 modulesWrapper.registerModule('yt2', Youtube2);
 modulesWrapper.registerModule('transcribe', Transcribe);
 modulesWrapper.registerModule('lyrics', LyricsFinder);
