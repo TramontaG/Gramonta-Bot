@@ -87,14 +87,14 @@ class LoggerModule extends Module {
 
 			`*_RANKING DE USOS DE ${entityType.toUpperCase()} POR PESSOA_*`,
 			`${personRank.reduce((acc, person, index) => {
-				return (acc += `*${index + 1}* - ${person.person}:\n\tUsou ${
+				return (acc += `*${index + 1}* - ${person.person}: Usou ${
 					person.amount
 				} vezes\n`);
 			}, '')}`,
 
 			`*_RANKING DE USOS DE ${entityType.toUpperCase()} POR GRUPO_*`,
 			`${groupRank.reduce((acc, group, index) => {
-				return (acc += `*${index + 1}* - ${group.group}:\n\tUsado ${
+				return (acc += `*${index + 1}* - ${group.group}: Usado ${
 					group.amount
 				} vezes\n`);
 			}, '')}`,
@@ -114,7 +114,7 @@ class LoggerModule extends Module {
 					amount: personMap[person],
 				};
 			})
-			.sort((a, b) => a.amount - b.amount);
+			.sort((a, b) => a.amount + b.amount);
 	}
 
 	private getGroupRank(groupMap: GroupMap) {
@@ -125,7 +125,7 @@ class LoggerModule extends Module {
 					amount: groupMap[group].amount,
 				};
 			})
-			.sort((a, b) => a.amount - b.amount);
+			.sort((a, b) => a.amount + b.amount);
 	}
 
 	private mostUsedGroup(groupMap: GroupMap) {
