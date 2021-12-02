@@ -32,10 +32,13 @@ class Copypasta extends Module {
 			method: this.sendHelp.bind(this),
 		});
 
+		this.registerPublicMethod({
+			name: 'search',
+			method: this.searchCopypasta.bind(this),
+		});
+
 		CopypastaManager.getCopypstaList().then(copypastaList => {
-			console.log('COPYPASTA LIST', copypastaList);
 			copypastaList.forEach(copypastaName => {
-				console.log('REGISTERING COPYPASTA', copypastaName);
 				this.registerPublicMethod({
 					name: copypastaName,
 					method: () => this.getCopypasta(copypastaName),
@@ -90,6 +93,20 @@ class Copypasta extends Module {
 			`Copypasta adicionado com sucesso. Para fazer o bot envia-la digite *_!copypasta ${copypastaName}_*`,
 			requester
 		);
+	}
+
+	async searchCopypasta(args: Args) {
+		const query = args.immediate;
+		if (!query) return this.zaplify?.replyAuthor('Preciso de algo pra pesquisar');
+
+		const requester = this.zaplify?.messageObject as Message;
+		const results = await CopypastaManager.searchCopyPasta(query.trim());
+
+		const message = results.reduce((msg, result, index) => {
+			return (msg += `${index + 1} - ${result.copypastaName}\n`);
+		}, '*_RESULTADOS:_*\n\n');
+
+		this.zaplify?.replyAuthor(message, requester);
 	}
 
 	async getCopypasta(copypastaName: string) {

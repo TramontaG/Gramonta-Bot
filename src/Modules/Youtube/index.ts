@@ -273,7 +273,7 @@ class Youtube extends Module {
 
 	private askInfo() {
 		this.zaplify?.replyAuthor(
-			'Preciso de mais informações. Se quiser saber como funciono, digite !yt ajuda',
+			'Preciso de mais informações. Se quiser saber como funciono, digite !yt help',
 			this.requester || undefined
 		);
 	}

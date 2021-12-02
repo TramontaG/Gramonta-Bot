@@ -23,6 +23,8 @@ const EntitiesArray = [
 	EntityTypes.HOROSCOPE,
 ];
 
+type LoggerArgs = Args & {};
+
 class LoggerModule extends Module {
 	logger: Logger;
 
@@ -46,6 +48,20 @@ class LoggerModule extends Module {
 			name: 'reset',
 			method: () => this.reset(),
 		});
+	}
+
+	async history(args: Args) {
+		const requester = this.zaplify?.messageObject as Message;
+		const entityType = args.immediate?.trim() as EntityTypes;
+
+		if (!entityType)
+			return this.zaplify?.replyAuthor('Por favor insira algum comando para logar!');
+		if (!EntitiesArray.includes(entityType))
+			return this.zaplify?.replyAuthor('Não consigo logar isso, comando inválido!');
+
+		const allEntities = await this.logger.getAllEntities(entityType);
+
+		let message = [];
 	}
 
 	async logAll(entityType: EntityTypes) {
@@ -86,8 +102,8 @@ class LoggerModule extends Module {
 			'',
 
 			`*_RANKING DE USOS DE ${entityType.toUpperCase()} POR PESSOA_*`,
-			`${personRank.reduce((acc, person, index) => {
-				return (acc += `*${index + 1}* - ${person.person}: Usou ${
+			`${personRank.slice(0, 10).reduce((acc, person, index) => {
+				return (acc += `*${index + 1}* - ${this.censorNumber(person.person)}: Usou ${
 					person.amount
 				} vezes\n`);
 			}, '')}`,
@@ -106,6 +122,10 @@ class LoggerModule extends Module {
 		this.zaplify?.replyAuthor(message, requester);
 	}
 
+	private censorNumber(number: string) {
+		return number.split('-')[0] + ' - **' + number.substr(15, 17);
+	}
+
 	private getPersonRank(personMap: PersonMap) {
 		return Object.keys(personMap)
 			.map(person => {
@@ -114,7 +134,7 @@ class LoggerModule extends Module {
 					amount: personMap[person],
 				};
 			})
-			.sort((a, b) => a.amount + b.amount);
+			.sort((a, b) => b.amount - a.amount);
 	}
 
 	private getGroupRank(groupMap: GroupMap) {
@@ -125,7 +145,7 @@ class LoggerModule extends Module {
 					amount: groupMap[group].amount,
 				};
 			})
-			.sort((a, b) => a.amount + b.amount);
+			.sort((a, b) => b.amount - a.amount);
 	}
 
 	private mostUsedGroup(groupMap: GroupMap) {

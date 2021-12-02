@@ -62,7 +62,8 @@ class Zaplify {
 			requester?.from || this.messageObject.from,
 			caption,
 			buttons,
-			title || ''
+			title || '',
+			''
 		);
 	}
 

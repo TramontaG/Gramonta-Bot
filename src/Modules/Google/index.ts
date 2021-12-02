@@ -45,9 +45,13 @@ class Google extends Module {
 		const requester = this.requester as Message;
 		try {
 			const imgAmount = Number(args.imgamount) || 5;
-			const results = await this.getImageSearcher().search(query, {
-				safe: 'high',
-			});
+			const results = await this.getImageSearcher()
+				.search(query, {
+					safe: 'high',
+				})
+				.catch(e => {
+					throw e;
+				});
 			let amountSend = 0;
 			results.forEach(result => {
 				if (amountSend >= imgAmount) return;

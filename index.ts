@@ -38,6 +38,6 @@ const start = async (client: Client) => {
 	});
 };
 
-create(options).then(client => {
+create({ ...options, multiDevice: true }).then(client => {
 	start(client);
 });
