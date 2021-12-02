@@ -37,11 +37,16 @@ class Copypasta extends Module {
 			method: this.searchCopypasta.bind(this),
 		});
 
+		this.registerPublicMethod({
+			name: 'number',
+			method: this.sendCopypastaByIndex.bind(this),
+		});
+
 		CopypastaManager.getCopypstaList().then(copypastaList => {
 			copypastaList.forEach(copypastaName => {
 				this.registerPublicMethod({
 					name: copypastaName,
-					method: () => this.getCopypasta(copypastaName),
+					method: () => this.sendCopypastaByName(copypastaName),
 				});
 			});
 		});
@@ -86,7 +91,7 @@ class Copypasta extends Module {
 
 		this.registerPublicMethod({
 			name: copypastaName,
-			method: () => this.getCopypasta(copypastaName),
+			method: () => this.sendCopypastaByName(copypastaName),
 		});
 
 		this.zaplify?.replyAuthor(
@@ -109,9 +114,9 @@ class Copypasta extends Module {
 		this.zaplify?.replyAuthor(message, requester);
 	}
 
-	async getCopypasta(copypastaName: string) {
+	async sendCopypastaByName(copypastaName: string) {
 		const requester = this.zaplify?.messageObject as Message;
-		const copypasta = await CopypastaManager.getCopyPasta(copypastaName);
+		const copypasta = await CopypastaManager.getCopyPastaByName(copypastaName);
 		this.zaplify?.replyAuthor(copypasta, requester);
 
 		this.logger.insertNew(EntityTypes.COPYPASTAS, {
@@ -121,6 +126,31 @@ class Copypasta extends Module {
 			copypastaName,
 			date: new Date().getTime(),
 		});
+	}
+
+	async sendCopypastaByIndex(args: Args) {
+		const requester = this.zaplify?.messageObject as Message;
+		const indexInText = args.immediate?.trim();
+		if (!indexInText)
+			return this.zaplify?.replyAuthor('Insira o número da copypasta', requester);
+		if (indexInText.match(/[^0-9]/g))
+			return this.zaplify?.replyAuthor('Insira número, seu macaco!', requester);
+
+		try {
+			const index = Number(indexInText);
+			const result = await CopypastaManager.getCopyPastaByIndex(index - 1);
+			this.zaplify?.replyAuthor(result.copypasta, requester);
+
+			this.logger.insertNew(EntityTypes.COPYPASTAS, {
+				groupName: requester.isGroupMsg ? requester.chat.name : '_',
+				chatId: requester.chat.id,
+				requester: requester.sender.formattedName,
+				copypastaName: result.copypastaName,
+				date: new Date().getTime(),
+			});
+		} catch (e) {
+			this.zaplify?.replyAuthor(e as string, requester);
+		}
 	}
 
 	async sendHelp() {

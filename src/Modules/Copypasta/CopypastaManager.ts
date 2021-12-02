@@ -4,10 +4,20 @@ export const getCopypstaList = () => {
 	return fs.readdir('./media/Copypastas');
 };
 
-export const getCopyPasta = (copypastaName: string) => {
+export const getCopyPastaByName = (copypastaName: string) => {
 	return fs.readFile(`./media/Copypastas/${copypastaName}`, {
 		encoding: 'utf-8',
 	});
+};
+
+export const getCopyPastaByIndex = async (copypastaIndex: number) => {
+	const copypastaList = await getCopypstaList();
+	if (copypastaIndex + 1 > copypastaList.length) throw 'index out of bounds';
+
+	return {
+		copypasta: await getCopyPastaByName(copypastaList[copypastaIndex]),
+		copypastaName: copypastaList[copypastaIndex],
+	};
 };
 
 export const newCopyPasta = (copypastaName: string, copypasta: string) => {
@@ -26,7 +36,7 @@ export const getAllCopypastas = async (): Promise<CopypastaSearchResut[]> => {
 	return new Promise(resolve => {
 		copypastaList.forEach(copypastaName => {
 			results.push(
-				getCopyPasta(copypastaName).then(copypasta => {
+				getCopyPastaByName(copypastaName).then(copypasta => {
 					return {
 						copypasta,
 						copypastaName,

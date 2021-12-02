@@ -4,10 +4,16 @@ Acervo pessoal do bot com muitas copypastas!
 -Listar todas as copypastas: 
     *_!copypasta all_*
 
--Enviar uma copypasta: 
+-Enviar uma copypasta pelo nome: 
     *_!copypasta nome-da-copypasta_*
+
+-Enviar uma copypasta pelo numero: 
+    *_!copypasta number numero-da-copypasta_*
 
 -Adicionar uma nova copypasta: 
     *_!copypasta new nome-da-copypasta_*
+
+-Procurar uma copypasta: 
+    *_!copypasta search trecho-da-copypasta_*
 
 *Obs: As copypastas devem ter nomes sem espaço. Use hífen para dar nome às copypastas. Caso contrário, apenas a primeira palavra será levada em conta.
