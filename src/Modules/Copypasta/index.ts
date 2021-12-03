@@ -43,10 +43,10 @@ class Copypasta extends Module {
 		});
 
 		CopypastaManager.getCopypstaList().then(copypastaList => {
-			copypastaList.forEach(copypastaName => {
+			copypastaList.forEach(item => {
 				this.registerPublicMethod({
-					name: copypastaName,
-					method: () => this.sendCopypastaByName(copypastaName),
+					name: item.copypastaName,
+					method: () => this.sendCopypastaByName(item.copypastaName),
 				});
 			});
 		});
@@ -55,11 +55,11 @@ class Copypasta extends Module {
 	async getCopypastaList() {
 		const requester = this.zaplify?.messageObject as Message;
 		try {
-			const files = await CopypastaManager.getCopypstaList();
-			console.log(files);
+			const copypastaList = await CopypastaManager.getCopypstaList();
 
-			const myCopypastas = files.reduce(
-				(str, fileName, index) => (str += `${index + 1} - ${fileName}\n`),
+			const myCopypastas = copypastaList.reduce(
+				(str, copypasta) =>
+					(str += `${copypasta.index} - ${copypasta.copypastaName}\n`),
 				'*_Lista de copypastas:_*\n'
 			);
 
@@ -80,10 +80,10 @@ class Copypasta extends Module {
 			return this.zaplify?.replyAuthor('Nome proibido', requester);
 
 		const copypastaName = args.immediate.split(' ')[1];
+		const copypastaList = await CopypastaManager.getCopypstaList();
+		const copypastaAlreadyExists =
+			copypastaList.filter(item => item.copypastaName === copypastaName).length > 0;
 
-		const copypastaAlreadyExists = (
-			await CopypastaManager.getCopypstaList()
-		).includes(copypastaName);
 		if (copypastaAlreadyExists)
 			return this.zaplify?.replyAuthor('Essa copypasta já existe!', requester);
 
@@ -107,8 +107,8 @@ class Copypasta extends Module {
 		const requester = this.zaplify?.messageObject as Message;
 		const results = await CopypastaManager.searchCopyPasta(query.trim());
 
-		const message = results.reduce((msg, result, index) => {
-			return (msg += `${index + 1} - ${result.copypastaName}\n`);
+		const message = results.reduce((msg, result) => {
+			return (msg += `${result.index} - ${result.copypastaName}\n`);
 		}, '*_RESULTADOS:_*\n\n');
 
 		this.zaplify?.replyAuthor(message, requester);
@@ -139,13 +139,15 @@ class Copypasta extends Module {
 		try {
 			const index = Number(indexInText);
 			const result = await CopypastaManager.getCopyPastaByIndex(index - 1);
+			console.log(result);
+
 			this.zaplify?.replyAuthor(result.copypasta, requester);
 
 			this.logger.insertNew(EntityTypes.COPYPASTAS, {
 				groupName: requester.isGroupMsg ? requester.chat.name : '_',
 				chatId: requester.chat.id,
 				requester: requester.sender.formattedName,
-				copypastaName: result.copypastaName,
+				copypastaName: result.copypastaName.copypastaName,
 				date: new Date().getTime(),
 			});
 		} catch (e) {

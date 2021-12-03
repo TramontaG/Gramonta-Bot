@@ -11,6 +11,7 @@ import Transcribe from './Transcribe';
 import LyricsFinder from './Lyrics';
 import CopypastaManager from './Copypasta';
 import Logger from './Logger';
+import Weather from './Weather';
 
 const modulesWrapper = new ModulesWrapper();
 
@@ -30,5 +31,6 @@ modulesWrapper.registerModule('transcribe', Transcribe);
 modulesWrapper.registerModule('lyrics', LyricsFinder);
 modulesWrapper.registerModule('copypasta', CopypastaManager);
 modulesWrapper.registerModule('log', Logger);
+modulesWrapper.registerModule('weather', Weather);
 
 export default modulesWrapper;

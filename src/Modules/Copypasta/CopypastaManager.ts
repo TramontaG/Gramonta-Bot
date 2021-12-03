@@ -1,7 +1,11 @@
 import fs from 'fs/promises';
 
-export const getCopypstaList = () => {
-	return fs.readdir('./media/Copypastas');
+export const getCopypstaList = async () => {
+	const nameList = await fs.readdir('./media/Copypastas');
+	return nameList.map((copypastaName, index) => ({
+		copypastaName,
+		index: index + 1,
+	}));
 };
 
 export const getCopyPastaByName = (copypastaName: string) => {
@@ -15,7 +19,7 @@ export const getCopyPastaByIndex = async (copypastaIndex: number) => {
 	if (copypastaIndex + 1 > copypastaList.length) throw 'index out of bounds';
 
 	return {
-		copypasta: await getCopyPastaByName(copypastaList[copypastaIndex]),
+		copypasta: await getCopyPastaByName(copypastaList[copypastaIndex].copypastaName),
 		copypastaName: copypastaList[copypastaIndex],
 	};
 };
@@ -27,6 +31,7 @@ export const newCopyPasta = (copypastaName: string, copypasta: string) => {
 type CopypastaSearchResut = {
 	copypasta: string;
 	copypastaName: string;
+	index: number;
 };
 
 export const getAllCopypastas = async (): Promise<CopypastaSearchResut[]> => {
@@ -34,12 +39,13 @@ export const getAllCopypastas = async (): Promise<CopypastaSearchResut[]> => {
 	const results: Promise<CopypastaSearchResut>[] = [];
 
 	return new Promise(resolve => {
-		copypastaList.forEach(copypastaName => {
+		copypastaList.forEach(item => {
 			results.push(
-				getCopyPastaByName(copypastaName).then(copypasta => {
+				getCopyPastaByName(item.copypastaName).then(copypasta => {
 					return {
 						copypasta,
-						copypastaName,
+						copypastaName: item.copypastaName,
+						index: item.index,
 					};
 				})
 			);

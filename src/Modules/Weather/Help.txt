@@ -1,0 +1,6 @@
+*|--------Weather!------|*
+Consulte a previsão do tempo diretamente do seu Whatsapp!
+
+*|---------City!--------|*
+Dados do dia de hoje para a sua cidade
+Uso: _!weather city_ ```nome da cidade```
