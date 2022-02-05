@@ -80,6 +80,15 @@ class Zaplify {
 		return fileHasBeenSent;
 	}
 
+	async sendSong(fileAddress: string, caption: string, quotedMessage?: Message) {
+		if (!this.messageObject) throw 'No message object initialized';
+		const fileHasBeenSent = await this.client.sendAudio(
+			quotedMessage?.from || this.messageObject.from,
+			fileAddress
+		);
+		return fileHasBeenSent;
+	}
+
 	async getMediaBuffer(mediaAddress: string) {
 		const media = await fs.readFile(mediaAddress, {
 			encoding: 'base64',
@@ -161,7 +170,7 @@ class Zaplify {
 
 	sendImageAsSticker(imageBuffer: Buffer, requester?: Message) {
 		if (!this.messageObject) throw 'No message object initialized';
-		this.client.sendMp4AsSticker(
+		this.client.sendImageAsSticker(
 			requester?.from || this.messageObject?.from,
 			imageBuffer
 		);

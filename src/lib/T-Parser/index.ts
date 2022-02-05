@@ -64,7 +64,7 @@ const parser = M.transform(
 	),
 	({ result }) => ({
 		command: result[0],
-		method: result[1],
+		method: result[1]?.trim(),
 		args: flatArgs(result[2]),
 	})
 );

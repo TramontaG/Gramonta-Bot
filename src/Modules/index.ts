@@ -12,6 +12,7 @@ import LyricsFinder from './Lyrics';
 import CopypastaManager from './Copypasta';
 import Logger from './Logger';
 import Weather from './Weather';
+import Meme from './MemeMaker';
 
 const modulesWrapper = new ModulesWrapper();
 
@@ -32,5 +33,6 @@ modulesWrapper.registerModule('lyrics', LyricsFinder);
 modulesWrapper.registerModule('copypasta', CopypastaManager);
 modulesWrapper.registerModule('log', Logger);
 modulesWrapper.registerModule('weather', Weather);
+modulesWrapper.registerModule('meme', Meme);
 
 export default modulesWrapper;

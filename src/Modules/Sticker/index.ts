@@ -79,7 +79,7 @@ class Sticker extends Module {
 				this.requester || undefined
 			);
 		} catch (e) {
-			return this.sendError(e);
+			return this.sendError(e + JSON.stringify(e));
 		}
 	}
 

@@ -76,6 +76,7 @@ class Youtube extends Module {
 			name: 'default',
 			method: this.askInfo.bind(this),
 		});
+
 		this.registerPublicMethod({
 			name: 'help',
 			method: this.help.bind(this),
@@ -259,6 +260,7 @@ class Youtube extends Module {
 				const video = this.videosInProgress.filter(
 					video => video.videoId === ID_VIDEO
 				)[0];
+				if (!video) return;
 				video.eta = info.progress.eta;
 				video.progress = info.progress.percentage;
 			});
@@ -268,12 +270,17 @@ class Youtube extends Module {
 	}
 
 	private async sendVideo(data: any, message: Message) {
-		this.zaplify?.sendFile(data.file, '', message);
+		console.log(data);
+		try {
+			this.zaplify?.sendSong('./' + data.file, '', message);
+		} catch (e) {
+			this.zaplify?.replyAuthor('deu ruim', message);
+		}
 	}
 
 	private askInfo() {
 		this.zaplify?.replyAuthor(
-			'Preciso de mais informações. Se quiser saber como funciono, digite !yt help',
+			'Youtube ta completamente bugado. To trabalhando numa solução pra ele.',
 			this.requester || undefined
 		);
 	}

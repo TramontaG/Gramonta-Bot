@@ -1,0 +1,27 @@
+*|--------Meme Maker!------|*
+Um criador de memes do imgflip.com!
+
+*_INSTRUÇÕES:_*
+1- Pesquise seu modelo com ```!meme search``` ou ```!meme random```
+2- Responda a mensagem com o modelo e os textos do meme
+
+*|----------Search---------|*
+Procura memes por palavras chave
+
+*Uso:* ```!meme search _pesquisa_```
+*opcional*: para especificar a quantidade de resultados, insira ```-amount _quantidade_```
+*Exemplo:* ```!meme search girl -amount 10```
+
+*|----------Random---------|*
+Procura memes aleatórios
+
+*Uso:* ```!meme random```
+*Opcional*: para especificar a quantidade de resultados, insira ```-amount _quantidade_```
+*Exemplo:* ```!meme random -amount 10```
+
+*|----------Create---------|*
+Cria seu meme a partir de um modelo *RESPONDENDO* a mensagem com o modelo do meme que veio do Search ou do Random
+
+*Uso:* ```!meme create @texto1 @texto2 @texto3 ...```
+*Nota:* Substitua o "texto1" pelo texto que você quer que apareça no meme!
+*Exemplo:* ```!meme create @texto de cima @texto de baixo```

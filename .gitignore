@@ -2,27 +2,24 @@
 node_modules
 # Ignore Session data
 *.data.json
-
 # managed
 **.data.json
 **.node-persist**
 # end managed
-
 # arquivos de log
 logs
-
 #arquivos mp3
 media/*.mp3
 media/to/*.mp3
-
 #App Dist
 dist
-
 #envs
 .env
-
 RecycleBin
 media
 _IGNORE_TramontaBot
-
 googleAppCredentials.json
+
+# managed
+**_IGNORE_**
+# end managed

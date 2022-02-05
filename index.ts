@@ -5,6 +5,8 @@ import ModulesWrapper from 'src/Modules';
 import Zaplify from 'src/Modules/Zaplify';
 import dotEnv from 'dotenv';
 
+const banned = ['556997479999@c.us'];
+
 dotEnv.config({
 	path: '.env',
 });
@@ -28,7 +30,11 @@ const start = async (client: Client) => {
 		}
 	};
 
-	client.onMessage(message => {
+	client.onAnyMessage(message => {
+		if (banned.includes(message.author) && message.body.startsWith('!')) {
+			client.reply(message.from, 'Você está bloqueado :)', message.id);
+			return;
+		}
 		zaplify.setMessageObject(message);
 		handleMsg(message.caption || message.body);
 	});

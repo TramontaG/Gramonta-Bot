@@ -45,10 +45,7 @@ export class Module {
 
 	setRequester() {
 		const message = this.zaplify?.messageObject;
-		if (
-			message?.type &&
-			message?.type !== MessageTypes.BUTTONS_RESPONSE
-		) {
+		if (message?.type && message?.type !== MessageTypes.BUTTONS_RESPONSE) {
 			this.requester = message;
 		}
 	}
@@ -69,9 +66,7 @@ class ModulesWrapper {
 	}
 
 	getModule(moduleName: string) {
-		const moduleAddress = this.modules.filter(
-			module => module.name === moduleName
-		);
+		const moduleAddress = this.modules.filter(module => module.name === moduleName);
 		return moduleAddress[0]?.module;
 	}
 

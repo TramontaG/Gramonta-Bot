@@ -33,4 +33,8 @@ Acesso ao módulo: *_!copypasta_*
 *|--------Logger!-------|*
 *beta*
 Mostra dados sobre utilização do bot
-Acesso ao módulo: *_!log*
+Acesso ao módulo: *_!log_*
+
+*|--------Weather!------|*
+Consulte a previsão do tempo diretamente do seu Whatsapp!
+Acesso ao módulo: *_!weather_*

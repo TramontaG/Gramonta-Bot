@@ -82,7 +82,7 @@ class Horoscopo extends Module {
 					return this.zaplify?.replyAuthor(`${resp.data.libra}`, requester);
 				case 'sagitario':
 				case 'sagitário':
-					return this.zaplify?.replyAuthor(`${resp.data.sagittarius}`), requester;
+					return this.zaplify?.replyAuthor(`${resp.data.sagittarius}`, requester);
 				case 'capricornio':
 				case 'capricórnio':
 					return this.zaplify?.replyAuthor(`${resp.data.capricorn}`, requester);
