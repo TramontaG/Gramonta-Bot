@@ -35,6 +35,13 @@ const start = async (client: Client) => {
 			client.reply(message.from, 'Você está bloqueado :)', message.id);
 			return;
 		}
+		if (
+			!message.isGroupMsg &&
+			(message.caption?.startsWith('!') || message.body?.startsWith('!'))
+		) {
+			client.reply(message.from, 'Esse bot só funciona em grupos', message.id);
+			return;
+		}
 		zaplify.setMessageObject(message);
 		handleMsg(message.caption || message.body);
 	});

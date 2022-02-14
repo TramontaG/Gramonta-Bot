@@ -31,7 +31,18 @@ class Sticker extends Module {
 				this.sendError('Mano, algo deu muuuito errado');
 				return;
 			}
-			console.log(messageObject.id);
+
+			if (!messageObject.isGroupMsg)
+				return this.zaplify?.replyAuthor(
+					[
+						'PARA DE VAZAR MEU NUMERO!!!!',
+						'Esse é um numero pessoal. Eu não quero ver foto da tua familia, dos teus amigos ou da tua pemba',
+						'Pelo amor de deus, se vai fazer figurinha faz num grupo que eu esteja!',
+						'\n',
+						'Esse bot não faz mais figurinhas no privado por causa de vacilão sem noção.',
+					].join('\n'),
+					messageObject
+				);
 
 			const typesAllowed = [MessageTypes.IMAGE, MessageTypes.VIDEO];
 

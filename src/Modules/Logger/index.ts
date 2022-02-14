@@ -1,4 +1,5 @@
 import { Message } from '@open-wa/wa-automate';
+import { resolve } from 'path/posix';
 import { AllEntitiesModel, EntityTypes } from 'src/BigData/JsonDB';
 import { Args, Module } from '../ModulesRegister';
 import Logger from './Logger';
@@ -44,9 +45,14 @@ class LoggerModule extends Module {
 			method: (args: Args) => this.rank(args),
 		});
 
+		// this.registerPublicMethod({
+		// 	name: 'reset',
+		// 	method: () => this.reset(),
+		// });
+
 		this.registerPublicMethod({
-			name: 'reset',
-			method: () => this.reset(),
+			name: 'me',
+			method: (args: Args) => this.me(args),
 		});
 	}
 
@@ -120,6 +126,27 @@ class LoggerModule extends Module {
 		].join('\n');
 
 		this.zaplify?.replyAuthor(message, requester);
+	}
+
+	async me(_: Args) {
+		const requester = this.zaplify?.messageObject as Message;
+		let message = '*Seu uso do bot*\n';
+		EntitiesArray.forEach(async (entity, index) => {
+			const totalUse = await this.getTotalUse(
+				entity,
+				requester.sender.formattedName
+			);
+			message += `*${entity}:* _${totalUse} vezes_\n`;
+			if (index === EntitiesArray.length - 1) {
+				this.zaplify?.replyAuthor(message, requester);
+			}
+		});
+	}
+
+	private async getTotalUse(entityType: EntityTypes, senderName: string) {
+		const allEntities = await this.logger.getAllEntities(entityType);
+		const personMap = this.getPersonMap(allEntities);
+		return personMap[senderName] || 0;
 	}
 
 	private censorNumber(number: string) {

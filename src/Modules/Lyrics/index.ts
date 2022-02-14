@@ -38,8 +38,8 @@ class LyricsFinder extends Module {
 			const result = await API.firstSong(query);
 			if (!result) return this.zaplify?.replyAuthor('Não encontrei nada', requester);
 
-			this.logger.insertNew(EntityTypes.SONGS, {
-				songName: query,
+			this.logger.insertNew(EntityTypes.LYRICS, {
+				query,
 				groupName: requester.isGroupMsg ? requester.chat.name : '_',
 				chatId: requester.chat.id,
 				requester: requester.sender.formattedName,
