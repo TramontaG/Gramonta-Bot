@@ -5,7 +5,7 @@ import ModulesWrapper from 'src/Modules';
 import Zaplify from 'src/Modules/Zaplify';
 import dotEnv from 'dotenv';
 
-const banned = ['556997479999@c.us'];
+const banned = ['556997479999@c.us', '551198783111@c.us'];
 
 dotEnv.config({
 	path: '.env',
@@ -37,7 +37,7 @@ const start = async (client: Client) => {
 		}
 		if (
 			!message.isGroupMsg &&
-			(message.caption?.startsWith('!') || message.body?.startsWith('!'))
+			(message?.caption?.startsWith('!') || message?.body?.startsWith('!'))
 		) {
 			client.reply(message.from, 'Esse bot só funciona em grupos', message.id);
 			return;

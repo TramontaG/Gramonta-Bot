@@ -1,5 +1,4 @@
 import { Message } from '@open-wa/wa-automate';
-import { resolve } from 'path/posix';
 import { AllEntitiesModel, EntityTypes } from 'src/BigData/JsonDB';
 import { Args, Module } from '../ModulesRegister';
 import Logger from './Logger';
@@ -16,15 +15,13 @@ type PersonMap = {
 };
 
 const EntitiesArray = [
+	EntityTypes.STICKERS,
 	EntityTypes.COPYPASTAS,
 	EntityTypes.GOOGLESEARCHES,
 	EntityTypes.SONGS,
-	EntityTypes.STICKERS,
 	EntityTypes.LYRICS,
 	EntityTypes.HOROSCOPE,
 ];
-
-type LoggerArgs = Args & {};
 
 class LoggerModule extends Module {
 	logger: Logger;

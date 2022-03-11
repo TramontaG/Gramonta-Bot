@@ -1,0 +1,10 @@
+*|---------Finance---------|*
+Módulo para quem gosta do mercado financeiro
+
+    -*!finance stock _ação_*: Te dá informações sobre a ação escolhida.
+        *Exemplo:* _!finance stock petr4_
+
+    -!finance exchange _moeda_*: Te dá o valor de câmbio da moeda.
+        *Exemplo:* _!finance exchange BTC_ (para valor de BTC em reais);
+        *Exemplo:* _!finance exchange BTC USD_ (para valor de BTC em dólares);
+        *Exemplo:* _!finance exchange USD_ (para saber quanto custa o dólar); 

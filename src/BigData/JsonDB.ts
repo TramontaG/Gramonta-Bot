@@ -112,6 +112,18 @@ class Database {
 				date: 'int',
 			},
 		},
+		weather: {
+			name: 'weather',
+			primaryKey: 'id',
+			properties: {
+				id: { type: 'int', indexed: true },
+				groupName: 'string',
+				chatId: 'string',
+				requester: 'string',
+				query: 'string',
+				date: 'int',			
+			}
+		}
 	};
 }
 
@@ -159,6 +171,13 @@ export type AllEntitiesModel = {
 		sign: string;
 		date: number;
 	};
+	weather : {
+		groupName: string;
+		chatId: string;
+		requester: string;
+		query: string;
+		date: number;
+	}
 };
 
 export enum EntityTypes {
@@ -168,6 +187,7 @@ export enum EntityTypes {
 	GOOGLESEARCHES = 'googleSearches',
 	LYRICS = 'lyrics',
 	HOROSCOPE = 'horoscope',
+	WEATHER = 'weather',
 }
 
 export default Database;

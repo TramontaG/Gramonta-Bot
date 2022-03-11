@@ -13,6 +13,8 @@ import CopypastaManager from './Copypasta';
 import Logger from './Logger';
 import Weather from './Weather';
 import Meme from './MemeMaker';
+import TextTransform from './TextTransform';
+import Finance from './Finance';
 
 const modulesWrapper = new ModulesWrapper();
 
@@ -34,5 +36,7 @@ modulesWrapper.registerModule('copypasta', CopypastaManager);
 modulesWrapper.registerModule('log', Logger);
 modulesWrapper.registerModule('weather', Weather);
 modulesWrapper.registerModule('meme', Meme);
+modulesWrapper.registerModule('text', TextTransform);
+modulesWrapper.registerModule('finance', Finance);
 
 export default modulesWrapper;

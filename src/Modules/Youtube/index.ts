@@ -239,6 +239,12 @@ class Youtube extends Module {
 				videoId: ID_VIDEO,
 			});
 			YD.on('finished', async (err, data) => {
+				if (err)
+					return this.zaplify?.replyAuthor(
+						'Deu pau, se liga: ' + JSON.stringify(err),
+						requester
+					);
+
 				const videoInProgressIndex = this.videosInProgress.indexOf(
 					this.videosInProgress.filter(video => video.videoId === ID_VIDEO)[0]
 				);

@@ -22,61 +22,51 @@ class Sticker extends Module {
 			name: 'help',
 			method: this.help.bind(this),
 		});
+
+		this.registerPublicMethod({
+			name: 'img',
+			method: this.stickerToImage.bind(this),
+		});
 	}
 
 	async sticker() {
 		try {
-			const messageObject = this.requester?.quotedMsg || this.requester;
-			if (!messageObject) {
-				this.sendError('Mano, algo deu muuuito errado');
-				return;
-			}
-
-			if (!messageObject.isGroupMsg)
-				return this.zaplify?.replyAuthor(
-					[
-						'PARA DE VAZAR MEU NUMERO!!!!',
-						'Esse é um numero pessoal. Eu não quero ver foto da tua familia, dos teus amigos ou da tua pemba',
-						'Pelo amor de deus, se vai fazer figurinha faz num grupo que eu esteja!',
-						'\n',
-						'Esse bot não faz mais figurinhas no privado por causa de vacilão sem noção.',
-					].join('\n'),
-					messageObject
-				);
+			const messageObject =
+				this.requester?.quotedMsg || (this.zaplify?.messageObject as Message);
 
 			const typesAllowed = [MessageTypes.IMAGE, MessageTypes.VIDEO];
 
-			if (typesAllowed.indexOf(messageObject.type) == -1) {
-				this.zaplify?.replyAuthor(
-					'Preciso de uma imagem ou video. Digite !sticker help para entender como funciono :)'
-				);
-				return;
-			}
+			if (!typesAllowed.includes(messageObject.type))
+				return this.sendError('Preciso de um video, gif ou imagem');
 
 			const media = (await this.zaplify?.getMediaBufferFromMessage(
 				messageObject
 			)) as Buffer;
 
 			if (messageObject.type === MessageTypes.IMAGE) {
-				this.logger.insertNew(EntityTypes.STICKERS, {
-					animated: false,
-					groupName: messageObject.isGroupMsg ? messageObject.chat.name : '_',
-					chatId: messageObject.chat.id,
-					requester: messageObject.sender.formattedName,
-					date: new Date().getTime(),
-				});
+				this.logSticker(messageObject, false);
 				return await this.sendImageSticker(media);
 			}
 			if (messageObject.type === MessageTypes.VIDEO) {
-				this.logger.insertNew(EntityTypes.STICKERS, {
-					animated: true,
-					groupName: messageObject.isGroupMsg ? messageObject.chat.name : '_',
-					chatId: messageObject.chat.id,
-					requester: messageObject.sender.formattedName,
-					date: new Date().getTime(),
-				});
+				this.logSticker(messageObject, true);
 				return await this.sendAnimatedSticker(media);
 			}
+		} catch (e) {
+			this.sendError('Erro desconhecido: ' + e, this.requester || undefined);
+		}
+	}
+
+	async stickerToImage() {
+		try {
+			const requester = this.zaplify?.messageObject as Message;
+			if (requester.quotedMsg?.type !== MessageTypes.STICKER)
+				return this.zaplify?.replyAuthor('Responda uma figurinha', requester);
+
+			const stickerImage = await this.zaplify?.getSticker(requester.quotedMsgObj);
+			if (!stickerImage)
+				return this.zaplify?.replyAuthor('não consegui achar imagem nessa mensagem');
+
+			return this.zaplify?.sendImageAsSticker(stickerImage, requester);
 		} catch (e) {
 			this.sendError('Erro desconhecido: ' + e, this.requester || undefined);
 		}
@@ -107,6 +97,16 @@ class Sticker extends Module {
 			encoding: 'utf-8',
 		});
 		this.zaplify?.replyAuthor(helpText);
+	}
+
+	logSticker(messageObject: Message, animated: boolean) {
+		this.logger.insertNew(EntityTypes.STICKERS, {
+			animated,
+			groupName: messageObject.isGroupMsg ? messageObject.chat.name : '_',
+			chatId: messageObject.chat.id,
+			requester: messageObject.sender.formattedName,
+			date: new Date().getTime(),
+		});
 	}
 }
 

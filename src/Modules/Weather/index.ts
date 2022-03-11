@@ -3,15 +3,18 @@ import fs from 'fs/promises';
 import { Message } from '@open-wa/wa-automate';
 import WeatherAPI from './WeatherAPI';
 import * as F from 'src/Helpers/TextFormatter';
-import { json } from 'express';
+import Logger from '../Logger/Logger';
+import { EntityTypes } from 'src/BigData/JsonDB';
 
 class Weather extends Module {
 	weatherAPI: WeatherAPI;
+	Logger: Logger;
 
 	constructor() {
 		super();
 
 		this.weatherAPI = new WeatherAPI();
+		this.Logger = new Logger();
 
 		this.registerPublicMethod({
 			name: 'default',
@@ -26,19 +29,28 @@ class Weather extends Module {
 	async fromCity(args: Args) {
 		const requester = this.zaplify?.messageObject as Message;
 		const city = args.immediate?.trim();
-		if (!city)
-			return this.zaplify?.replyAuthor('Por favor, insira uma cidade', requester);
+		if (!city) return this.zaplify?.replyAuthor('Por favor, insira uma cidade');
 
 		try {
 			const weather = await this.weatherAPI.getWeatherFromCity(city);
-			if (weather.cod === 404)
+			if (weather.cod == 404)
 				return this.zaplify?.replyAuthor(
-					`Ih, deu ruim. Não encontrei essa cidade, erro ${weather.cod}`
+					`Ih, deu ruim. Não encontrei essa cidade, erro ${weather.cod}`,
+					requester
 				);
-			if (weather.cod !== 200)
+			if (weather.cod != 200)
 				return this.zaplify?.replyAuthor(
-					`Ih, deu ruim. Request voltou com status ${weather.cod}`
+					`Ih, deu ruim. Request voltou com status ${weather.cod}`,
+					requester
 				);
+
+			this.Logger.insertNew(EntityTypes.WEATHER, {
+				query: city,
+				groupName: requester.isGroupMsg ? requester.chat.name : '_',
+				chatId: requester.chat.id,
+				requester: requester.sender.formattedName,
+				date: new Date().getTime(),
+			});
 
 			const message = [
 				`${F.italic(F.bold(`Clima atual de ${weather.name}`))}`,
