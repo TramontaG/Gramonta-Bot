@@ -164,4 +164,4 @@ class Copypasta extends Module {
 	}
 }
 
-export default new Copypasta();
+export default Copypasta;

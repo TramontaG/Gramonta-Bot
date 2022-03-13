@@ -116,4 +116,4 @@ class Horoscopo extends Module {
 	}
 }
 
-export default new Horoscopo();
+export default Horoscopo;

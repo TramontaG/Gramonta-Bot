@@ -164,4 +164,4 @@ class Google extends Module {
 	}
 }
 
-export default new Google();
+export default Google;

@@ -247,4 +247,4 @@ class LoggerModule extends Module {
 	}
 }
 
-export default new LoggerModule();
+export default LoggerModule;

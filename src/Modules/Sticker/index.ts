@@ -93,4 +93,4 @@ class Sticker extends Module {
 	}
 }
 
-export default new Sticker();
+export default Sticker;

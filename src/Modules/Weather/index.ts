@@ -44,13 +44,15 @@ class Weather extends Module {
 					requester
 				);
 
-			this.Logger.insertNew(EntityTypes.WEATHER, {
-				query: city,
-				groupName: requester.isGroupMsg ? requester.chat.name : '_',
-				chatId: requester.chat.id,
-				requester: requester.sender.formattedName,
-				date: new Date().getTime(),
-			});
+			if (!requester.id.startsWith('Debug')) {
+				this.Logger.insertNew(EntityTypes.WEATHER, {
+					query: city,
+					groupName: requester.isGroupMsg ? requester.chat.name : '_',
+					chatId: requester.chat.id,
+					requester: requester.sender.formattedName,
+					date: new Date().getTime(),
+				});
+			}
 
 			const message = [
 				`${F.italic(F.bold(`Clima atual de ${weather.name}`))}`,
@@ -73,7 +75,7 @@ class Weather extends Module {
 			].join('\n');
 			this.zaplify?.replyAuthor(message, requester);
 		} catch (e) {
-			this.zaplify?.replyAuthor('Erro desconhcido: ' + JSON.stringify(e), requester);
+			this.zaplify?.replyAuthor('Erro desconhcido: ' + e, requester);
 		}
 	}
 
@@ -86,4 +88,4 @@ class Weather extends Module {
 	}
 }
 
-export default new Weather();
+export default Weather;

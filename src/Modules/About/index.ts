@@ -19,4 +19,4 @@ class Help extends Module {
 	}
 }
 
-export default new Help();
+export default Help;

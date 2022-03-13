@@ -119,4 +119,4 @@ class MemeModule extends Module {
 	}
 }
 
-export default new MemeModule();
+export default MemeModule;

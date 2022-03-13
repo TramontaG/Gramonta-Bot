@@ -108,4 +108,4 @@ class Finance extends Module {
 	}
 }
 
-export default new Finance();
+export default Finance;

@@ -15,10 +15,10 @@ DebugServer.get('/', async (req, res) => {
 		id: `Debug - Message sent through WebRequest on ${new Date()}`,
 	};
 
-	modules.registerMockedZaplify(mockedCient);
+	modules.WebRequest.registerMockedZaplify(mockedCient);
 
 	const { command, method, args } = parseResult.result;
-	const module = modules.getModule(command);
+	const module = modules.WebRequest.getModule(command);
 	if (!module) return;
 
 	module.setRequester();

@@ -274,4 +274,4 @@ class Youtube extends Module {
 	}
 }
 
-export default new Youtube();
+export default Youtube;

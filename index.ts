@@ -15,16 +15,18 @@ dotEnv.config({
 const start = async (client: Client) => {
 	console.log('[SERVER] Servidor iniciado!');
 	const zaplify = new Zaplify(client);
-	ModulesWrapper.registerZaplify(zaplify);
+	ModulesWrapper.Zaplify.registerZaplify(zaplify);
 
 	const handleMsg = async (msg: string) => {
 		const parsingResult = parse(msg?.toLowerCase() || 'null');
 
 		if (!parsingResult.isError) {
 			const { command, method, args } = parsingResult.result;
-			const module = ModulesWrapper.getModule(command);
+			const module = ModulesWrapper.Zaplify.getModule(command);
 
 			if (!module) return;
+
+			console.log(module.zaplify);
 
 			module.setRequester();
 			module.callMethod(method, args);
@@ -54,7 +56,6 @@ const start = async (client: Client) => {
 
 DebugServer.listen(3000);
 
-// create({ ...options, multiDevice: true }).then(client => {
-// 	start(client);
-
-// });
+create({ ...options, multiDevice: true }).then(client => {
+	start(client);
+});

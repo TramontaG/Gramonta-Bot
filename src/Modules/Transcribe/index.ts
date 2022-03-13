@@ -56,4 +56,4 @@ class Transcriber extends Module {
 	}
 }
 
-export default new Transcriber();
+export default Transcriber;

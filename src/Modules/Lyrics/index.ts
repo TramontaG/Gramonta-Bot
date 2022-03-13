@@ -60,4 +60,4 @@ class LyricsFinder extends Module {
 	}
 }
 
-export default new LyricsFinder();
+export default LyricsFinder;
