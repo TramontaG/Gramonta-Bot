@@ -4,6 +4,7 @@ import parse from 'src/lib/T-Parser';
 import ModulesWrapper from 'src/Modules';
 import Zaplify from 'src/Modules/Zaplify';
 import dotEnv from 'dotenv';
+import DebugServer from './src/Debug';
 
 const banned = ['556997479999@c.us', '551198783111@c.us'];
 
@@ -51,6 +52,9 @@ const start = async (client: Client) => {
 	});
 };
 
-create({ ...options, multiDevice: true }).then(client => {
-	start(client);
-});
+DebugServer.listen(3000);
+
+// create({ ...options, multiDevice: true }).then(client => {
+// 	start(client);
+
+// });

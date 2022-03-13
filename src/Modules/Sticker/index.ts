@@ -6,11 +6,9 @@ import { EntityTypes } from 'src/BigData/JsonDB';
 
 class Sticker extends Module {
 	logger: Logger;
-	requester: Message | null;
 
 	constructor() {
 		super();
-		this.requester = null;
 		this.logger = new Logger();
 
 		this.registerPublicMethod({
@@ -21,11 +19,6 @@ class Sticker extends Module {
 		this.registerPublicMethod({
 			name: 'help',
 			method: this.help.bind(this),
-		});
-
-		this.registerPublicMethod({
-			name: 'img',
-			method: this.stickerToImage.bind(this),
 		});
 	}
 
@@ -52,23 +45,10 @@ class Sticker extends Module {
 				return await this.sendAnimatedSticker(media);
 			}
 		} catch (e) {
-			this.sendError('Erro desconhecido: ' + e, this.requester || undefined);
-		}
-	}
-
-	async stickerToImage() {
-		try {
-			const requester = this.zaplify?.messageObject as Message;
-			if (requester.quotedMsg?.type !== MessageTypes.STICKER)
-				return this.zaplify?.replyAuthor('Responda uma figurinha', requester);
-
-			const stickerImage = await this.zaplify?.getSticker(requester.quotedMsgObj);
-			if (!stickerImage)
-				return this.zaplify?.replyAuthor('não consegui achar imagem nessa mensagem');
-
-			return this.zaplify?.sendImageAsSticker(stickerImage, requester);
-		} catch (e) {
-			this.sendError('Erro desconhecido: ' + e, this.requester || undefined);
+			this.sendError(
+				'Erro desconhecido: ' + e,
+				(this.requester as Message) || undefined
+			);
 		}
 	}
 
@@ -77,7 +57,7 @@ class Sticker extends Module {
 			return this.zaplify?.sendVideoSticker(
 				media,
 				'video/mp4',
-				this.requester || undefined
+				(this.requester as Message) || undefined
 			);
 		} catch (e) {
 			return this.sendError(e + JSON.stringify(e));
@@ -85,7 +65,10 @@ class Sticker extends Module {
 	}
 
 	async sendImageSticker(media: Buffer) {
-		return this.zaplify?.sendSticker(media, this.requester || undefined);
+		return this.zaplify?.sendSticker(
+			media,
+			(this.requester as Message) || undefined
+		);
 	}
 
 	async sendError(error: string | unknown, message?: Message) {

@@ -29,7 +29,7 @@ modulesWrapper.registerModule('youtube', Youtube);
 modulesWrapper.registerModule('horoscopo', Horoscopo);
 modulesWrapper.registerModule('horóscopo', Horoscopo);
 modulesWrapper.registerModule('google', Google);
-modulesWrapper.registerModule('yt2', Youtube2);
+// modulesWrapper.registerModule('yt2', Youtube2);
 modulesWrapper.registerModule('transcribe', Transcribe);
 modulesWrapper.registerModule('lyrics', LyricsFinder);
 modulesWrapper.registerModule('copypasta', CopypastaManager);

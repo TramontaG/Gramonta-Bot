@@ -1,4 +1,7 @@
 import { Client, Message, MessageTypes } from '@open-wa/wa-automate';
+import MockedClient from 'src/Debug/ZaplifyMock';
+import ZaplifyMock from 'src/Debug/ZaplifyMock';
+import { MockedMessageObject } from 'src/Debug/ZaplifyMock/Models';
 import Zaplify from './Zaplify';
 
 export interface Args {
@@ -16,13 +19,13 @@ type ModuleAddresser = {
 
 export class Module {
 	publicMethods: PublicMethod[];
-	zaplify: Zaplify | null;
-	requester: Message | unknown;
+	zaplify: Zaplify | ZaplifyMock | null;
+	requester: Message | MockedMessageObject | undefined;
 
 	constructor() {
 		this.publicMethods = [];
 		this.zaplify = null;
-		this.requester = null;
+		this.requester = undefined;
 	}
 
 	callMethod(methodName: string, args: Args): any {
@@ -73,6 +76,12 @@ class ModulesWrapper {
 	registerZaplify(zaplify: Zaplify) {
 		this.modules.forEach(module => {
 			module.module.zaplify = zaplify;
+		});
+	}
+
+	registerMockedZaplify(mockedZaplify: MockedClient) {
+		this.modules.forEach(module => {
+			module.module.zaplify = mockedZaplify;
 		});
 	}
 }

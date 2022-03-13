@@ -52,7 +52,6 @@ class Youtube extends Module {
 	videos: CachedVideo[];
 	nextPageToken: string;
 	previousPageToken: string;
-	requester: Message | null;
 	requesterLine: Message[];
 	videosInProgress: VideoInProgress[];
 	logger: Logger;
@@ -65,7 +64,6 @@ class Youtube extends Module {
 		this.nextPageToken = '';
 		this.previousPageToken = '';
 
-		this.requester = null;
 		this.requesterLine = [];
 
 		this.videosInProgress = [];
@@ -78,25 +76,10 @@ class Youtube extends Module {
 		});
 
 		this.registerPublicMethod({
-			name: 'help',
-			method: this.help.bind(this),
-		});
-		this.registerPublicMethod({
 			name: 'download',
 			method: this.downloadVideo.bind(this),
 		});
-		this.registerPublicMethod({
-			name: 'search',
-			method: this.search.bind(this),
-		});
-		this.registerPublicMethod({
-			name: 'next',
-			method: this.next.bind(this),
-		});
-		this.registerPublicMethod({
-			name: 'previous',
-			method: this.previous.bind(this),
-		});
+
 		this.registerPublicMethod({
 			name: 'progress',
 			method: () => this.progress(),
@@ -125,7 +108,7 @@ class Youtube extends Module {
 
 			if (url) return this.downloadVideoFromUrl(url, this.requester as Message, url);
 
-			if (!query) return this.askInfo();
+			if (!query) return this.askInfo(args, requester);
 			const results = await this.searchResults(query);
 			if (!results) return;
 
@@ -140,36 +123,6 @@ class Youtube extends Module {
 		} catch (e) {
 			this.sendErrorMessage('Deu pau', e as string);
 		}
-	}
-
-	async search(args: YoutubeArgs, token?: string) {
-		if (!args.immediate && !this.searchString) return this.askInfo();
-		const query = args.immediate || this.searchString;
-		this.searchString = query;
-
-		this.addRequester(this.requester as Message);
-
-		const results = await this.searchResults(query, token);
-		if (!results) return;
-		this.addVideos(results);
-
-		const message = results.reduce((message: string, result, index) => {
-			return (message += `${index + 1} - ${result.title}\n`);
-		}, '');
-
-		const buttons = results.map((result, index) => ({
-			id: `!yt download -index ${index} -req ${this.requester?.id}`,
-			text: `${result.title}`,
-		}));
-
-		this.zaplify?.sendButtons(message, buttons, this.requester || undefined);
-	}
-
-	next(args: YoutubeArgs) {
-		return this.search(args, this.nextPageToken);
-	}
-	previous(args: YoutubeArgs) {
-		return this.search(args, this.previousPageToken);
 	}
 
 	private async downloadByIndex(stringIndex: string, reqId?: string) {
@@ -194,7 +147,12 @@ class Youtube extends Module {
 		);
 	}
 
-	private async searchResults(query: string, token?: string, maxResults = 3) {
+	private async searchResults(
+		query: string,
+		token?: string,
+		maxResults = 3,
+		requester?: Message
+	) {
 		try {
 			const options = {
 				maxResults,
@@ -214,7 +172,11 @@ class Youtube extends Module {
 					thumbnail: result.thumbnails.high?.url,
 				}));
 		} catch (e) {
-			return this.sendErrorMessage('Erro desconhecido', JSON.stringify(e));
+			return this.sendErrorMessage(
+				'Erro desconhecido',
+				JSON.stringify(e),
+				requester
+			);
 		}
 	}
 
@@ -260,7 +222,7 @@ class Youtube extends Module {
 					this.videosInProgress.filter(video => video.videoId === ID_VIDEO)[0]
 				);
 				this.videosInProgress.splice(videoInProgressIndex, 1);
-				this.sendErrorMessage('Erro ao baixar mp3', err);
+				this.sendErrorMessage('Erro ao baixar mp3', err, requester);
 			});
 			YD.on('progress', info => {
 				const video = this.videosInProgress.filter(
@@ -271,7 +233,7 @@ class Youtube extends Module {
 				video.progress = info.progress.percentage;
 			});
 		} catch (e) {
-			this.sendErrorMessage('Erro desconhecido', JSON.stringify(e));
+			this.sendErrorMessage('Erro desconhecido', JSON.stringify(e), requester);
 		}
 	}
 
@@ -284,55 +246,31 @@ class Youtube extends Module {
 		}
 	}
 
-	private askInfo() {
-		this.zaplify?.replyAuthor(
-			'Youtube ta completamente bugado. To trabalhando numa solução pra ele.',
-			this.requester || undefined
-		);
+	async askInfo(args: Args, req?: Message) {
+		const requester = req && (this.zaplify?.messageObject as Message);
+
+		const helpText = await fs.readFile('src/Modules/Youtube/Help.txt', {
+			encoding: 'utf-8',
+		});
+		this.zaplify?.replyAuthor(helpText, requester);
 	}
 
-	private sendErrorMessage(prefix: string, error: string) {
-		this.zaplify?.replyAuthor(`${prefix}: ${error}`, this.requester || undefined);
+	private sendErrorMessage(prefix: string, error: string, requester?: Message) {
+		this.zaplify?.replyAuthor(`${prefix}: ${error}`, requester);
 	}
 
-	private sendVideoMetaData(title: string, thumbnail?: string) {
+	private sendVideoMetaData(title: string, thumbnail?: string, requester?: Message) {
 		if (thumbnail)
 			return this.zaplify?.sendImageFromUrl(
 				thumbnail,
 				`Baixando mp3 do vídeo:\n${title}`,
-				this.requester || undefined
+				requester
 			);
 		else
 			return this.zaplify?.sendMessage(
 				`Baixando mp3 do vídeo:\n${title}`,
-				this.requester || undefined
+				requester
 			);
-	}
-
-	private addRequester(requester: Message) {
-		this.requesterLine.unshift(requester);
-		if (this.requesterLine.length > 5) this.requesterLine.pop();
-	}
-
-	private addVideos(
-		results: {
-			link: string;
-			title: string;
-			thumbnail?: string;
-		}[]
-	) {
-		this.videos.unshift({
-			requester: this.requester?.id as string,
-			videos: results,
-		});
-		if (this.videos.length > 5) this.videos.pop();
-	}
-
-	async help() {
-		const helpText = await fs.readFile('src/Modules/Youtube/Help.txt', {
-			encoding: 'utf-8',
-		});
-		this.zaplify?.replyAuthor(helpText);
 	}
 }
 

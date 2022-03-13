@@ -6,6 +6,7 @@ import {
 	useragent,
 } from '@open-wa/wa-automate';
 import fs from 'fs/promises';
+import MockedClient from 'src/Debug/ZaplifyMock';
 
 type Mimetype = 'video/mp4' | 'image/gif' | 'image';
 
