@@ -26,8 +26,6 @@ const start = async (client: Client) => {
 
 			if (!module) return;
 
-			console.log(module.zaplify);
-
 			module.setRequester();
 			module.callMethod(method, args);
 		}

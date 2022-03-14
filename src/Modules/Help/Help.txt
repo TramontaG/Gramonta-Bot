@@ -31,10 +31,18 @@ Acervo pessoal do bot com muitas copypastas!
 Acesso ao módulo: *_!copypasta_*
 
 *|--------Logger!-------|*
-*beta*
 Mostra dados sobre utilização do bot
 Acesso ao módulo: *_!log_*
 
 *|--------Weather!------|*
 Consulte a previsão do tempo diretamente do seu Whatsapp!
 Acesso ao módulo: *_!weather_*
+
+*|------Meme-Maker!----|*
+Faça memes diretamente no seu whatsapp com os templates do IMGFlip!
+Acesso ao módulo: *_!meme_*
+
+*|--------Finance!------|*
+Para quem gosta do mercado financeiro. Consulte câmbio de moedas,
+cotação de ações, fundos imobiliários, BDR's e mais!
+Acesso ao módulo: *_!finance_*

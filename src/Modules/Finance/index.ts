@@ -26,12 +26,17 @@ class Finance extends Module {
 					method: this.exchange.bind(this),
 				})
 		);
+
+		this.registerPublicMethod({
+			name: 'default',
+			method: this.sendInstructions.bind(this),
+		});
 	}
 
 	async stock(args: Args) {
 		const requester = this.zaplify?.messageObject as Message;
 		try {
-			const stockSymbol = args.immediate;
+			const stockSymbol = args.immediate?.trim().toUpperCase();
 
 			if (!stockSymbol)
 				return this.zaplify?.replyAuthor(
@@ -39,30 +44,31 @@ class Finance extends Module {
 					requester
 				);
 
-			const result = await this.API.stock(stockSymbol);
-			if (!result)
+			const stockResult = await this.API.stock(stockSymbol);
+			if (!stockResult)
 				return this.zaplify?.replyAuthor(
 					'Não encontrei nada. Verifique o simbolo da ação e tente novamente',
 					requester
 				);
 
-			const stockResult = result.results[stockSymbol];
 			const message = [
-				bold(`Ação ${stockResult.symbol}: ${stockResult.company_name}`),
-				`${italic(stockResult.description)}`,
-				``,
+				bold(`Ação ${stockResult.symbol}: ${stockResult.name}`),
+				`${italic(stockResult.description || '')}`,
 				`Preço de mercado: ${util.toMoneyString(stockResult.price)}`,
+				`Variação: ${stockResult.change_percent}%`,
 				`Abertura: ${stockResult.market_time.open}`,
 				`Fechamento: ${stockResult.market_time.close}`,
-				`Variação: ${stockResult.change_percent}%`,
 				``,
 				`${stockResult.website}`,
+				``,
+				`${bold('Para mais detalhes acesse o site:')}`,
+				`${this.getOverviewWebsite(stockSymbol)}`,
 			].join('\n');
+
 			return this.zaplify?.replyAuthor(message, requester);
 		} catch (e) {
-			console.log(e);
 			this.zaplify?.replyAuthor(
-				'Deu erro, se liga: ' + JSON.stringify(e),
+				'Deu erro, confira o simbolo da ação ou fundo e tente novamente',
 				requester
 			);
 		}
@@ -105,6 +111,12 @@ class Finance extends Module {
 		}).then(helpText => {
 			this.zaplify?.replyAuthor(helpText);
 		});
+	}
+
+	private getOverviewWebsite(symbol: string) {
+		if (symbol.endsWith('11'))
+			return `https://statusinvest.com.br/fundos-imobiliarios/${symbol}`;
+		return `https://statusinvest.com.br/acoes/${symbol}`;
 	}
 }
 

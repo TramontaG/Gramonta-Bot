@@ -32,8 +32,8 @@ type StocksResponse<T extends string> = {
 	};
 };
 
-const getAlphaVintageKey = () => process.env.ALPHA_VINTAGE_KEY;
-const getHGKey = () => process.env.HG_KEY;
+const getAlphaVintageKey = () => process.env.ALPHA_VINTAGE_API_KEY;
+const getHGKey = () => process.env.HG_API_KEY;
 
 type ExchangeResponse = {
 	['Realtime Currency Exchange Rate']: {
@@ -59,31 +59,25 @@ class FinanceAPI {
 			baseURL: 'https://www.alphavantage.co',
 		});
 
-		this.exchangeAPI.interceptors.request.use(requestConfig => {
-			const ALPHA_VINTAGE_API_KEY = getAlphaVintageKey();
-			return {
-				...requestConfig,
-				params: {
-					...requestConfig.params,
-					apikey: ALPHA_VINTAGE_API_KEY,
-				},
-			};
-		});
+		this.exchangeAPI.interceptors.request.use(requestConfig => ({
+			...requestConfig,
+			params: {
+				...requestConfig.params,
+				apikey: getAlphaVintageKey(),
+			},
+		}));
 
 		this.stocksAPI = axios.create({
 			baseURL: 'https://api.hgbrasil.com/finance',
 		});
 
-		this.stocksAPI.interceptors.request.use(requestConfig => {
-			const HG_API_KEY = getHGKey();
-			return {
-				...requestConfig,
-				params: {
-					...requestConfig.params,
-					key: HG_API_KEY,
-				},
-			};
-		});
+		this.stocksAPI.interceptors.request.use(requestConfig => ({
+			...requestConfig,
+			params: {
+				...requestConfig.params,
+				key: getHGKey(),
+			},
+		}));
 	}
 
 	static util = {
@@ -128,7 +122,7 @@ class FinanceAPI {
 
 		if (!result.data.valid_key) return null;
 
-		return result.data;
+		return result.data.results[symbol];
 	}
 }
 
