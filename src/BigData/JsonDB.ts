@@ -136,6 +136,18 @@ class Database {
 				date: 'string',
 			},
 		},
+		finance: {
+			name: 'finance',
+			primaryKey: 'id',
+			properties: {
+				id: { type: 'int', indexed: true },
+				groupName: 'string',
+				chatId: 'string',
+				requester: 'string',
+				operation: 'string',
+				test: 'salve fatec!!',
+			},
+		},
 	};
 }
 
