@@ -145,7 +145,6 @@ class Database {
 				chatId: 'string',
 				requester: 'string',
 				operation: 'string',
-				test: 'salve fatec!!',
 			},
 		},
 	};
