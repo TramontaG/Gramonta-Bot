@@ -121,9 +121,21 @@ class Database {
 				chatId: 'string',
 				requester: 'string',
 				query: 'string',
-				date: 'int',			
-			}
-		}
+				date: 'int',
+			},
+		},
+		meme: {
+			name: 'meme',
+			primaryKey: 'id',
+			properties: {
+				id: { type: 'int', indexed: true },
+				groupName: 'string',
+				chatId: 'string',
+				requester: 'string',
+				memeId: 'string',
+				date: 'string',
+			},
+		},
 	};
 }
 
@@ -171,13 +183,20 @@ export type AllEntitiesModel = {
 		sign: string;
 		date: number;
 	};
-	weather : {
+	weather: {
 		groupName: string;
 		chatId: string;
 		requester: string;
 		query: string;
 		date: number;
-	}
+	};
+	meme: {
+		groupName: string;
+		chatId: string;
+		requester: string;
+		memeId: string;
+		date: string;
+	};
 };
 
 export enum EntityTypes {
@@ -188,6 +207,7 @@ export enum EntityTypes {
 	LYRICS = 'lyrics',
 	HOROSCOPE = 'horoscope',
 	WEATHER = 'weather',
+	MEME = 'meme',
 }
 
 export default Database;

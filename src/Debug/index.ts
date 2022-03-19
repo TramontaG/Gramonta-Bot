@@ -5,14 +5,18 @@ import MockedClient from './ZaplifyMock';
 
 const DebugServer = Express();
 DebugServer.use(Express.json());
+DebugServer.use(Express.urlencoded({ extended: false }));
 
 DebugServer.get('/', async (req, res) => {
-	const parseResult = parse(req.body.command);
+	const queryParamsCommand = req.query.command as string;
+	const parseResult = parse(queryParamsCommand);
+
 	if (parseResult.isError) return res.status(400).send('Invalid command');
 
 	const mockedCient = MockedClient.getInstance(req, res);
 	mockedCient.messageObject = {
 		id: `Debug - Message sent through WebRequest on ${new Date()}`,
+		author: 'Postman',
 	};
 
 	modules.WebRequest.registerMockedZaplify(mockedCient);

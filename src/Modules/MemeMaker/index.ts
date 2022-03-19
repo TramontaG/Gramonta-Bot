@@ -91,7 +91,7 @@ class MemeModule extends Module {
 			return this.zaplify?.replyAuthor('Envie os textos para a criação do meme!');
 
 		const memeJson: MemeCreationModel = {};
-		textArray.slice(0, 6).forEach((text, index) => {
+		textArray.forEach((text, index) => {
 			memeJson['text' + index] = text;
 		});
 

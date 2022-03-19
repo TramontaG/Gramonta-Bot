@@ -79,11 +79,6 @@ class Youtube extends Module {
 			name: 'download',
 			method: this.downloadVideo.bind(this),
 		});
-
-		this.registerPublicMethod({
-			name: 'progress',
-			method: () => this.progress(),
-		});
 	}
 
 	progress(requester?: Message) {
@@ -112,7 +107,7 @@ class Youtube extends Module {
 			const results = await this.searchResults(query);
 			if (!results) return;
 
-			this.sendVideoMetaData(results[0].title, results[0].thumbnail);
+			this.sendVideoMetaData(results[0].title, results[0].thumbnail, requester);
 
 			this.downloadVideoFromUrl(
 				results[0].link,

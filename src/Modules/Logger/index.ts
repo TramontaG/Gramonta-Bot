@@ -21,6 +21,7 @@ const EntitiesArray = [
 	EntityTypes.SONGS,
 	EntityTypes.LYRICS,
 	EntityTypes.HOROSCOPE,
+	EntityTypes.MEME,
 ];
 
 class LoggerModule extends Module {

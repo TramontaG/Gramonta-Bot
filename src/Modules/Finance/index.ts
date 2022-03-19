@@ -88,11 +88,11 @@ class Finance extends Module {
 
 			const result = await this.API.exchange(from, to);
 			const message = [
-				`${bold(`Câmbio de ${from} x ${to}`)}`,
+				`${bold(`Câmbio de ${to} x ${from}`)}`,
 				``,
-				`1 ${result.to}(${result.toCode}) vale ${util.toMoneyString(
+				`1 ${result.from}(${result.fromCode}) vale ${util.toMoneyString(
 					result.exchangeRate
-				)} ${result.from}(${result.fromCode})`,
+				)} ${result.to}(${result.toCode})`,
 			].join('\n');
 
 			return this.zaplify?.replyAuthor(message, requester);
