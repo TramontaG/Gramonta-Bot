@@ -4,7 +4,7 @@ class Database {
 	DatabaseVersion: number;
 	_RealmInstance: Realm | undefined;
 	constructor() {
-		this.DatabaseVersion = 6;
+		this.DatabaseVersion = 7;
 		this._RealmInstance = undefined;
 	}
 
@@ -133,7 +133,7 @@ class Database {
 				chatId: 'string',
 				requester: 'string',
 				memeId: 'string',
-				date: 'string',
+				date: 'number',
 			},
 		},
 		finance: {
@@ -145,6 +145,8 @@ class Database {
 				chatId: 'string',
 				requester: 'string',
 				operation: 'string',
+				values: 'string[]',
+				date: 'number',
 			},
 		},
 	};
@@ -206,7 +208,15 @@ export type AllEntitiesModel = {
 		chatId: string;
 		requester: string;
 		memeId: string;
-		date: string;
+		date: number;
+	};
+	finance: {
+		groupName: string;
+		chatId: string;
+		requester: string;
+		operation: string;
+		values: string[];
+		date: number;
 	};
 };
 
@@ -219,6 +229,7 @@ export enum EntityTypes {
 	HOROSCOPE = 'horoscope',
 	WEATHER = 'weather',
 	MEME = 'meme',
+	FINANCE = 'finance',
 }
 
 export default Database;

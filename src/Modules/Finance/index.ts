@@ -4,13 +4,16 @@ import { Args, Module } from '../ModulesRegister';
 import FinanceAPI from './API';
 import * as util from './util';
 import fs from 'fs/promises';
+import Logger from '../Logger/Logger';
 
 class Finance extends Module {
 	API: FinanceAPI;
+	logger: Logger;
 
 	constructor() {
 		super();
 		this.API = new FinanceAPI();
+		this.logger = new Logger();
 
 		['stock', 'ação', 'acao', 'açao', 'acão'].map(methodName =>
 			this.registerPublicMethod({
@@ -50,6 +53,17 @@ class Finance extends Module {
 					'Não encontrei nada. Verifique o simbolo da ação e tente novamente',
 					requester
 				);
+
+			if (!requester.id.startsWith('Debug')) {
+				this.logger.insertNew('finance', {
+					groupName: requester.isGroupMsg ? requester.chat.name : '_',
+					chatId: requester.chat.id,
+					requester: requester.sender.formattedName,
+					operation: 'stock',
+					values: [stockSymbol],
+					date: new Date().getTime(),
+				});
+			}
 
 			const message = [
 				bold(`Ação ${stockResult.symbol}: ${stockResult.name}`),
@@ -94,6 +108,17 @@ class Finance extends Module {
 					result.exchangeRate
 				)} ${result.to}(${result.toCode})`,
 			].join('\n');
+
+			if (!requester.id.startsWith('Debug')) {
+				this.logger.insertNew('finance', {
+					groupName: requester.isGroupMsg ? requester.chat.name : '_',
+					chatId: requester.chat.id,
+					requester: requester.sender.formattedName,
+					operation: 'stock',
+					values: [from, to],
+					date: new Date().getTime(),
+				});
+			}
 
 			return this.zaplify?.replyAuthor(message, requester);
 		} catch (e) {

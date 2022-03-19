@@ -4,6 +4,7 @@ import { Args, Module } from '../ModulesRegister';
 import MemeApi from './MemeApi';
 import { MemeCreationModel, MemeCreationObject } from './Models';
 import fs from 'fs/promises';
+import Logger from '../Logger/Logger';
 
 type MemeArgs = Args & {
 	amount?: string;
@@ -12,10 +13,12 @@ type MemeArgs = Args & {
 
 class MemeModule extends Module {
 	memeAPI: MemeApi;
+	logger: Logger;
 
 	constructor() {
 		super();
 		this.memeAPI = new MemeApi();
+		this.logger = new Logger();
 
 		this.registerPublicMethod({
 			name: 'search',
@@ -102,6 +105,14 @@ class MemeModule extends Module {
 				'Ih, deu erro, se liga: ' + JSON.stringify(createdMeme.data),
 				requester
 			);
+
+		this.logger.insertNew('meme', {
+			groupName: requester.isGroupMsg ? requester.chat.name : '_',
+			chatId: requester.chat.id,
+			requester: requester.sender.formattedName,
+			date: new Date().getTime(),
+			memeId: id,
+		});
 
 		this.zaplify?.sendImageFromUrl(
 			createdMeme.data.url,
