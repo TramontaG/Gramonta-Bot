@@ -1,21 +1,33 @@
+import { Message } from '@open-wa/wa-automate';
 import { Args, Module } from '../ModulesRegister';
 
+type TransformerFn = (src: string) => string;
+
 class TextTransform extends Module {
-	constructor() {
+	transformerFn: TransformerFn;
+
+	constructor(transformerFn: TransformerFn) {
 		super();
 
+		this.transformerFn = transformerFn;
+
 		this.registerPublicMethod({
-			name: 'neutro',
-			method: this.neutro.bind(this),
+			name: 'default',
+			method: this.trasnsform.bind(this),
 		});
 	}
 
-	neutro(args: Args) {
-		const message = this.zaplify?.messageObject?.quotedMsg?.body;
-		if (!message)
-			return this.zaplify?.replyAuthor('Responda uma mensagem com esse comando!');
-		const rg = new RegExp(/(?<=\S)\Ss|(?<=\S{2})\S\b/g);
-		return this.zaplify?.replyAuthor(message.replace(rg, 'es'));
+	trasnsform(_: Args) {
+		const requester = this.zaplify?.messageObject as Message;
+		const string = requester.quotedMsg?.body;
+
+		if (!string)
+			return this.zaplify?.replyAuthor(
+				'Responda uma mensagem para eu modificar o texto',
+				requester
+			);
+
+		return this.zaplify?.replyAuthor(this.transformerFn(string), requester);
 	}
 }
 

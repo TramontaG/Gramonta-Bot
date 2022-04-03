@@ -1,7 +1,9 @@
-import Genius, { Client } from 'genius-lyrics';
+import * as Genius from 'genius-lyrics';
+
+console.log({ Genius });
 
 class LyricsApi {
-	client: Client;
+	client: Genius.Client;
 
 	constructor() {
 		this.client = new Genius.Client();

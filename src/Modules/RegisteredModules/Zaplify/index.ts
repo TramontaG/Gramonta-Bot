@@ -17,6 +17,7 @@ import TextTransform from '../../TextTransform';
 import Finance from '../../Finance';
 
 const modulesWrapper = new ModulesWrapper();
+import { kudurolify } from '../../TextTransform/Transformations';
 
 const help = new Help();
 const sticker = new Sticker();
@@ -41,7 +42,7 @@ modulesWrapper.registerModule('copypasta', new CopypastaManager());
 modulesWrapper.registerModule('log', new Logger());
 modulesWrapper.registerModule('weather', new Weather());
 modulesWrapper.registerModule('meme', new Meme());
-modulesWrapper.registerModule('text', new TextTransform());
+modulesWrapper.registerModule('kuduro', new TextTransform(kudurolify));
 modulesWrapper.registerModule('finance', new Finance());
 
 export default modulesWrapper;

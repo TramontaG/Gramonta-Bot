@@ -16,6 +16,8 @@ import Meme from '../../MemeMaker';
 import TextTransform from '../../TextTransform';
 import Finance from '../../Finance';
 
+import { kudurolify } from '../../TextTransform/Transformations';
+
 const modulesWrapper = new ModulesWrapper();
 
 const help = new Help();
@@ -41,7 +43,7 @@ modulesWrapper.registerModule('copypasta', new CopypastaManager());
 modulesWrapper.registerModule('log', new Logger());
 modulesWrapper.registerModule('weather', new Weather());
 modulesWrapper.registerModule('meme', new Meme());
-modulesWrapper.registerModule('text', new TextTransform());
+modulesWrapper.registerModule('kuduro', new TextTransform(kudurolify));
 modulesWrapper.registerModule('finance', new Finance());
 
 export default modulesWrapper;

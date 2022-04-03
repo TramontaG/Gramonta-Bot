@@ -41,6 +41,7 @@
 		"realm": "^10.9.1",
 		"remove.bg": "^1.3.0",
 		"request": "^2.88.2",
+		"text-replacement-map": "^1.0.1",
 		"tiktok-scraper": "^1.4.36",
 		"video-url-link": "^0.1.4",
 		"wikijs": "^6.3.2",

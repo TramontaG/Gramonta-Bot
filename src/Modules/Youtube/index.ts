@@ -208,9 +208,13 @@ class Youtube extends Module {
 				this.videosInProgress.splice(videoInProgressIndex, 1);
 				this.sendVideo(data, requester);
 
-				const lyrics = await API.firstSong(title);
-				if (!lyrics) return;
-				this.zaplify?.replyAuthor(lyrics, requester);
+				try {
+					const lyrics = await API.firstSong(title);
+					if (!lyrics) return;
+					this.zaplify?.replyAuthor(lyrics, requester);
+				} catch (e) {
+					return;
+				}
 			});
 			YD.on('error', err => {
 				const videoInProgressIndex = this.videosInProgress.indexOf(

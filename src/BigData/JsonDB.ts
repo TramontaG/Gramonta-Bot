@@ -133,7 +133,7 @@ class Database {
 				chatId: 'string',
 				requester: 'string',
 				memeId: 'string',
-				date: 'number',
+				date: 'int',
 			},
 		},
 		finance: {
@@ -146,7 +146,7 @@ class Database {
 				requester: 'string',
 				operation: 'string',
 				values: 'string[]',
-				date: 'number',
+				date: 'int',
 			},
 		},
 	};
