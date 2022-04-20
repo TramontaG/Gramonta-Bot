@@ -60,7 +60,7 @@ class Wordle extends Module {
 		console.log({ guess });
 		if (!guess) throw messages.ERROR('Chute não encontrado');
 		if (guess.length !== 5)
-			throw messages.ERROR('Apenas chutes de 6 letras são pertmitidos');
+			throw messages.ERROR('Apenas chutes de 5 letras são pertmitidos');
 		if (guess.match(/[^A-zÀ-ÿ]/))
 			throw messages.ERROR('Apenas letras são permitidas!');
 	}
