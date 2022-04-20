@@ -80,6 +80,13 @@ class Copypasta extends Module {
 			return this.zaplify?.replyAuthor('Nome proibido', requester);
 
 		const copypastaName = args.immediate.split(' ')[1];
+
+		if (copypastaName.includes('?'))
+			return this.zaplify?.replyAuthor(
+				'Não inclua interrogação no nome, por favor',
+				requester
+			);
+
 		const copypastaList = await CopypastaManager.getCopypstaList();
 		const copypastaAlreadyExists =
 			copypastaList.filter(item => item.copypastaName === copypastaName).length > 0;

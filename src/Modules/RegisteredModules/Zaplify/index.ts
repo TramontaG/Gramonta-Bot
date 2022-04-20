@@ -1,6 +1,7 @@
 import ModulesWrapper from '../../ModulesRegister';
 import Help from '../../Help';
 import About from '../../About';
+import SingleCommandModule from '../../SingleCommandModule';
 
 import Sticker from '../../Sticker';
 import Youtube from '../../Youtube';
@@ -15,6 +16,7 @@ import Weather from '../../Weather';
 import Meme from '../../MemeMaker';
 import TextTransform from '../../TextTransform';
 import Finance from '../../Finance';
+import Wordle from '../../Wordle';
 
 const modulesWrapper = new ModulesWrapper();
 import { kudurolify } from '../../TextTransform/Transformations';
@@ -23,6 +25,8 @@ const help = new Help();
 const sticker = new Sticker();
 const youtube = new Youtube();
 const horoscope = new Horoscopo();
+const google = new Google();
+const replySpeak = new SingleCommandModule(google.replySpeak, google);
 
 modulesWrapper.registerModule('help', help);
 modulesWrapper.registerModule('menu', help);
@@ -34,7 +38,8 @@ modulesWrapper.registerModule('yt', youtube);
 modulesWrapper.registerModule('youtube', youtube);
 modulesWrapper.registerModule('horoscopo', horoscope);
 modulesWrapper.registerModule('horóscopo', horoscope);
-modulesWrapper.registerModule('google', new Google());
+modulesWrapper.registerModule('google', google);
+modulesWrapper.registerModule('speak', replySpeak);
 // modulesWrapper.registerModule('yt2', Youtube2);
 modulesWrapper.registerModule('transcribe', new Transcribe());
 modulesWrapper.registerModule('lyrics', new LyricsFinder());
@@ -44,5 +49,6 @@ modulesWrapper.registerModule('weather', new Weather());
 modulesWrapper.registerModule('meme', new Meme());
 modulesWrapper.registerModule('kuduro', new TextTransform(kudurolify));
 modulesWrapper.registerModule('finance', new Finance());
+modulesWrapper.registerModule('wordle', new Wordle());
 
 export default modulesWrapper;

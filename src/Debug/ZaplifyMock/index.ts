@@ -117,6 +117,8 @@ class MockedClient {
 			textContent: title,
 		});
 	}
+
+	sendFileFromUrl(url: string, fileName: string, requester: Message) {}
 }
 
 export default MockedClient;

@@ -14,7 +14,7 @@ const startup = {
 	popup: 3012,
 	defaultViewport: null,
 	sessionId: 'TramontaBot',
-	headless: false,
+	headless: true,
 	multiDevice: true,
 	qrTimeout: 0,
 	authTimeout: 99999999,

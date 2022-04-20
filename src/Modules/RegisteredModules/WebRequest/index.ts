@@ -17,6 +17,7 @@ import TextTransform from '../../TextTransform';
 import Finance from '../../Finance';
 
 import { kudurolify } from '../../TextTransform/Transformations';
+import Wordle from 'src/Modules/Wordle';
 
 const modulesWrapper = new ModulesWrapper();
 
@@ -45,5 +46,6 @@ modulesWrapper.registerModule('weather', new Weather());
 modulesWrapper.registerModule('meme', new Meme());
 modulesWrapper.registerModule('kuduro', new TextTransform(kudurolify));
 modulesWrapper.registerModule('finance', new Finance());
+modulesWrapper.registerModule('wordle', new Wordle());
 
 export default modulesWrapper;

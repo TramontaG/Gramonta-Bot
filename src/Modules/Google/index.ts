@@ -4,9 +4,11 @@ import { Message } from '@open-wa/wa-automate';
 import GoogleSearch from './GoogleWebSearcher';
 import Logger from '../Logger/Logger';
 import { EntityTypes } from 'src/BigData/JsonDB';
+import { getAudioUrl } from 'google-tts-api';
 
 interface GoogleArgs extends Args {
 	imgamount?: string;
+	lang?: string;
 }
 
 class Google extends Module {
@@ -37,6 +39,50 @@ class Google extends Module {
 			name: 'search',
 			method: this.search.bind(this),
 		});
+
+		this.registerPublicMethod({
+			name: 'speak',
+			method: this.speak.bind(this),
+		});
+	}
+
+	async speak(args: GoogleArgs) {
+		const text = args.immediate?.substr(0, 199);
+		const lang = args.lang;
+		const requester = this.zaplify?.messageObject as Message;
+		try {
+			if (!text)
+				return this.zaplify?.replyAuthor(
+					'Me mande um texto pra mulher do google falar'
+				);
+			const audioUrl = getAudioUrl(text, {
+				lang: lang || 'pt_BR',
+			});
+			return this.zaplify?.sendFileFromUrl(audioUrl, 'googleTts', requester);
+		} catch (e) {
+			return this.zaplify?.replyAuthor('Erro: ' + e, requester);
+		}
+	}
+
+	async replySpeak(args: GoogleArgs) {
+		const requester = this.zaplify?.messageObject as Message;
+		const quotedRequester = requester.quotedMsgObj;
+		const lang = args.lang;
+		try {
+			if (!quotedRequester)
+				return this.zaplify?.replyAuthor(
+					'Responda uma mensagem para eu narrar',
+					requester
+				);
+
+			const text = quotedRequester.body.substr(0, 199);
+			const audioUrl = getAudioUrl(text, {
+				lang: lang || 'pt_BR',
+			});
+			return this.zaplify?.sendFileFromUrl(audioUrl, 'googleTts', requester);
+		} catch (e) {
+			this.zaplify?.replyAuthor('Erro:' + e, requester);
+		}
 	}
 
 	async image(args: GoogleArgs) {

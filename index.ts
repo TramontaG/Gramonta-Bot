@@ -6,7 +6,7 @@ import Zaplify from 'src/Modules/Zaplify';
 import dotEnv from 'dotenv';
 import DebugServer from './src/Debug';
 
-const banned = ['556997479999@c.us', '551198783111@c.us', '554498070146@c.us'];
+const banned = ['556997479999@c.us', '551198783111@c.us'];
 
 dotEnv.config({
 	path: '.env',
@@ -21,6 +21,7 @@ const start = async (client: Client) => {
 		const parsingResult = parse(msg?.toLowerCase() || 'null');
 
 		if (!parsingResult.isError) {
+			console.log(msg);
 			const { command, method, args } = parsingResult.result;
 			const module = ModulesWrapper.Zaplify.getModule(command);
 
@@ -28,6 +29,15 @@ const start = async (client: Client) => {
 
 			module.setRequester();
 			module.callMethod(method, args);
+			const messageObject = zaplify.messageObject as Message;
+			// client.reply(
+			// 	messageObject.from,
+			// 	[
+			// 		'*FUTURO NUMERO NOVO!!!*',
+			// 		'Logo o bot terá um numero novo. Por favor adicionem o bot neste link: https://wa.me/55119344556777',
+			// 	].join('\n'),
+			// 	messageObject.id
+			// );
 		}
 	};
 
@@ -40,8 +50,11 @@ const start = async (client: Client) => {
 			!message.isGroupMsg &&
 			(message?.caption?.startsWith('!') || message?.body?.startsWith('!'))
 		) {
-			client.reply(message.from, 'Esse bot só funciona em grupos', message.id);
-			return;
+			return client.reply(
+				message.from,
+				'Esse bot só funciona em grupos',
+				message.id
+			);
 		}
 		zaplify.setMessageObject(message);
 		handleMsg(message.caption || message.body);

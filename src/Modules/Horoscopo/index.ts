@@ -51,57 +51,61 @@ class Horoscopo extends Module {
 
 	async default(signo: string) {
 		const requester = this.zaplify?.messageObject as Message;
-		this.zaplify?.replyAuthor(
-			'Indo até as estrelas pra buscar sua sorte...',
-			requester
-		);
 
-		if (!requester.id.startsWith('Debug')) {
-			this.logger.insertNew(EntityTypes.HOROSCOPE, {
-				groupName: requester.isGroupMsg ? requester.chat.name : '_',
-				chatId: requester.chatId,
-				requester: requester.sender.formattedName,
-				sign: signo,
-				date: new Date().getTime(),
-			});
-		}
+		try {
+			if (!requester.id.startsWith('Debug')) {
+				this.logger.insertNew(EntityTypes.HOROSCOPE, {
+					groupName: requester.isGroupMsg ? requester.chat.name : '_',
+					chatId: requester.chatId,
+					requester: requester.sender.formattedName,
+					sign: signo,
+					date: new Date().getTime(),
+				});
+			}
 
-		const resp = await axios.get(`https://horoscopefree.herokuapp.com/daily/pt/`);
+			const resp = await axios.get(`https://horoscopefree.herokuapp.com/daily/pt/`);
 
-		switch (signo) {
-			case 'aries':
-				return this.zaplify?.replyAuthor(`${resp.data.aries}`, requester);
-			case 'touro':
-				return this.zaplify?.replyAuthor(`${resp.data.taurus}`, requester);
-			case 'gemeos':
-			case 'gêmeos':
-				return this.zaplify?.replyAuthor(`${resp.data.gemini}`, requester);
-			case 'cancer':
-			case 'câncer':
-				return this.zaplify?.replyAuthor(`${resp.data.cancer}`, requester);
-			case 'leao':
-			case 'leão':
-				return this.zaplify?.replyAuthor(`${resp.data.leo}`, requester);
-			case 'escorpiao':
-			case 'escorpião':
-				return this.zaplify?.replyAuthor(`${resp.data.scorpio}`, requester);
-			case 'libra':
-				return this.zaplify?.replyAuthor(`${resp.data.libra}`, requester);
-			case 'sagitario':
-			case 'sagitário':
-				return this.zaplify?.replyAuthor(`${resp.data.sagittarius}`, requester);
-			case 'capricornio':
-			case 'capricórnio':
-				return this.zaplify?.replyAuthor(`${resp.data.capricorn}`, requester);
-			case 'aquario':
-			case 'aquário':
-				return this.zaplify?.replyAuthor(`${resp.data.aquarius}`, requester);
-			case 'peixes':
-				return this.zaplify?.replyAuthor(`${resp.data.pisces}`, requester);
-			case 'virgem':
-				return this.zaplify?.replyAuthor(`${resp.data.virgo}`, requester);
-			default:
-				return this.zaplify?.replyAuthor(`Não encontrei nada...`, requester);
+			switch (signo) {
+				case 'aries':
+				case 'áries':
+					return this.zaplify?.replyAuthor(`${resp.data.aries}`, requester);
+				case 'touro':
+					return this.zaplify?.replyAuthor(`${resp.data.taurus}`, requester);
+				case 'gemeos':
+				case 'gêmeos':
+					return this.zaplify?.replyAuthor(`${resp.data.gemini}`, requester);
+				case 'cancer':
+				case 'câncer':
+					return this.zaplify?.replyAuthor(`${resp.data.cancer}`, requester);
+				case 'leao':
+				case 'leão':
+					return this.zaplify?.replyAuthor(`${resp.data.leo}`, requester);
+				case 'escorpiao':
+				case 'escorpião':
+					return this.zaplify?.replyAuthor(`${resp.data.scorpio}`, requester);
+				case 'libra':
+					return this.zaplify?.replyAuthor(`${resp.data.libra}`, requester);
+				case 'sagitario':
+				case 'sagitário':
+					return this.zaplify?.replyAuthor(`${resp.data.sagittarius}`, requester);
+				case 'capricornio':
+				case 'capricórnio':
+					return this.zaplify?.replyAuthor(`${resp.data.capricorn}`, requester);
+				case 'aquario':
+				case 'aquário':
+					return this.zaplify?.replyAuthor(`${resp.data.aquarius}`, requester);
+				case 'peixes':
+					return this.zaplify?.replyAuthor(`${resp.data.pisces}`, requester);
+				case 'virgem':
+					return this.zaplify?.replyAuthor(`${resp.data.virgo}`, requester);
+				default:
+					return this.zaplify?.replyAuthor(`Não encontrei nada...`, requester);
+			}
+		} catch (e) {
+			this.zaplify?.replyAuthor(
+				'Erro ao pesquisar seu horóscopo, tente novamente mais tarde',
+				requester
+			);
 		}
 	}
 
