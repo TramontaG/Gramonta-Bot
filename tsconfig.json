@@ -66,5 +66,5 @@
 		"forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
 	},
 	"exclude": ["node_modules", "dist", "__tests__"],
-	"include": ["index.ts", "src/**/*.ts"]
+	"include": ["index.ts", "src/**/*.ts", "media/Dictionaries/wordlist.ts"]
 }

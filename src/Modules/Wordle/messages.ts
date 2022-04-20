@@ -23,7 +23,7 @@ export const HELP = () =>
 		'Envie *!wordle guess _sua palavra_* para fazer o chute',
 		'A palavra ja é automaticamente sorteada e atrelada ao seu número e você já consome a primeira tentativa, assim como no jogo original',
 		'Você só pode enviar chutes de 5 letras. Se seu chute tiver numeros, símbolos ou uma quantidade diferente de letras ele será rejeitado',
-		'A resposta do seu chute será dada na forma de 6 quadrados coloridos. Cada quadrado representa uma letra do seu chute e cada cor significa um resultado para aquela letra, de acordo com a legenda',
+		'A resposta do seu chute será dada na forma de 5 quadrados coloridos. Cada quadrado representa uma letra do seu chute e cada cor significa um resultado para aquela letra, de acordo com a legenda',
 		'O primeiro quadrado representa a primeira letra, o segundo quadrado a segunda letra e assim por diante',
 		'Se você acertar a palavra você ganha o jogo. Não estou mantendo pontuação ou ranking AINDA, mas em breve incluirei essa funcionalidade',
 		'',

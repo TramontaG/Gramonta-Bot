@@ -1,4 +1,4 @@
-import wordList from './wordlist';
+import wordList from '../../../media/Dictionaries/wordlist';
 
 type GuessersGroup = {
 	[key: number]: {
@@ -54,9 +54,11 @@ class Guesser {
 		//kinda ugly but whatever, it's functional
 		const now = new Date();
 		const today = now.getMonth() * 31 + now.getDate();
-		const id = phone ^ today;
+		const id = phone + today;
 		const guesser = new Guesser(id);
 		const word = guesser.word.stringRepresentation;
+
+		console.log({ word });
 
 		if (!this.guessersGroup[id]) this.guessersGroup[id] = { word, guesser };
 
@@ -64,7 +66,9 @@ class Guesser {
 	}
 
 	getWord(id: number) {
-		return wordList[id % wordList.length];
+		const randomness = Math.round(Math.random() * 2000);
+		const index = (id + randomness) % (wordList.length - 1);
+		return wordList[index];
 	}
 
 	guess(guess: string) {

@@ -27,8 +27,7 @@ class Wordle extends Module {
 
 	guess(args: WordleArgs) {
 		const requester = this.zaplify?.messageObject as Message;
-		console.log(requester);
-		const number = this.getNumber(requester.sender.formattedName);
+		const number = this.getNumber(requester.author);
 		const guesser = Guesser.getInstance(number);
 		const guess = args.immediate?.trim() as string;
 
@@ -52,15 +51,16 @@ class Wordle extends Module {
 
 	private getNumber(formattedName: string) {
 		const numericOnly = formattedName.replace(/\D/g, '');
-		console.log({ numericOnly });
-		return Number(formattedName.replace(/\D/, ''));
+		const number = Number(numericOnly);
+		console.log({ numericOnly, number });
+		return number;
 	}
 
 	private validateGuess(guess?: string) {
 		console.log({ guess });
 		if (!guess) throw messages.ERROR('Chute não encontrado');
 		if (guess.length !== 5)
-			throw messages.ERROR('Apenas chutes de 6 letras são pertmitidos');
+			throw messages.ERROR('Apenas chutes de 5 letras são pertmitidos');
 		if (guess.match(/[^A-zÀ-ÿ]/))
 			throw messages.ERROR('Apenas letras são permitidas!');
 	}
