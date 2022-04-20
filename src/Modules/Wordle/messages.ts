@@ -17,7 +17,7 @@ export const HELP = () =>
 		'Sua palavra NÃO É COMPARTILHADA!!! Cada um recebe uma palavra diferente',
 		'Sua palavra será diferente depois da meia noite',
 		'Você tem 6 chances para acertar sua palavra. Caso não consiga, tente uma palavra nova no dia seguinte.',
-		'As palavras tem todas 6 letras, são em português e não levam em conta acentos.',
+		'As palavras tem todas 5 letras, são em português e não levam em conta acentos.',
 		'',
 		'*INSTRUÇÕES:*',
 		'Envie *!wordle guess _sua palavra_* para fazer o chute',
