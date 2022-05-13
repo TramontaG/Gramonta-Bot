@@ -1,3 +1,4 @@
+import { normalizeLetter, normalizeString } from 'src/Helpers/TextFormatter';
 import wordList from '../../../media/Dictionaries/wordlist';
 
 type GuessersGroup = {
@@ -5,10 +6,6 @@ type GuessersGroup = {
 		guesser: Guesser;
 		word: string;
 	};
-};
-
-type NormalizedLetterMap = {
-	[key: string]: string;
 };
 
 type WordInstance = {
@@ -20,8 +17,9 @@ type WordInstance = {
 const createWordInstance = (word: string): WordInstance => {
 	return {
 		stringRepresentation: word,
-		hasLetter: (letter: string) => word.includes(letter),
-		hasLetterInIndex: (letter: string, index: number) => word[index] === letter,
+		hasLetter: (letter: string) => normalizeString(word).includes(letter),
+		hasLetterInIndex: (letter: string, index: number) =>
+			normalizeString(word)[index] === letter,
 	};
 };
 
@@ -72,14 +70,19 @@ class Guesser {
 	}
 
 	guess(guess: string) {
+		const normalizedGuess = normalizeString(guess);
 		if (this.won)
 			throw 'Você já adivinhou essa palavra. Volte amanhã para jogar mais';
+
 		if (this.tries === 6) throw 'Chances encerradas';
-		const result = guess.split('').map((letter, index) => {
-			const normalizedLetter = this.normalizeLetter(letter.toLowerCase());
-			if (this.word.hasLetterInIndex(normalizedLetter, index))
+
+		if (!wordList.includes(guess) && !wordList.includes(normalizedGuess))
+			throw 'Você só pode usar palavras como palpite.';
+
+		const result = normalizedGuess.split('').map((letter, index) => {
+			if (this.word.hasLetterInIndex(letter, index))
 				return LetterStatus.LetterInIndex;
-			if (this.word.hasLetter(normalizedLetter)) return LetterStatus.LetterInWord;
+			if (this.word.hasLetter(letter)) return LetterStatus.LetterInWord;
 			return LetterStatus.LetterNotFound;
 		});
 
@@ -90,33 +93,6 @@ class Guesser {
 		this.history.push(result);
 		this.tries++;
 		return result;
-	}
-
-	/**
-	 * I'm having trouble using string.normalize on node environment. Better
-	 * to just create my own normalizing function
-	 * @param letter
-	 */
-	normalizeLetter(letter: keyof NormalizedLetterMap) {
-		const normalizedLetterMap: NormalizedLetterMap = {
-			['à']: 'a',
-			['á']: 'a',
-			['ã']: 'a',
-			['â']: 'a',
-			['é']: 'e',
-			['è']: 'e',
-			['í']: 'i',
-			['ì']: 'i',
-			['õ']: 'o',
-			['ô']: 'o',
-			['ò']: 'o',
-			['ó']: 'o',
-			['û']: 'u',
-			['ú']: 'u',
-			['ç']: 'c',
-		};
-
-		return normalizedLetterMap[letter] || (letter as string);
 	}
 }
 

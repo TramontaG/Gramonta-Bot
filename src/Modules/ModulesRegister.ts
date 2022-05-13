@@ -42,6 +42,13 @@ export class Module {
 		return choosenMethod.method(args);
 	}
 
+	makePublic(name: string, method: (args: Args) => any) {
+		this.registerPublicMethod({
+			name,
+			method: args => method.bind(this)(args),
+		});
+	}
+
 	registerPublicMethod(method: PublicMethod) {
 		this.publicMethods.push(method);
 	}

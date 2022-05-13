@@ -3,6 +3,7 @@ import { Message, MessageTypes } from '@open-wa/wa-automate';
 import fs from 'fs/promises';
 import Logger from '../Logger/Logger';
 import { EntityTypes } from 'src/BigData/JsonDB';
+import { publicMethod } from 'src/Helpers/Decorators';
 
 class Sticker extends Module {
 	logger: Logger;
@@ -16,10 +17,7 @@ class Sticker extends Module {
 			method: this.sticker.bind(this),
 		});
 
-		this.registerPublicMethod({
-			name: 'help',
-			method: this.help.bind(this),
-		});
+		this.makePublic('help', this.help);
 	}
 
 	async sticker() {

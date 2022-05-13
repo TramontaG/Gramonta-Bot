@@ -73,13 +73,25 @@ class Copypasta extends Module {
 		const requester = this.zaplify?.messageObject as Message;
 
 		if (!requester.quotedMsg)
-			return this.zaplify?.replyAuthor('Deu ruim', requester);
+			return this.zaplify?.replyAuthor(
+				'Responda uma mensagem para salvá-la como copypasta',
+				requester
+			);
 		if (!args.immediate)
 			return this.zaplify?.replyAuthor('Preciso de um nome', requester);
-		if (['new', 'all'].includes(args.immediate))
+		if (
+			['new', 'all', 'search', 'help', 'number', 'default'].includes(args.immediate)
+		)
 			return this.zaplify?.replyAuthor('Nome proibido', requester);
 
-		const copypastaName = args.immediate.split(' ')[1];
+		const copypastaName = args.immediate.replace(/ /g, '-');
+
+		if (requester.quotedMsg.isMedia) {
+			return this.zaplify?.replyAuthor(
+				'Não consigo salvar mídias, apenas textos',
+				requester
+			);
+		}
 
 		if (copypastaName.includes('?'))
 			return this.zaplify?.replyAuthor(
