@@ -46,3 +46,11 @@ Acesso ao módulo: *_!meme_*
 Para quem gosta do mercado financeiro. Consulte câmbio de moedas,
 cotação de ações, fundos imobiliários, BDR's e mais!
 Acesso ao módulo: *_!finance_*
+
+*|--------Wordle!-------|*
+Jogue Wordle diretamente no seu whatsapp!
+Acesso ao módulo: *_!wordle_*
+
+*|--------Sorteio!-------|*
+Crie sorteios em grupos de whatsapp!
+Acesso ao módulo: *_!sorteio*

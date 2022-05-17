@@ -84,7 +84,7 @@ class Copypasta extends Module {
 		)
 			return this.zaplify?.replyAuthor('Nome proibido', requester);
 
-		const copypastaName = args.immediate.replace(/ /g, '-');
+		const copypastaName = args.immediate.trim().replace(/ /g, '-');
 
 		if (requester.quotedMsg.isMedia) {
 			return this.zaplify?.replyAuthor(

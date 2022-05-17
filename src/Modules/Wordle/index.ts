@@ -33,8 +33,7 @@ class Wordle extends Module {
 
 		try {
 			this.validateGuess(guess);
-			//Aight this is ridiculous
-			guesser.guesser.guess(guess);
+			guesser.guesser.guess(guess); //Aight this is ridiculous
 			this.zaplify?.replyAuthor(messages.GUESS_STATUS(guesser.guesser), requester);
 		} catch (e) {
 			this.zaplify?.replyAuthor(messages.ERROR(e), requester);

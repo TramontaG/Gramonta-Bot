@@ -53,6 +53,10 @@ export class Module {
 		this.publicMethods.push(method);
 	}
 
+	removePublicMethod(methodName: string) {
+		this.publicMethods = this.publicMethods.filter(m => m.name !== methodName);
+	}
+
 	setRequester() {
 		const message = this.zaplify?.messageObject;
 		if (message?.type && message?.type !== MessageTypes.BUTTONS_RESPONSE) {

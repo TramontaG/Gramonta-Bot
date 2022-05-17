@@ -17,6 +17,7 @@ import Meme from '../../MemeMaker';
 import TextTransform from '../../TextTransform';
 import Finance from '../../Finance';
 import Wordle from '../../Wordle';
+import Raffle from '../../Raffle';
 
 const modulesWrapper = new ModulesWrapper();
 import { kudurolify } from '../../TextTransform/Transformations';
@@ -27,6 +28,7 @@ const youtube = new Youtube();
 const horoscope = new Horoscopo();
 const google = new Google();
 const replySpeak = new SingleCommandModule(google.replySpeak, google);
+const raffle = new Raffle();
 
 modulesWrapper.registerModule('help', help);
 modulesWrapper.registerModule('menu', help);
@@ -50,5 +52,7 @@ modulesWrapper.registerModule('meme', new Meme());
 modulesWrapper.registerModule('kuduro', new TextTransform(kudurolify));
 modulesWrapper.registerModule('finance', new Finance());
 modulesWrapper.registerModule('wordle', new Wordle());
+modulesWrapper.registerModule('sorteio', raffle);
+modulesWrapper.registerModule('raffle', raffle);
 
 export default modulesWrapper;

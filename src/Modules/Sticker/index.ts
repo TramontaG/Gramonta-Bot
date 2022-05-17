@@ -22,24 +22,24 @@ class Sticker extends Module {
 
 	async sticker() {
 		try {
-			const messageObject =
+			const requester =
 				this.requester?.quotedMsg || (this.zaplify?.messageObject as Message);
 
 			const typesAllowed = [MessageTypes.IMAGE, MessageTypes.VIDEO];
 
-			if (!typesAllowed.includes(messageObject.type))
+			if (!typesAllowed.includes(requester.type))
 				return this.sendError('Preciso de um video, gif ou imagem');
 
 			const media = (await this.zaplify?.getMediaBufferFromMessage(
-				messageObject
+				requester
 			)) as Buffer;
 
-			if (messageObject.type === MessageTypes.IMAGE) {
-				this.logSticker(messageObject, false);
+			if (requester.type === MessageTypes.IMAGE) {
+				this.logSticker(requester, false);
 				return await this.sendImageSticker(media);
 			}
-			if (messageObject.type === MessageTypes.VIDEO) {
-				this.logSticker(messageObject, true);
+			if (requester.type === MessageTypes.VIDEO) {
+				this.logSticker(requester, true);
 				return await this.sendAnimatedSticker(media);
 			}
 		} catch (e) {
