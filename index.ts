@@ -6,7 +6,12 @@ import Zaplify from 'src/Modules/Zaplify';
 import dotEnv from 'dotenv';
 import DebugServer from './src/Debug';
 
-const banned = ['556997479999@c.us', '551198783111@c.us', '557183543921@c.us'];
+const banned = [
+	'556997479999@c.us',
+	'551198783111@c.us',
+	'557183543921@c.us',
+	'555198783111@c.us',
+];
 
 dotEnv.config({
 	path: '.env',

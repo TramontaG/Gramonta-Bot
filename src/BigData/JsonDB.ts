@@ -232,4 +232,8 @@ export enum EntityTypes {
 	FINANCE = 'finance',
 }
 
+export type WithID<T extends keyof AllEntitiesModel> = {
+	id: number;
+} & AllEntitiesModel[T];
+
 export default Database;

@@ -35,7 +35,7 @@ class Raffle extends Module {
 		const requester = this.requester as Message;
 		const thing = args.immediate?.trim();
 		try {
-			const creatorID = requester.author;
+			const creatorID = requester.sender.formattedName;
 			if (this.raffles.some(r => r.creatorID === creatorID))
 				throw replies.raffleInUse();
 			if (!thing) throw replies.noRaffleName();
@@ -51,7 +51,7 @@ class Raffle extends Module {
 			});
 
 			this.raffles.push(raffle);
-			this.zaplify?.replyAuthor(replies.raffleCreated(raffle));
+			return this.zaplify?.replyAuthor(replies.raffleCreated(raffle));
 		} catch (e) {
 			this.sendError(e, requester);
 		}
@@ -61,7 +61,7 @@ class Raffle extends Module {
 		const raffle = this.getRaffleByThing(thing);
 		try {
 			raffle.addParticipant(requester);
-			this.zaplify?.replyAuthor(replies.raffleJoin(raffle), requester);
+			return this.zaplify?.replyAuthor(replies.raffleJoin(raffle), requester);
 		} catch (e) {
 			this.sendError(e, requester);
 		}
@@ -71,7 +71,7 @@ class Raffle extends Module {
 		const raffle = this.getRaffleByThing(thing);
 		try {
 			raffle.removeParticipant(requester);
-			this.zaplify?.replyAuthor(replies.raffleQuit(raffle), requester);
+			return this.zaplify?.replyAuthor(replies.raffleQuit(raffle), requester);
 		} catch (e) {
 			this.sendError(e, requester);
 		}
@@ -81,19 +81,21 @@ class Raffle extends Module {
 		const raffle = this.getRaffleByThing(thing);
 		try {
 			if (raffle.creatorID !== requester.author) throw replies.youAreNotTheOwner();
-			this.raffles = this.raffles.filter(r => r.creatorID !== requester.author);
+			return (this.raffles = this.raffles.filter(
+				r => r.creatorID !== requester.author
+			));
 		} catch (e) {
 			this.sendError(e, requester);
 		}
 	}
 
-	private concludeRaffle(thing: string, requester: Message) {
+	private async concludeRaffle(thing: string, requester: Message) {
 		const raffle = this.getRaffleByThing(thing);
 		try {
 			if (raffle.creatorID !== requester.author) throw replies.youAreNotTheOwner();
 			const winner = raffle.go();
 			this.raffles = this.raffles.filter(r => r.creatorID !== requester.author);
-			this.zaplify?.replyAuthor(replies.raffleWin(raffle), winner);
+			await this.zaplify?.replyAuthor(replies.raffleWin(raffle), winner);
 			this.removePublicMethod(raffle.thing);
 		} catch (e) {
 			this.sendError(e, requester);
