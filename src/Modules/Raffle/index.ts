@@ -25,6 +25,10 @@ class Raffle extends Module {
 	constructor() {
 		super();
 		this.raffles = [];
+		this.registerPublicMethod({
+			name: 'criar',
+			method: this.create.bind(this),
+		});
 	}
 
 	public create(args: Args) {
@@ -36,17 +40,18 @@ class Raffle extends Module {
 				throw replies.raffleInUse();
 			if (!thing) throw replies.noRaffleName();
 
-			this.raffles.push(
-				new RaffleInstance({
-					creatorID,
-					thing,
-				})
-			);
+			const raffle = new RaffleInstance({
+				creatorID,
+				thing,
+			});
 
 			this.registerPublicMethod({
 				name: thing,
-				method: this.raffleActions(thing),
+				method: (args: Args) => this.raffleActions(thing)(args),
 			});
+
+			this.raffles.push(raffle);
+			this.zaplify?.replyAuthor(replies.raffleCreated(raffle));
 		} catch (e) {
 			this.sendError(e, requester);
 		}
@@ -117,12 +122,15 @@ class Raffle extends Module {
 				sendError: () => this.sendError(replies.noCommand(), requester),
 			};
 
-			return commandMap[command]?.() || commandMap.sendError();
+			console.log('COMMAND', commandMap[command]);
+
+			if (commandMap[command]) return commandMap[command]();
+			return commandMap.sendError();
 		}).bind(this);
 	}
 
 	private sendError(e: any, requester: Message) {
-		return this.zaplify?.replyAuthor(JSON.stringify(e), requester);
+		return this.zaplify?.replyAuthor(e, requester);
 	}
 }
 

@@ -3,6 +3,12 @@ import RaffleInstance from './RaffleInstance';
 
 export const instructions = () => ['Sample Text'].join('\n');
 
+export const raffleCreated = (raffle: RaffleInstance) =>
+	[
+		`Você iniciou um sorteio de ${raffle.thing}!`,
+		`Para participar do sorteio, digite ${bold(`!sorteio entrar ${raffle.thing}`)}!`,
+	].join('\n');
+
 export const raffleInUse = () =>
 	[
 		'Erro!!!',
