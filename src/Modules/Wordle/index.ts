@@ -27,8 +27,7 @@ class Wordle extends Module {
 
 	guess(args: WordleArgs) {
 		const requester = this.zaplify?.messageObject as Message;
-		const number = this.getNumber(requester.author);
-		const guesser = Guesser.getInstance(number);
+		const guesser = Guesser.getInstance(requester);
 		const guess = args.immediate?.trim() as string;
 
 		try {
@@ -40,23 +39,15 @@ class Wordle extends Module {
 		}
 	}
 
-	help(args: WordleArgs) {
+	help(_: Args) {
 		this.zaplify?.replyAuthor(messages.HELP());
 	}
 
-	default(args: WordleArgs) {
+	default(_: Args) {
 		this.zaplify?.replyAuthor(messages.WORDLE_DEFAULT());
 	}
 
-	private getNumber(formattedName: string) {
-		const numericOnly = formattedName.replace(/\D/g, '');
-		const number = Number(numericOnly);
-		console.log({ numericOnly, number });
-		return number;
-	}
-
 	private validateGuess(guess?: string) {
-		console.log({ guess });
 		if (!guess) throw messages.ERROR('Chute não encontrado');
 		if (guess.length !== 5)
 			throw messages.ERROR('Apenas chutes de 5 letras são pertmitidos');

@@ -4,7 +4,7 @@ class Database {
 	DatabaseVersion: number;
 	_RealmInstance: Realm | undefined;
 	constructor() {
-		this.DatabaseVersion = 7;
+		this.DatabaseVersion = 8;
 		this._RealmInstance = undefined;
 	}
 
@@ -149,6 +149,20 @@ class Database {
 				date: 'int',
 			},
 		},
+		wordle: {
+			name: 'wordle',
+			primaryKey: 'id',
+			properties: {
+				id: { type: 'int', indexed: true },
+				groupName: 'string',
+				chatId: 'string',
+				requester: 'string',
+				state: 'string',
+				tries: 'int',
+				gameID: 'string',
+				date: 'int',
+			},
+		},
 	};
 }
 
@@ -218,6 +232,15 @@ export type AllEntitiesModel = {
 		values: string[];
 		date: number;
 	};
+	wordle: {
+		groupName: string;
+		chatId: string;
+		requester: string;
+		date: number;
+		state: WordleState;
+		tries: number;
+		gameID: string;
+	};
 };
 
 export enum EntityTypes {
@@ -230,10 +253,13 @@ export enum EntityTypes {
 	WEATHER = 'weather',
 	MEME = 'meme',
 	FINANCE = 'finance',
+	WORDLE = 'wordle',
 }
 
 export type WithID<T extends keyof AllEntitiesModel> = {
 	id: number;
 } & AllEntitiesModel[T];
+
+export type WordleState = 'start' | 'lose' | 'win';
 
 export default Database;

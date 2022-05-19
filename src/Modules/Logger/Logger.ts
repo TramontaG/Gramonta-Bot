@@ -4,7 +4,7 @@ import Database, {
 	WithID,
 } from '../../BigData/JsonDB';
 
-type FilterFn = <T extends keyof AllEntitiesModel>(
+type FilterFn<T extends keyof AllEntitiesModel> = (
 	_entity: WithID<T>,
 	_index: number
 ) => boolean;
@@ -28,11 +28,12 @@ class Logger {
 
 	async getEntities<T extends keyof AllEntitiesModel>(
 		entityName: T,
-		filterFunction: FilterFn
+		filterFunction: FilterFn<T>
 	) {
 		const DB = await this.DB.getInstance();
-		const objects = DB.objects<T>(entityName);
-		return objects.toJSON().filter(filterFunction) as AllEntitiesModel[T][];
+		const objects = DB.objects<WithID<T>>(entityName);
+		const objJSON = objects.toJSON() as WithID<T>[];
+		return objJSON.filter((obj, index) => filterFunction(obj, index));
 	}
 
 	async clearDatabase() {

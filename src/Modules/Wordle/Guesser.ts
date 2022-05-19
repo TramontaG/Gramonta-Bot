@@ -1,5 +1,9 @@
+import { Message } from '@open-wa/wa-automate';
+import { WordleState } from 'src/BigData/JsonDB';
 import { normalizeLetter, normalizeString } from 'src/Helpers/TextFormatter';
 import wordList from '../../../media/Dictionaries/wordlist';
+
+import Logger from './../Logger';
 
 type GuessersGroup = {
 	[key: number]: {
@@ -29,43 +33,60 @@ export enum LetterStatus {
 	LetterNotFound,
 }
 
+type LoggerMap = {
+	[key in WordleState]: any;
+} & {
+	try: any;
+};
+
 class Guesser {
 	tries: number;
 	history: LetterStatus[][];
 	instance?: Guesser;
-	id: number;
+	id: string;
 	word: WordInstance;
 	won: boolean;
 
-	constructor(id: number) {
+	requester: Message;
+
+	logger: Logger;
+
+	constructor(id: string, requester: Message) {
 		this.id = id;
 		this.tries = 0;
 		this.word = createWordInstance(this.getWord(id));
 		this.history = [];
 		this.won = false;
+
+		this.logger = new Logger();
+		this.requester = requester;
 	}
 
 	static guessersGroup: GuessersGroup = {};
 
-	static getInstance(phone: number) {
+	static getInstance(requester: Message) {
 		//that's a factory and singleton in the same function
 		//kinda ugly but whatever, it's functional
 		const now = new Date();
 		const today = now.getMonth() * 31 + now.getDate();
-		const id = phone + today;
-		const guesser = new Guesser(id);
+		const id = requester.author + today;
+		const guesser = new Guesser(id, requester);
 		const word = guesser.word.stringRepresentation;
 
-		console.log({ word });
+		const sanitizeId = Number(id.replace(/[^0-9]+/g, ''));
 
-		if (!this.guessersGroup[id]) this.guessersGroup[id] = { word, guesser };
+		if (!this.guessersGroup[sanitizeId]) {
+			this.guessersGroup[sanitizeId] = { word, guesser };
+			guesser.log('start', guesser, requester);
+		}
 
-		return this.guessersGroup[id];
+		return this.guessersGroup[sanitizeId];
 	}
 
-	getWord(id: number) {
+	getWord(id: string) {
+		const sanitizedId = Number(id.replace(/[^0-9]+/g, ''));
 		const randomness = Math.round(Math.random() * 2000);
-		const index = (id + randomness) % (wordList.length - 1);
+		const index = (sanitizedId + randomness) % (wordList.length - 1);
 		return wordList[index];
 	}
 
@@ -92,7 +113,73 @@ class Guesser {
 
 		this.history.push(result);
 		this.tries++;
+
+		if (this.won) this.log('win');
+		else {
+			if (this.tries === 0) this.log('lose');
+			else this.log('try');
+		}
+
 		return result;
+	}
+
+	log(
+		state: WordleState | 'try',
+		instance: Guesser = this,
+		requester: Message = this.requester
+	) {
+		const getGame = async () =>
+			(
+				await this.logger.logger.getEntities(
+					'wordle',
+					game => game.gameID === instance.id
+				)
+			)[0];
+
+		const logStart = () => {
+			return this.logger.logger.insertNew('wordle', {
+				groupName: requester.chat.name,
+				chatId: requester.chat.id,
+				date: new Date().getTime(),
+				requester: requester.sender.formattedName,
+				state: 'start',
+				tries: 1,
+				gameID: instance.id,
+			});
+		};
+
+		const logTry = async () => {
+			const game = await getGame();
+			this.logger.logger.updateObject('wordle', game.id, {
+				...game,
+				tries: game.tries + 1,
+			});
+		};
+
+		const logWin = async () => {
+			const game = await getGame();
+			this.logger.logger.updateObject('wordle', game.id, {
+				...game,
+				state: 'win',
+			});
+		};
+
+		const logLose = async () => {
+			const game = await getGame();
+			this.logger.logger.updateObject('wordle', game.id, {
+				...game,
+				state: 'lose',
+			});
+		};
+
+		const loggerMap: LoggerMap = {
+			start: logStart,
+			try: logTry,
+			win: logWin,
+			lose: logLose,
+		};
+
+		return loggerMap[state]();
 	}
 }
 
