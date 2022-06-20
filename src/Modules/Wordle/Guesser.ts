@@ -179,7 +179,11 @@ class Guesser {
 			lose: logLose,
 		};
 
-		return loggerMap[state]();
+		try {
+			// loggerMap[state]();
+		} catch (e) {
+			console.warn(e);
+		}
 	}
 }
 

@@ -53,4 +53,12 @@ Acesso ao módulo: *_!wordle_*
 
 *|--------Sorteio!-------|*
 Crie sorteios em grupos de whatsapp!
-Acesso ao módulo: *_!sorteio*
+Acesso ao módulo: *_!sorteio_*
+
+*|--------Speak!-------|*
+Responda uma mensagem com esse comando para a mulher do google tradutor dizer o que está escrito!
+Acesso ao módulo: *_!speak_*
+
+*|--------Translate!-------|*
+Google Tradutor direto do seu whatsapp!
+Acesso ao módulo: *_!translate_*

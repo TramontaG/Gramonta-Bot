@@ -1,0 +1,21 @@
+*|--------Translate!-------|*
+Google Tradutor direto do seu whatsapp!
+    
+*Como utilizar?*
+    
+    _Enviando texto:_
+    Envie o texto a ser traduzido logo após o comando.
+        *Exemplo:* !translate pt where are my keys?
+        *Resultado:* onde estão minhas chaves?
+
+    _Respondendo mengagem:_
+    Responda a mensagem que deseja traduzir
+        *Exemplo:* !translate pt
+        *Resultado:* Texto da mensagem quotada traduzido
+    
+*_LINGUAGENS SUPORTADAS_*
+Portugues: pt
+Ingles: en
+francês: fr,
+russo: ru,
+japonês: jp,

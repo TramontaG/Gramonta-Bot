@@ -14,6 +14,7 @@
 	"license": "Apache-2.0",
 	"dependencies": {
 		"@google-cloud/speech": "^4.9.0",
+		"@google-cloud/translate": "^6.3.1",
 		"@open-wa/wa-automate": "@latest",
 		"@open-wa/wa-decrypt": "@latest",
 		"axios": "^0.21.2",

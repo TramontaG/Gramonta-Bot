@@ -5,6 +5,7 @@ import GoogleSearch from './GoogleWebSearcher';
 import Logger from '../Logger/Logger';
 import { EntityTypes } from 'src/BigData/JsonDB';
 import { getAudioUrl } from 'google-tts-api';
+import fs from 'fs/promises';
 
 interface GoogleArgs extends Args {
 	imgamount?: string;
@@ -28,6 +29,10 @@ class Google extends Module {
 			method: this.help.bind(this),
 		});
 		this.registerPublicMethod({
+			name: 'default',
+			method: this.help.bind(this),
+		});
+		this.registerPublicMethod({
 			name: 'image',
 			method: this.image.bind(this),
 		});
@@ -35,11 +40,6 @@ class Google extends Module {
 			name: 'web',
 			method: this.web.bind(this),
 		});
-		this.registerPublicMethod({
-			name: 'search',
-			method: this.search.bind(this),
-		});
-
 		this.registerPublicMethod({
 			name: 'speak',
 			method: this.speak.bind(this),
@@ -114,8 +114,6 @@ class Google extends Module {
 				amountSend++;
 			});
 
-			const requester = this.zaplify?.messageObject as Message;
-
 			this.logger.insertNew(EntityTypes.GOOGLESEARCHES, {
 				groupName: requester.isGroupMsg ? requester.chat.name : '_',
 				chatId: requester.chat.id,
@@ -148,8 +146,12 @@ class Google extends Module {
 		}
 	}
 
-	help() {
-		this.zaplify?.replyAuthor('TODO', this.requester as Message);
+	async help() {
+		fs.readFile('src/Modules/Google/Help.txt', {
+			encoding: 'utf-8',
+		}).then(helpText => {
+			this.zaplify?.replyAuthor(helpText);
+		});
 	}
 
 	web(args: GoogleArgs) {

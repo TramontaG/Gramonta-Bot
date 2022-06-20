@@ -1,0 +1,17 @@
+*|---Buscar imagens---|*
+    Digite !google image _sua pesquisa_ para obter imagens.
+        *Exemplo:* !google image minecraft
+
+    *Opcional:* Especificar uma quantidade de imagens na busca com o parâmetro _-imgamount_.
+        *Exemplo:* !google image minecraft -imgamount 5
+
+*|---Buscar na web---|*
+    Digite !google web _sua pesquisa_ para obter resultados.
+        *Exemplo:* !google web data primeira copa do mundo
+
+*|---Voz do google---|* 
+    Digite !google speak _seu texto_ para a mulher do google tradutor dizer o que foi escrito
+        *Exemplo:* !google speak boa tarde pessoal
+    
+    *Opcional:* Especificar a lingua do texto.
+        *Exemplo:* !google speak Good afternoon guys! -lang en

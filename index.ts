@@ -34,15 +34,6 @@ const start = async (client: Client) => {
 
 			module.setRequester();
 			module.callMethod(method, args);
-			const messageObject = zaplify.messageObject as Message;
-			// client.reply(
-			// 	messageObject.from,
-			// 	[
-			// 		'*FUTURO NUMERO NOVO!!!*',
-			// 		'Logo o bot terá um numero novo. Por favor adicionem o bot neste link: https://wa.me/55119344556777',
-			// 	].join('\n'),
-			// 	messageObject.id
-			// );
 		}
 	};
 

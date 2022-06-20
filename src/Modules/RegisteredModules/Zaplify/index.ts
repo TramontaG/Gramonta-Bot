@@ -18,6 +18,7 @@ import TextTransform from '../../TextTransform';
 import Finance from '../../Finance';
 import Wordle from '../../Wordle';
 import Raffle from '../../Raffle';
+import Translate from 'src/Modules/Translate';
 
 const modulesWrapper = new ModulesWrapper();
 import { kudurolify } from '../../TextTransform/Transformations';
@@ -54,5 +55,6 @@ modulesWrapper.registerModule('finance', new Finance());
 modulesWrapper.registerModule('wordle', new Wordle());
 modulesWrapper.registerModule('sorteio', raffle);
 modulesWrapper.registerModule('raffle', raffle);
+modulesWrapper.registerModule('translate', new Translate());
 
 export default modulesWrapper;

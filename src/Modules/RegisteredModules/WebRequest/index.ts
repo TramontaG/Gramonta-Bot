@@ -16,6 +16,8 @@ import Meme from '../../MemeMaker';
 import TextTransform from '../../TextTransform';
 import Finance from '../../Finance';
 
+import Translate from 'src/Modules/Translate';
+
 import { kudurolify } from '../../TextTransform/Transformations';
 import Wordle from 'src/Modules/Wordle';
 
@@ -47,5 +49,6 @@ modulesWrapper.registerModule('meme', new Meme());
 modulesWrapper.registerModule('kuduro', new TextTransform(kudurolify));
 modulesWrapper.registerModule('finance', new Finance());
 modulesWrapper.registerModule('wordle', new Wordle());
+modulesWrapper.registerModule("translate", new Translate());
 
 export default modulesWrapper;
