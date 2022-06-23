@@ -16,6 +16,7 @@ import Meme from '../../MemeMaker';
 import TextTransform from '../../TextTransform';
 import Finance from '../../Finance';
 import Ping from '../../Ping';
+import Dictionary from '../..//Dictionary';
 
 import Translate from 'src/Modules/Translate';
 
@@ -28,6 +29,7 @@ const help = new Help();
 const sticker = new Sticker();
 const youtube = new Youtube();
 const horoscope = new Horoscopo();
+const dictionary = new Dictionary;
 
 modulesWrapper.registerModule('help', help);
 modulesWrapper.registerModule('menu', help);
@@ -52,5 +54,7 @@ modulesWrapper.registerModule('finance', new Finance());
 modulesWrapper.registerModule('wordle', new Wordle());
 modulesWrapper.registerModule("translate", new Translate());
 modulesWrapper.registerModule("ping", new Ping());
+modulesWrapper.registerModule("dicionario", dictionary);
+modulesWrapper.registerModule("significado", dictionary);
 
 export default modulesWrapper;

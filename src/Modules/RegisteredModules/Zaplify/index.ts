@@ -20,6 +20,7 @@ import Wordle from '../../Wordle';
 import Raffle from '../../Raffle';
 import Translate from 'src/Modules/Translate';
 import Ping from '../../Ping';
+import Dictionary from '../../Dictionary';
 
 const modulesWrapper = new ModulesWrapper();
 import { kudurolify } from '../../TextTransform/Transformations';
@@ -31,6 +32,7 @@ const horoscope = new Horoscopo();
 const google = new Google();
 const replySpeak = new SingleCommandModule(google.replySpeak, google);
 const raffle = new Raffle();
+const dictionary = new Dictionary;
 
 modulesWrapper.registerModule('help', help);
 modulesWrapper.registerModule('menu', help);
@@ -58,5 +60,7 @@ modulesWrapper.registerModule('sorteio', raffle);
 modulesWrapper.registerModule('raffle', raffle);
 modulesWrapper.registerModule('translate', new Translate());
 modulesWrapper.registerModule('ping', new Ping());
+modulesWrapper.registerModule("dicionario", dictionary);
+modulesWrapper.registerModule("significado", dictionary);
 
 export default modulesWrapper;
