@@ -15,6 +15,7 @@ import Weather from '../../Weather';
 import Meme from '../../MemeMaker';
 import TextTransform from '../../TextTransform';
 import Finance from '../../Finance';
+import Ping from '../../Ping';
 
 import Translate from 'src/Modules/Translate';
 
@@ -50,5 +51,6 @@ modulesWrapper.registerModule('kuduro', new TextTransform(kudurolify));
 modulesWrapper.registerModule('finance', new Finance());
 modulesWrapper.registerModule('wordle', new Wordle());
 modulesWrapper.registerModule("translate", new Translate());
+modulesWrapper.registerModule("ping", new Ping());
 
 export default modulesWrapper;

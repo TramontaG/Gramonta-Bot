@@ -16,7 +16,7 @@ class Translate extends Module {
         super();
         this.translateService = new TranslateService();
 
-        ['pt', 'en', 'es', 'ru', 'jp', 'fr', 'de'].forEach(lang => this.registerPublicMethod({
+        ['pt', 'en', 'es', 'ru', 'ja', 'fr', 'de'].forEach(lang => this.registerPublicMethod({
             method: (args: TranslatorArgs) => this.translate(args, lang),
             name: lang,
         }));

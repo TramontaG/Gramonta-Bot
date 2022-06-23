@@ -19,6 +19,7 @@ import Finance from '../../Finance';
 import Wordle from '../../Wordle';
 import Raffle from '../../Raffle';
 import Translate from 'src/Modules/Translate';
+import Ping from '../../Ping';
 
 const modulesWrapper = new ModulesWrapper();
 import { kudurolify } from '../../TextTransform/Transformations';
@@ -56,5 +57,6 @@ modulesWrapper.registerModule('wordle', new Wordle());
 modulesWrapper.registerModule('sorteio', raffle);
 modulesWrapper.registerModule('raffle', raffle);
 modulesWrapper.registerModule('translate', new Translate());
+modulesWrapper.registerModule('ping', new Ping());
 
 export default modulesWrapper;

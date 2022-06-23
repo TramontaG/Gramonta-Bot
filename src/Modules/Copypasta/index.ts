@@ -42,6 +42,11 @@ class Copypasta extends Module {
 			method: this.sendCopypastaByIndex.bind(this),
 		});
 
+		this.registerPublicMethod({
+			name: 'random',
+			method: this.sendRandomCopypasta.bind(this)
+		})
+
 		CopypastaManager.getCopypstaList().then(copypastaList => {
 			copypastaList.forEach(item => {
 				this.registerPublicMethod({
@@ -80,7 +85,7 @@ class Copypasta extends Module {
 		if (!args.immediate)
 			return this.zaplify?.replyAuthor('Preciso de um nome', requester);
 		if (
-			['new', 'all', 'search', 'help', 'number', 'default'].includes(args.immediate)
+			['new', 'all', 'search', 'help', 'number', 'default', 'random'].includes(args.immediate)
 		)
 			return this.zaplify?.replyAuthor('Nome proibido', requester);
 
@@ -172,6 +177,12 @@ class Copypasta extends Module {
 		} catch (e) {
 			this.zaplify?.replyAuthor(e as string, requester);
 		}
+	}
+
+	async sendRandomCopypasta(args: Args){
+		const copypastaList = await CopypastaManager.getCopypstaList();
+		const randomIndex = Math.round(Math.random() * copypastaList.length);
+		return this.sendCopypastaByIndex({...args, immediate: randomIndex.toString()});
 	}
 
 	async sendHelp() {
