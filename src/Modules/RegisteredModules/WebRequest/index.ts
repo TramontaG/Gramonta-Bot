@@ -17,8 +17,8 @@ import TextTransform from '../../TextTransform';
 import Finance from '../../Finance';
 import Ping from '../../Ping';
 import Dictionary from '../..//Dictionary';
-
 import Translate from 'src/Modules/Translate';
+import OpenAI from '../../OpenAi';
 
 import { kudurolify } from '../../TextTransform/Transformations';
 import Wordle from 'src/Modules/Wordle';
@@ -56,5 +56,6 @@ modulesWrapper.registerModule("translate", new Translate());
 modulesWrapper.registerModule("ping", new Ping());
 modulesWrapper.registerModule("dicionario", dictionary);
 modulesWrapper.registerModule("significado", dictionary);
+modulesWrapper.registerModule("openai", new OpenAI());
 
 export default modulesWrapper;

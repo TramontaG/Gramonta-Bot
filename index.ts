@@ -11,6 +11,8 @@ const banned = [
 	'551198783111@c.us',
 	'557183543921@c.us',
 	'555198783111@c.us',
+	'5521969693229@c.us',
+	'447796457170c.us'
 ];
 
 dotEnv.config({
@@ -42,16 +44,16 @@ const start = async (client: Client) => {
 			client.reply(message.from, 'Você está bloqueado :)', message.id);
 			return;
 		}
-		if (
-			!message.isGroupMsg &&
-			(message?.caption?.startsWith('!') || message?.body?.startsWith('!'))
-		) {
-			return client.reply(
-				message.from,
-				'Esse bot só funciona em grupos',
-				message.id
-			);
-		}
+		// if (
+		// 	!message.isGroupMsg &&
+		// 	(message?.caption?.startsWith('!') || message?.body?.startsWith('!'))
+		// ) {
+		// 	return client.reply(
+		// 		message.from,
+		// 		'Esse bot só funciona em grupos',
+		// 		message.id
+		// 	);
+		// }
 		zaplify.setMessageObject(message);
 		handleMsg(message.caption || message.body);
 	});

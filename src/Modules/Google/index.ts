@@ -93,6 +93,7 @@ class Google extends Module {
 			const imgAmount = Number(args.imgamount) || 5;
 			const results = await this.getImageSearcher()
 				.search(query, {
+					
 					safe: 'high',
 				})
 				.catch(e => {

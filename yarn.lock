@@ -966,7 +966,7 @@ axios@^0.25.0:
   dependencies:
     follow-redirects "^1.14.7"
 
-axios@^0.26.1:
+axios@^0.26.0, axios@^0.26.1:
   version "0.26.1"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.26.1.tgz#1ede41c51fcf51bbbd6fd43669caaa4f0495aaa9"
   integrity sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==
@@ -4860,6 +4860,14 @@ open@^8.0.2:
     define-lazy-prop "^2.0.0"
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
+
+openai@^3.0.0:
+  version "3.0.0"
+  resolved "https://genesisglobal.jfrog.io/artifactory/api/npm/npm/openai/-/openai-3.0.0.tgz#0816f1d72ee37820c9ff14d93d597431489fec37"
+  integrity sha512-YNAPZKzBfE6MnR5Ro/z3uKbg7T3F3W1FoTCtYheKRdEjZeheMX49QYFeL990gBFAhuGziEZCUdhnNT+eIrxX/Q==
+  dependencies:
+    axios "^0.26.0"
+    form-data "^4.0.0"
 
 openurl@1.1.1:
   version "1.1.1"
