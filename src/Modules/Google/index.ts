@@ -6,6 +6,7 @@ import Logger from '../Logger/Logger';
 import { EntityTypes } from 'src/BigData/JsonDB';
 import { getAudioUrl } from 'google-tts-api';
 import fs from 'fs/promises';
+import axios from 'axios';
 
 interface GoogleArgs extends Args {
 	imgamount?: string;
@@ -93,13 +94,13 @@ class Google extends Module {
 			const imgAmount = Number(args.imgamount) || 5;
 			const results = await this.getImageSearcher()
 				.search(query, {
-					
 					safe: 'high',
 				})
 				.catch(e => {
 					throw e;
 				});
 			let amountSend = 0;
+
 			results.forEach(result => {
 				if (amountSend >= imgAmount) return;
 				if (result.type !== 'image/jpeg') return;
@@ -107,11 +108,18 @@ class Google extends Module {
 
 				// @ts-ignore
 				const caption = `${result.description}\n\n${result.parentPage}`;
-				this.zaplify?.sendImageFromUrl(
-					result.url,
-					caption,
-					this.requester as Message
-				);
+				try {
+					axios.get(result.url).then(() =>
+						this.zaplify?.sendImageFromUrl(
+							result.url,
+							caption,
+							requester,
+						)
+					).catch(e => console.warn(e));
+				} catch (e) {
+					console.warn(e);
+				}
+
 				amountSend++;
 			});
 

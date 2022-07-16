@@ -178,13 +178,17 @@ class Zaplify {
 	}
 
 	sendImageFromUrl(url: string, caption?: string, requester?: Message) {
-		if (!this.messageObject) throw 'No message object initialized';
-		this.client.sendImage(
-			requester?.from || this.messageObject.from,
-			url,
-			'Youtube Thumbnail',
-			caption || ''
-		);
+		try {
+			if (!this.messageObject) throw 'No message object initialized';
+			this.client.sendImage(
+				requester?.from || this.messageObject.from,
+				url,
+				'Youtube Thumbnail',
+				caption || ''
+			);
+		} catch (e) {
+			this.replyAuthor("erro desconhecido", requester);
+		}
 	}
 
 	async isAdmin(requester: Message) {

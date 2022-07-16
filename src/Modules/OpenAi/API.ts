@@ -79,12 +79,11 @@ export default class OpenAPI {
         const response = await this.API.createCompletion({
             model: "text-curie-001",
             prompt: Prompts[prompt](query),
-            temperature: .3,
-            max_tokens: 100,
+            temperature: .5,
+            max_tokens: 256,
             top_p: 1,
-            frequency_penalty: 0,
-            presence_penalty: 0,
-            stop: ['\n'],
+            frequency_penalty: .3,
+            presence_penalty: .3,
             ...options,
         });
 

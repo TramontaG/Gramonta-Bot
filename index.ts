@@ -12,7 +12,8 @@ const banned = [
 	'557183543921@c.us',
 	'555198783111@c.us',
 	'5521969693229@c.us',
-	'447796457170c.us'
+	'447796457170c.us',
+	'554598345338@c.us',
 ];
 
 dotEnv.config({
@@ -35,27 +36,37 @@ const start = async (client: Client) => {
 			if (!module) return;
 
 			module.setRequester();
-			module.callMethod(method, args);
+			try {
+				module.callMethod(method, args);
+			} catch (e) {
+				console.warn(e);
+			}
 		}
 	};
 
 	client.onAnyMessage(message => {
-		if (banned.includes(message.author) && message.body.startsWith('!')) {
-			client.reply(message.from, 'Você está bloqueado :)', message.id);
-			return;
+		try {
+			if (banned.includes(message.author) && message.body.startsWith('!')) {
+				client.reply(message.from, 'Você está bloqueado :)', message.id);
+				return;
+			}
+			// if (
+			// 	!message.isGroupMsg &&
+			// 	(message?.caption?.startsWith('!') || message?.body?.startsWith('!'))
+			// ) {
+			// 	return client.reply(
+			// 		message.from,
+			// 		'Esse bot só funciona em grupos',
+			// 		message.id
+			// 	);
+			// }
+			zaplify.setMessageObject(message);
+			handleMsg(message.caption || message.body).catch(
+				e => console.warn(e)
+			);
+		} catch (e) {
+			console.warn(e);
 		}
-		// if (
-		// 	!message.isGroupMsg &&
-		// 	(message?.caption?.startsWith('!') || message?.body?.startsWith('!'))
-		// ) {
-		// 	return client.reply(
-		// 		message.from,
-		// 		'Esse bot só funciona em grupos',
-		// 		message.id
-		// 	);
-		// }
-		zaplify.setMessageObject(message);
-		handleMsg(message.caption || message.body);
 	});
 
 	client.onButton(async (chat: any) => {
