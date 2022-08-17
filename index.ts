@@ -14,6 +14,7 @@ const banned = [
 	'5521969693229@c.us',
 	'447796457170c.us',
 	'554598345338@c.us',
+	'556291899337@c.us',
 ];
 
 dotEnv.config({
@@ -26,7 +27,7 @@ const start = async (client: Client) => {
 	ModulesWrapper.Zaplify.registerZaplify(zaplify);
 
 	const handleMsg = async (msg: string) => {
-		const parsingResult = parse(msg?.toLowerCase() || 'null');
+		const parsingResult = parse(msg.toLowerCase() || 'null');
 
 		if (!parsingResult.isError) {
 			console.log(msg);

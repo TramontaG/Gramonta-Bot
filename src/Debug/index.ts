@@ -1,4 +1,4 @@
-import { Message } from '@open-wa/wa-automate';
+import { Message, MessageId } from '@open-wa/wa-automate';
 import Express from 'express';
 import parse from 'src/lib/T-Parser';
 import modules from 'src/Modules';
@@ -18,7 +18,7 @@ DebugServer.get('/', async (req, res) => {
 	const mockedCient = MockedClient.getInstance(req, res);
 	const sender = mockedCient.messageObject?.sender as Message['sender'];
 	mockedCient.messageObject = {
-		id: `Debug - Message sent through WebRequest on ${new Date()}`,
+		id: `Debug - Message sent through WebRequest on ${new Date()}` as MessageId,
 		author: 'Postman',
 		sender: {
 			...sender,

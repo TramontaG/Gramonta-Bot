@@ -163,10 +163,10 @@ class Zaplify {
 		return decryptMedia(sticker);
 	}
 
-	sendFileFromUrl(url: string, fileName: string, requester: Message) {
+	sendFileFromUrl(url: string, fileName: string, requester: Message, caption: string = "") {
 		const message = requester || this.messageObject;
 		if (!message) throw 'No message object initialized';
-		this.client.sendFileFromUrl(requester.from, url, '', fileName, requester.id);
+		return this.client.sendFileFromUrl(requester.from, url, caption, fileName, requester.id);
 	}
 
 	sendImageAsSticker(imageBuffer: Buffer, requester?: Message) {
@@ -188,6 +188,15 @@ class Zaplify {
 			);
 		} catch (e) {
 			this.replyAuthor("erro desconhecido", requester);
+		}
+	}
+
+	sendFileFromBuffer(buffer: Buffer, mimeType: Mimetype, caption: string = "", requester: Message){
+		try {
+			const base64 = this.getBase64fromBuffer(buffer, mimeType)
+			return this.client.sendFile(requester.from, base64, "file", caption)
+		} catch (e) {
+			this.replyAuthor(JSON.stringify(e), requester);
 		}
 	}
 

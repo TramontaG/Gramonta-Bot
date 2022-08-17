@@ -118,7 +118,17 @@ class MockedClient {
 		});
 	}
 
-	sendFileFromUrl(url: string, fileName: string, requester: Message) {}
+	sendFileFromUrl(url: string, fileName: string, requester: Message) {
+		this.addReplyToQueue({
+			type: MessageType.MEDIA,
+			url,
+			fileName,
+		})
+	}
+
+	sendFileFromBuffer(){
+		
+	}
 }
 
 export default MockedClient;

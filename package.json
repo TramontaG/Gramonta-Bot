@@ -10,7 +10,8 @@
 		"dev": "ts-node-dev --exit-child -r tsconfig-paths/register index.ts",
 		"lines": "lineCounter count --path=\"src\""
 	},
-	"author": "Jonathan",
+	"module": "index.ts",
+	"author": "TramontaG",
 	"license": "Apache-2.0",
 	"dependencies": {
 		"@google-cloud/speech": "^4.9.0",
@@ -70,7 +71,8 @@
 		"@types/google-images": "^2.1.1",
 		"@types/he": "^1.1.2",
 		"ts-node": "^10.3.0",
-		"ts-node-dev": "^1.1.8",
-		"tsconfig-paths": "^3.11.0"
+		"ts-node-dev": "@latest",
+		"tsconfig-paths": "^3.11.0",
+		"typescript": "^4.7.4"
 	}
 }

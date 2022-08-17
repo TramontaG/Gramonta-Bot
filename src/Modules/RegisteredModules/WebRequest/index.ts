@@ -19,6 +19,7 @@ import Ping from '../../Ping';
 import Dictionary from '../..//Dictionary';
 import Translate from 'src/Modules/Translate';
 import OpenAI from '../../OpenAi';
+import Downloader from 'src/Modules/Downloader';
 
 import { kudurolify } from '../../TextTransform/Transformations';
 import Wordle from 'src/Modules/Wordle';
@@ -57,5 +58,6 @@ modulesWrapper.registerModule("ping", new Ping());
 modulesWrapper.registerModule("dicionario", dictionary);
 modulesWrapper.registerModule("significado", dictionary);
 modulesWrapper.registerModule("openai", new OpenAI());
+modulesWrapper.registerModule('download', new Downloader());
 
 export default modulesWrapper;

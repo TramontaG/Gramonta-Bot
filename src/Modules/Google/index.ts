@@ -182,6 +182,12 @@ class Google extends Module {
 				.search(query)
 				.then(({ data }) => {
 					const { searchInformation } = data;
+
+					if (!data.items){
+						this.zaplify?.replyAuthor("Não encontrei nada");
+						return;
+					}
+
 					let response = ``;
 					response += `*_O google encontrou ${searchInformation.totalResults} em ${searchInformation.formattedSearchTime} segundos_*`;
 					response += `\n\n`;
