@@ -16,21 +16,21 @@ class Weather extends Module {
 		this.weatherAPI = new WeatherAPI();
 		this.Logger = new Logger();
 
+		// this.registerPublicMethod({
+		// 	name: 'default',
+		// 	method: this.sendHelp.bind(this),
+		// });
 		this.registerPublicMethod({
 			name: 'default',
-			method: this.sendHelp.bind(this),
-		});
-		this.registerPublicMethod({
-			name: 'city',
 			method: this.fromCity.bind(this),
 		});
 	}
 
 	async fromCity(args: Args) {
 		const requester = this.zaplify?.messageObject as Message;
-		const city = args.immediate?.trim();
+		const city = args.immediate?.trim() || args.method;
 		if (!city) return this.zaplify?.replyAuthor('Por favor, insira uma cidade');
-
+		
 		try {
 			const weather = await this.weatherAPI.getWeatherFromCity(city);
 			if (weather.cod == 404)
