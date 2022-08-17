@@ -16,10 +16,11 @@ class Weather extends Module {
 		this.weatherAPI = new WeatherAPI();
 		this.Logger = new Logger();
 
-		// this.registerPublicMethod({
-		// 	name: 'default',
-		// 	method: this.sendHelp.bind(this),
-		// });
+		this.registerPublicMethod({
+			name: 'help',
+			method: this.sendHelp.bind(this),
+		});
+		
 		this.registerPublicMethod({
 			name: 'default',
 			method: this.fromCity.bind(this),
@@ -30,7 +31,7 @@ class Weather extends Module {
 		const requester = this.zaplify?.messageObject as Message;
 		const city = args.immediate?.trim() || args.method;
 		if (!city) return this.zaplify?.replyAuthor('Por favor, insira uma cidade');
-		
+
 		try {
 			const weather = await this.weatherAPI.getWeatherFromCity(city);
 			if (weather.cod == 404)
