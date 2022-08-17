@@ -5,6 +5,7 @@ import ModulesWrapper from 'src/Modules';
 import Zaplify from 'src/Modules/Zaplify';
 import dotEnv from 'dotenv';
 import DebugServer from './src/Debug';
+import { filterProperty } from 'src/Helpers/ObjectManipulation';
 
 const banned = [
 	'556997479999@c.us',
@@ -26,19 +27,23 @@ const start = async (client: Client) => {
 	const zaplify = new Zaplify(client);
 	ModulesWrapper.Zaplify.registerZaplify(zaplify);
 
-	const handleMsg = async (msg: string) => {
+	const handleMsg = async (msg: string, messageObject: Message) => {
 		const parsingResult = parse(msg.toLowerCase() || 'null');
 
 		if (!parsingResult.isError) {
 			console.log(msg);
-			const { command, method, args } = parsingResult.result;
+			const { command, method } = parsingResult.result;
 			const module = ModulesWrapper.Zaplify.getModule(command);
+			const messageData = filterProperty(parsingResult.result, "args");
 
 			if (!module) return;
 
 			module.setRequester();
 			try {
-				module.callMethod(method, args);
+				module.callMethod(method, {
+					...messageData,
+					...parsingResult.result.args
+				}, messageObject);
 			} catch (e) {
 				console.warn(e);
 			}
@@ -62,21 +67,17 @@ const start = async (client: Client) => {
 			// 	);
 			// }
 			zaplify.setMessageObject(message);
-			handleMsg(message.caption || message.body).catch(
+			handleMsg(message.caption || message.body, message).catch(
 				e => console.warn(e)
 			);
 		} catch (e) {
 			console.warn(e);
 		}
 	});
-
-	client.onButton(async (chat: any) => {
-		handleMsg(chat.selectedButtonId);
-	});
 };
 
 DebugServer.listen(3000);
 
-create({ ...options, multiDevice: true }).then(client => {
-	start(client);
-});
+// create({ ...options, multiDevice: true }).then(client => {
+// 	start(client);
+// });

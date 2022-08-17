@@ -1,4 +1,4 @@
-import { Module } from '../ModulesRegister';
+import { Args, Module } from '../ModulesRegister';
 import { Message, MessageTypes } from '@open-wa/wa-automate';
 import fs from 'fs/promises';
 import Logger from '../Logger/Logger';
@@ -20,10 +20,9 @@ class Sticker extends Module {
 		this.makePublic('help', this.help);
 	}
 
-	async sticker() {
+	async sticker(_: Args, requester: Message) {
 		try {
-			const requester =
-				this.requester?.quotedMsg || (this.zaplify?.messageObject as Message);
+			requester = requester?.quotedMsg || requester;
 
 			const typesAllowed = [MessageTypes.IMAGE, MessageTypes.VIDEO];
 

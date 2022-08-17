@@ -1,7 +1,5 @@
 import * as Genius from 'genius-lyrics';
 
-console.log({ Genius });
-
 class LyricsApi {
 	client: Genius.Client;
 
