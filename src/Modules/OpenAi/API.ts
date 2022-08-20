@@ -86,9 +86,7 @@ export default class OpenAPI {
             presence_penalty: .3,
             ...options,
         });
-
-        console.log(response.data);
-
+        
         const result = {
             response: response.data.choices?.[0].text?.trim() || "The AI could not find and anwnser",
             //the type declaration is missing the property usage. Plz open ai, fix this <3
