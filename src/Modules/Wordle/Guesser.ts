@@ -3,7 +3,7 @@ import { WordleState } from 'src/BigData/JsonDB';
 import { normalizeLetter, normalizeString } from 'src/Helpers/TextFormatter';
 import wordList from '../../../media/Dictionaries/wordlist';
 
-import Logger from './../Logger';
+import Logger from '../Logger';
 
 type GuessersGroup = {
 	[key: number]: {

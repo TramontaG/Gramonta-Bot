@@ -2,7 +2,7 @@ import { Module } from '../ModulesRegister';
 import fs from 'fs/promises';
 import axios from 'axios';
 import Logger from '../Logger/Logger';
-import { EntityTypes } from 'src/BigData/JsonDB';
+import { EntityTypes } from '../../BigData/JsonDB';
 import { Message } from '@open-wa/wa-automate';
 
 const signos = [
