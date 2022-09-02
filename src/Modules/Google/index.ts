@@ -6,6 +6,7 @@ import Logger from '../Logger/Logger';
 import { EntityTypes } from 'src/BigData/JsonDB';
 import { getAudioUrl } from 'google-tts-api';
 import fs from 'fs/promises';
+import axios from 'axios';
 
 interface GoogleArgs extends Args {
 	imgamount?: string;
@@ -99,6 +100,7 @@ class Google extends Module {
 					throw e;
 				});
 			let amountSend = 0;
+
 			results.forEach(result => {
 				if (amountSend >= imgAmount) return;
 				if (result.type !== 'image/jpeg') return;
@@ -106,11 +108,18 @@ class Google extends Module {
 
 				// @ts-ignore
 				const caption = `${result.description}\n\n${result.parentPage}`;
-				this.zaplify?.sendImageFromUrl(
-					result.url,
-					caption,
-					this.requester as Message
-				);
+				try {
+					axios.get(result.url).then(() =>
+						this.zaplify?.sendImageFromUrl(
+							result.url,
+							caption,
+							requester,
+						)
+					).catch(e => console.warn(e));
+				} catch (e) {
+					console.warn(e);
+				}
+
 				amountSend++;
 			});
 
@@ -173,6 +182,12 @@ class Google extends Module {
 				.search(query)
 				.then(({ data }) => {
 					const { searchInformation } = data;
+
+					if (!data.items){
+						this.zaplify?.replyAuthor("Não encontrei nada");
+						return;
+					}
+
 					let response = ``;
 					response += `*_O google encontrou ${searchInformation.totalResults} em ${searchInformation.formattedSearchTime} segundos_*`;
 					response += `\n\n`;

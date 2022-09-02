@@ -4,7 +4,6 @@ import About from '../../About';
 
 import Sticker from '../../Sticker';
 import Youtube from '../../Youtube';
-import Youtube2 from '../../YouTube2';
 import Horoscopo from '../../Horoscopo';
 import Google from '../../Google';
 import Transcribe from '../../Transcribe';
@@ -16,12 +15,13 @@ import Meme from '../../MemeMaker';
 import TextTransform from '../../TextTransform';
 import Finance from '../../Finance';
 import Ping from '../../Ping';
-import Dictionary from '../..//Dictionary';
-
-import Translate from 'src/Modules/Translate';
+import Dictionary from '../../Dictionary';
+import Translate from '../../Translate';
+import OpenAI from '../../OpenAi';
+import Downloader from '../../Downloader';
 
 import { kudurolify } from '../../TextTransform/Transformations';
-import Wordle from 'src/Modules/Wordle';
+import Wordle from '../..//Wordle';
 
 const modulesWrapper = new ModulesWrapper();
 
@@ -56,5 +56,7 @@ modulesWrapper.registerModule("translate", new Translate());
 modulesWrapper.registerModule("ping", new Ping());
 modulesWrapper.registerModule("dicionario", dictionary);
 modulesWrapper.registerModule("significado", dictionary);
+modulesWrapper.registerModule("openai", new OpenAI());
+modulesWrapper.registerModule('download', new Downloader());
 
 export default modulesWrapper;

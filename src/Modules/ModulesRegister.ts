@@ -5,12 +5,15 @@ import { MockedMessageObject } from 'src/Debug/ZaplifyMock/Models';
 import Zaplify from './Zaplify';
 
 export interface Args {
+	command: string;
+	method: string;
+	fullString: string;
 	immediate?: string;
 }
 
 type PublicMethod = {
 	name: string;
-	method: (args: Args) => any;
+	method: (args: Args, requester: Message) => any;
 };
 type ModuleAddresser = {
 	name: string;
@@ -28,18 +31,16 @@ export class Module {
 		this.requester = undefined;
 	}
 
-	callMethod(methodName: string, args: Args): any {
+	callMethod(methodName: string, args: Args, requester: Message): Promise<any> {
 		const choosenMethod = this.publicMethods.filter(
 			method => method.name === methodName
 		)[0];
 		if (!choosenMethod) {
 			if (methodName !== 'default') {
-				return this.callMethod('default', args);
-			} else {
-				return;
+				return this.callMethod('default', args, requester);
 			}
 		}
-		return choosenMethod.method(args);
+		return choosenMethod.method(args, requester);
 	}
 
 	makePublic(name: string, method: (args: Args) => any) {

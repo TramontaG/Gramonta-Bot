@@ -1,5 +1,6 @@
-import { Message } from '@open-wa/wa-automate';
+import { Message, MessageId } from '@open-wa/wa-automate';
 import Express from 'express';
+import { filterProperty } from 'src/Helpers/ObjectManipulation';
 import parse from 'src/lib/T-Parser';
 import modules from 'src/Modules';
 import MockedClient from './ZaplifyMock';
@@ -15,10 +16,11 @@ DebugServer.get('/', async (req, res) => {
 
 	if (parseResult.isError) return res.status(400).send('Invalid command');
 
+
 	const mockedCient = MockedClient.getInstance(req, res);
 	const sender = mockedCient.messageObject?.sender as Message['sender'];
 	mockedCient.messageObject = {
-		id: `Debug - Message sent through WebRequest on ${new Date()}`,
+		id: `Debug - Message sent through WebRequest on ${new Date()}` as MessageId,
 		author: 'Postman',
 		sender: {
 			...sender,
@@ -33,7 +35,12 @@ DebugServer.get('/', async (req, res) => {
 	if (!module) return;
 
 	module.setRequester();
-	await module.callMethod(method, args);
+	const messageArgs = {
+		...filterProperty(parseResult.result, "args"),
+		...parseResult.result.args
+	}
+
+	await module.callMethod(method, messageArgs, mockedCient.messageObject as Message);
 
 	mockedCient.sendReplyQueue();
 });

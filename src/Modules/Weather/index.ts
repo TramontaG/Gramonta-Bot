@@ -17,18 +17,19 @@ class Weather extends Module {
 		this.Logger = new Logger();
 
 		this.registerPublicMethod({
-			name: 'default',
+			name: 'help',
 			method: this.sendHelp.bind(this),
 		});
+		
 		this.registerPublicMethod({
-			name: 'city',
+			name: 'default',
 			method: this.fromCity.bind(this),
 		});
 	}
 
 	async fromCity(args: Args) {
 		const requester = this.zaplify?.messageObject as Message;
-		const city = args.immediate?.trim();
+		const city = args.immediate?.trim() || args.method;
 		if (!city) return this.zaplify?.replyAuthor('Por favor, insira uma cidade');
 
 		try {

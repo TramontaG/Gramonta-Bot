@@ -24,14 +24,13 @@ class LyricsFinder extends Module {
 
 		this.registerPublicMethod({
 			name: 'default',
-			method: this.help.bind(this),
+			method: this.firstSong.bind(this),
 		});
 	}
 
-	async firstSong(args: Args) {
+	async firstSong(args: Args, requester: Message) {
 		try {
-			const requester = this.zaplify?.messageObject as Message;
-			const query = args.immediate;
+			const query = args.method + args.immediate;
 
 			if (!query) throw 'Por favor, insira algo para eu pesquisar!';
 
@@ -46,9 +45,9 @@ class LyricsFinder extends Module {
 				date: new Date().getTime(),
 			});
 
-			this.zaplify?.replyAuthor(result, requester);
+			return this.zaplify?.replyAuthor(result, requester);
 		} catch (e) {
-			this.zaplify?.replyAuthor('Erro desconhecido:' + e);
+			return this.zaplify?.replyAuthor('Erro desconhecido:' + e);
 		}
 	}
 

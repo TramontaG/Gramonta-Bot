@@ -21,6 +21,8 @@ import Raffle from '../../Raffle';
 import Translate from 'src/Modules/Translate';
 import Ping from '../../Ping';
 import Dictionary from '../../Dictionary';
+import OpenAI from 'src/Modules/OpenAi';
+import Downloader from 'src/Modules/Downloader';
 
 const modulesWrapper = new ModulesWrapper();
 import { kudurolify } from '../../TextTransform/Transformations';
@@ -62,5 +64,7 @@ modulesWrapper.registerModule('translate', new Translate());
 modulesWrapper.registerModule('ping', new Ping());
 modulesWrapper.registerModule("dicionario", dictionary);
 modulesWrapper.registerModule("significado", dictionary);
+modulesWrapper.registerModule("openai", new OpenAI());
+// modulesWrapper.registerModule("download", new Downloader());
 
 export default modulesWrapper;

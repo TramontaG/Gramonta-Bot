@@ -6,6 +6,10 @@ Sou composto por vários módulos! Cada módulo possui sua seção de ajuda, que
 Informações sobre o bot e seu criador
 Acesso ao módulo: *_!about_*
 
+*|---------Ping---------|*
+Responde pong. Util para verificar se o bot está on e tempo de latência
+Acesso ao módulo: *_!ping_*
+
 *|-----Sticker-Maker-----|*
 Faz figurinhas a partir de fotos, videos e gifs!
 Acesso ao módulo: *_!s_* ou *_!sticker_*
@@ -62,3 +66,7 @@ Acesso ao módulo: *_!speak_*
 *|--------Translate!-------|*
 Google Tradutor direto do seu whatsapp!
 Acesso ao módulo: *_!translate_*
+
+*|--------Dicionário!-------|*
+Serviço de dicionário
+Acesso ao módulo: *_!significado*
