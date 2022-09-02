@@ -1,0 +1,15 @@
+export const question = (question: string) => [
+    'I am a highly intelligent question answering bot.',
+    '',
+    'Q: What is human life expectancy in the United States?',
+    'A: Human life expectancy in the United States is 78 years.',
+    '',
+    'Q: Who was president of the United States in 1955?',
+    'A: Dwight D. Eisenhower was president of the United States in 1955.',
+    '',
+    'Q: Where were the 1992 Olympics held?',
+    'A: The 1992 Olympics were held in Barcelona, Spain.',
+    '',
+    `Q: ${question}`,
+    'A:',
+].join('\n')

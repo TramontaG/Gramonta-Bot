@@ -245,13 +245,11 @@ class Youtube extends Module {
 		}
 	}
 
-	async askInfo(args: Args, req?: Message) {
-		const requester = req && (this.zaplify?.messageObject as Message);
-
+	async askInfo(args: Args, requester: Message) {
 		const helpText = await fs.readFile('src/Modules/Youtube/Help.txt', {
 			encoding: 'utf-8',
 		});
-		this.zaplify?.replyAuthor(helpText, requester);
+		return this.zaplify?.replyAuthor(helpText, requester);
 	}
 
 	private sendErrorMessage(prefix: string, error: string, requester?: Message) {

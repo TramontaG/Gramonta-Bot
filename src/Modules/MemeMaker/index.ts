@@ -22,7 +22,7 @@ class MemeModule extends Module {
 
 		this.registerPublicMethod({
 			name: 'search',
-			method: this.searchMeme.bind(this),
+			method: (args: MemeArgs, requester: Message) => this.searchMeme(args, false, requester),
 		});
 
 		this.registerPublicMethod({
@@ -37,12 +37,11 @@ class MemeModule extends Module {
 
 		this.registerPublicMethod({
 			name: 'random',
-			method: (args: MemeArgs) => this.searchMeme(args, true),
+			method: (args: MemeArgs, requester: Message) => this.searchMeme(args, true, requester),
 		});
 	}
 
-	async searchMeme(args: MemeArgs, random?: boolean) {
-		const requester = this.zaplify?.messageObject as Message;
+	async searchMeme(args: MemeArgs, random: boolean, requester: Message) {
 		const query = args.immediate?.trim();
 
 		if (!query && !random)

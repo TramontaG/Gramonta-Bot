@@ -1,3 +1,4 @@
+import { Message } from "@open-wa/wa-automate";
 import { Args, Module } from "../ModulesRegister";
 
 class Ping extends Module {
@@ -10,8 +11,8 @@ class Ping extends Module {
         });
     }
 
-    pong(_: Args){
-        this.zaplify?.replyAuthor("pong");
+    pong(_: Args, requester: Message){
+        this.zaplify?.replyAuthor("pong", requester);
     }
 }
 

@@ -13,6 +13,7 @@ export enum MessageType {
 	VIDEO = 'Video',
 	TEXT = 'Text',
 	BUTTONS = 'Buttons',
+	MEDIA = "media",
 }
 
 export type Reply = {
@@ -22,6 +23,8 @@ export type Reply = {
 	caption?: string;
 	quoteMessageId?: string;
 	buttons?: Button[];
+	url?: string,
+	fileName?: string,
 };
 
 export type TimelessReply = {

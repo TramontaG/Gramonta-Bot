@@ -13,6 +13,16 @@ const flatArgs = (args: any[]) => {
 	}, {});
 };
 
+type ArgObj = {
+	[key: string]: string;
+}
+
+const objToString = (obj: ArgObj) => {
+	return Object.keys(obj).map((key: keyof ArgObj) => {
+		return `-${key} ${obj[key]}`
+	}).join(' ');
+}
+
 const deepLog = (obj: any) => {
 	console.log(
 		util.inspect(obj, {
@@ -29,7 +39,7 @@ const command = M.transform(
 );
 
 const method = M.transform(
-	C.sequenceOf([T.whiteSpace, T.regexMatch(/^((?! ).)+/)]),
+	C.sequenceOf([T.whiteSpace, T.letters]),
 	({ result }) => result[1]
 );
 
@@ -66,6 +76,11 @@ const parser = M.transform(
 		command: result[0],
 		method: result[1]?.trim(),
 		args: flatArgs(result[2]),
+		fullString: [
+			`${result[0]} `,
+			`${result[1] + " " || ""}`,
+			`${objToString(flatArgs(result[2]))}`,
+		].join('')
 	})
 );
 
