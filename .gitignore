@@ -9,8 +9,8 @@ node_modules
 # arquivos de log
 logs
 #arquivos mp3
-media/*.mp3
-media/to/*.mp3
+# media/*.mp3
+# media/to/*.mp3
 #App Dist
 dist
 #envs
@@ -23,3 +23,6 @@ googleAppCredentials.json
 # managed
 **_IGNORE_**
 # end managed
+
+#media in general
+media/**/*
