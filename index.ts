@@ -11,10 +11,10 @@ const banned = [
 	'556997479999@c.us',
 	'551198783111@c.us',
 	'557183543921@c.us',
-	'555198783111@c.us',
 	'5521969693229@c.us',
 	'447796457170c.us',
 	'554598345338@c.us',
+	'5521991967597@c.us',
 ];
 
 dotEnv.config({
@@ -75,8 +75,8 @@ const start = async (client: Client) => {
 	});
 };
 
-DebugServer.listen(3000);
+DebugServer.listen(4000);
 
-create({ ...options, multiDevice: true }).then(client => {
-	start(client);
-});
+// create({ ...options, multiDevice: true }).then(client => {
+// 	start(client);
+// });

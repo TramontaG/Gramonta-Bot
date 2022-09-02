@@ -48,21 +48,14 @@ interface VideoInProgress {
 }
 
 class Youtube extends Module {
-	searchString: string;
 	videos: CachedVideo[];
-	nextPageToken: string;
-	previousPageToken: string;
 	requesterLine: Message[];
 	videosInProgress: VideoInProgress[];
 	logger: Logger;
 
 	constructor() {
 		super();
-
-		this.searchString = '';
 		this.videos = [];
-		this.nextPageToken = '';
-		this.previousPageToken = '';
 
 		this.requesterLine = [];
 
@@ -81,65 +74,27 @@ class Youtube extends Module {
 		// });
 	}
 
-	progress(requester?: Message) {
-		let replyString = `*_Videos sendo baixados atualmente pelo bot_*\n\n`;
-		replyString += this.videosInProgress.reduce(
-			(reply: string, video: VideoInProgress) => {
-				reply += `*${video.title}* - ${video.progress.toFixed(2)}% concluidos.\n`;
-				reply += `Tempo estimado de espera: ${video.eta.toFixed(0)} segundos\n\n`;
-				return reply;
-			},
-			``
-		);
-		this.zaplify?.replyAuthor(replyString, requester);
-	}
-
-	async downloadVideo(args: YoutubeArgs) {
+	async downloadVideo(args: YoutubeArgs, requester: Message) {
 		try {
-			const requester = this.requester as Message;
-			const query = args.immediate;
-			const { url, index, req } = args;
-			if (index) return this.downloadByIndex(index, req);
-
-			if (url) return this.downloadVideoFromUrl(url, this.requester as Message, url);
-
+			const query = args.command + args.immediate;
 			if (!query) return this.askInfo(args, requester);
+
 			const results = await this.searchResults(query);
 			if (!results) return;
 
 			this.sendVideoMetaData(results[0].title, results[0].thumbnail, requester);
 
+			console.log("chegou aq de boa");
+
 			this.downloadVideoFromUrl(
 				results[0].link,
-				this.requester as Message,
+				requester as Message,
 				results[0].title
 			);
-			setTimeout(() => this.progress(requester), 3000);
+
 		} catch (e) {
 			this.sendErrorMessage('Deu pau', e as string);
 		}
-	}
-
-	private async downloadByIndex(stringIndex: string, reqId?: string) {
-		const index = Number(stringIndex);
-		const requester = this.requesterLine.filter(
-			request => request.id.toLowerCase() === reqId
-		)[0];
-		const requesterVideoArray = this.videos.filter(
-			video => video.requester.toLowerCase() === reqId
-		)[0];
-		const choosenVideo = requesterVideoArray?.videos[index];
-
-		await this.sendVideoMetaData(
-			'Baixando ' + choosenVideo.title,
-			choosenVideo.thumbnail
-		);
-
-		return this.downloadVideoFromUrl(
-			choosenVideo.link,
-			requester as Message,
-			choosenVideo.title
-		);
 	}
 
 	private async searchResults(
@@ -155,9 +110,6 @@ class Youtube extends Module {
 				pageToken: token,
 			};
 			const response = await YTSearch(query, options);
-
-			this.nextPageToken = response.pageInfo.nextPageToken;
-			this.previousPageToken = response.pageInfo.prevPageToken;
 
 			return response.results
 				.filter(result => result.kind === 'youtube#video')
@@ -180,9 +132,11 @@ class Youtube extends Module {
 			const YD = new YoutubeMp3Downloader(downloaderOptions);
 			const ID_VIDEO = url.split('=')[1];
 
+			console.log({url, ID_VIDEO});
+
 			this.logger.insertNew(EntityTypes.SONGS, {
 				groupName: requester.isGroupMsg ? requester.chat.name : '_',
-				chatId: requester.chat.id,
+				chatId: requester?.chat?.id || "unknown",
 				requester: requester.sender.formattedName,
 				songName: title,
 				date: new Date().getTime(),
@@ -223,15 +177,9 @@ class Youtube extends Module {
 				this.videosInProgress.splice(videoInProgressIndex, 1);
 				this.sendErrorMessage('Erro ao baixar mp3', err, requester);
 			});
-			YD.on('progress', info => {
-				const video = this.videosInProgress.filter(
-					video => video.videoId === ID_VIDEO
-				)[0];
-				if (!video) return;
-				video.eta = info.progress.eta;
-				video.progress = info.progress.percentage;
-			});
+
 		} catch (e) {
+			console.warn(e);
 			this.sendErrorMessage('Erro desconhecido', JSON.stringify(e), requester);
 		}
 	}
