@@ -68,10 +68,10 @@ class Youtube extends Module {
 			method: this.askInfo.bind(this),
 		});
 
-		// this.registerPublicMethod({
-		// 	name: 'download',
-		// 	method: this.downloadVideo.bind(this),
-		// });
+		this.registerPublicMethod({
+			name: 'download',
+			method: this.downloadVideo.bind(this),
+		});
 	}
 
 	async downloadVideo(args: YoutubeArgs, requester: Message) {

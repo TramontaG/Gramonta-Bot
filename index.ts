@@ -75,8 +75,8 @@ const start = async (client: Client) => {
 	});
 };
 
-DebugServer.listen(4000);
+DebugServer.listen(3000);
 
-// create({ ...options, multiDevice: true }).then(client => {
-// 	start(client);
-// });
+create({ ...options, multiDevice: true }).then(client => {
+	start(client);
+});
