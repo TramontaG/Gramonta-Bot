@@ -7,6 +7,7 @@ import YoutubeMp3Downloader from 'youtube-mp3-downloader';
 import API from '../Lyrics/API,';
 import Logger from '../Logger/Logger';
 import { EntityTypes } from 'src/BigData/JsonDB';
+import YouTubeDownloader from 'ytdl-core';
 
 const downloaderOptions = {
 	filter: 'audioonly',
@@ -70,11 +71,48 @@ class Youtube extends Module {
 
 		this.registerPublicMethod({
 			name: 'download',
-			method: this.downloadVideo.bind(this),
+			method: this.downloadSong.bind(this),
 		});
+
+		this.registerPublicMethod({
+			name: 'video',
+			method: this.downloadVideo.bind(this),
+		})
 	}
 
-	async downloadVideo(args: YoutubeArgs, requester: Message) {
+	async downloadVideo(args: YoutubeArgs, requester: Message){
+		try {
+			const query = args.immediate;
+			if (!query) return this.askInfo(args, requester);
+
+			const results = await this.searchResults(query);
+			if (!results) return;
+
+			console.log({results});
+
+			const downloadStream = YouTubeDownloader(results[0].link);
+			let video = Buffer.from("");
+
+			downloadStream.on("data", (chunk) => {
+				video += chunk;
+				console.log("Received chunk = ", chunk);
+			});
+
+
+			downloadStream.on("end", () => {
+				fs.writeFile('./media/ytVideos/' + results[0].title + '.mp4', video);
+				console.log("FINISHED")
+				this.zaplify?.sendFileFromBuffer(video, "video/mp4", results[0].title, requester);
+			})
+
+		} catch (e) {
+			console.warn(e);
+			this.zaplify?.replyAuthor(JSON.stringify(e), requester);
+		}
+	}
+
+
+	async downloadSong(args: YoutubeArgs, requester: Message) {
 		try {
 			const query = args.command + args.immediate;
 			if (!query) return this.askInfo(args, requester);
@@ -83,8 +121,6 @@ class Youtube extends Module {
 			if (!results) return;
 
 			this.sendVideoMetaData(results[0].title, results[0].thumbnail, requester);
-
-			console.log("chegou aq de boa");
 
 			this.downloadVideoFromUrl(
 				results[0].link,
@@ -110,6 +146,9 @@ class Youtube extends Module {
 				pageToken: token,
 			};
 			const response = await YTSearch(query, options);
+			console.log({
+				results: response.results
+			});
 
 			return response.results
 				.filter(result => result.kind === 'youtube#video')
@@ -131,8 +170,6 @@ class Youtube extends Module {
 		try {
 			const YD = new YoutubeMp3Downloader(downloaderOptions);
 			const ID_VIDEO = url.split('=')[1];
-
-			console.log({url, ID_VIDEO});
 
 			this.logger.insertNew(EntityTypes.SONGS, {
 				groupName: requester.isGroupMsg ? requester.chat.name : '_',

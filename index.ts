@@ -75,8 +75,11 @@ const start = async (client: Client) => {
 	});
 };
 
-DebugServer.listen(3000);
-
-create({ ...options, multiDevice: true }).then(client => {
-	start(client);
+const DEBUG_PORT = 4000
+DebugServer.listen(DEBUG_PORT, () => {
+	console.log(`[SERVER]: Listening on port ${DEBUG_PORT}`);
 });
+
+// create({ ...options, multiDevice: true }).then(client => {
+// 	start(client);
+// });

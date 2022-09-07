@@ -200,6 +200,14 @@ class Zaplify {
 		}
 	}
 
+	sendVideo(url: string, name: string, requester: Message, caption = ""){
+		try {
+			this.client.sendFileFromUrl(requester.from, url, name, caption)
+		} catch (e) {
+			this.replyAuthor(JSON.stringify(e), requester);
+		}
+	}
+
 	async isAdmin(requester: Message) {
 		if (!requester.isGroupMsg) return true;
 		const allAdmins = await this.client.getGroupAdmins(

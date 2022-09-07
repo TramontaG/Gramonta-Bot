@@ -8,7 +8,7 @@ import url from './UrlParser';
 const flatArgs = (args: any[]) => {
 	return args.reduce((acc, obj) => {
 		const key = Object.keys(obj)[0];
-		const value = obj[key];
+		const value = obj[key].trim();
 		return { ...acc, [key]: value };
 	}, {});
 };
@@ -73,7 +73,7 @@ const parser = M.transform(
 		'Command'
 	),
 	({ result }) => ({
-		command: result[0],
+		command: result[0].trim(),
 		method: result[1]?.trim(),
 		args: flatArgs(result[2]),
 		fullString: [
