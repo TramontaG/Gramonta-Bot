@@ -26,6 +26,7 @@ import Downloader from 'src/Modules/Downloader';
 
 const modulesWrapper = new ModulesWrapper();
 import { kudurolify } from '../../TextTransform/Transformations';
+import MensagensModule from 'src/Modules/BomDia';
 
 const help = new Help();
 const sticker = new Sticker();
@@ -34,7 +35,7 @@ const horoscope = new Horoscopo();
 const google = new Google();
 const replySpeak = new SingleCommandModule(google.replySpeak, google);
 const raffle = new Raffle();
-const dictionary = new Dictionary;
+const dictionary = new Dictionary();
 
 modulesWrapper.registerModule('help', help);
 modulesWrapper.registerModule('menu', help);
@@ -62,9 +63,10 @@ modulesWrapper.registerModule('sorteio', raffle);
 modulesWrapper.registerModule('raffle', raffle);
 modulesWrapper.registerModule('translate', new Translate());
 modulesWrapper.registerModule('ping', new Ping());
-modulesWrapper.registerModule("dicionario", dictionary);
-modulesWrapper.registerModule("significado", dictionary);
-modulesWrapper.registerModule("openai", new OpenAI());
+modulesWrapper.registerModule('dicionario', dictionary);
+modulesWrapper.registerModule('significado', dictionary);
+modulesWrapper.registerModule('openai', new OpenAI());
 // modulesWrapper.registerModule("download", new Downloader());
+modulesWrapper.registerModule('tia', new MensagensModule());
 
 export default modulesWrapper;

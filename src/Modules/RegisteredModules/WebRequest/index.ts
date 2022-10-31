@@ -22,6 +22,7 @@ import Downloader from 'src/Modules/Downloader';
 
 import { kudurolify } from '../../TextTransform/Transformations';
 import Wordle from '../..//Wordle';
+import MensagensModule from 'src/Modules/BomDia';
 
 const modulesWrapper = new ModulesWrapper();
 
@@ -29,7 +30,7 @@ const help = new Help();
 const sticker = new Sticker();
 const youtube = new Youtube();
 const horoscope = new Horoscopo();
-const dictionary = new Dictionary;
+const dictionary = new Dictionary();
 
 modulesWrapper.registerModule('help', help);
 modulesWrapper.registerModule('menu', help);
@@ -52,11 +53,12 @@ modulesWrapper.registerModule('meme', new Meme());
 modulesWrapper.registerModule('kuduro', new TextTransform(kudurolify));
 modulesWrapper.registerModule('finance', new Finance());
 modulesWrapper.registerModule('wordle', new Wordle());
-modulesWrapper.registerModule("translate", new Translate());
-modulesWrapper.registerModule("ping", new Ping());
-modulesWrapper.registerModule("dicionario", dictionary);
-modulesWrapper.registerModule("significado", dictionary);
-modulesWrapper.registerModule("openai", new OpenAI());
+modulesWrapper.registerModule('translate', new Translate());
+modulesWrapper.registerModule('ping', new Ping());
+modulesWrapper.registerModule('dicionario', dictionary);
+modulesWrapper.registerModule('significado', dictionary);
+modulesWrapper.registerModule('openai', new OpenAI());
 modulesWrapper.registerModule('download', new Downloader());
+modulesWrapper.registerModule('tia', new MensagensModule());
 
 export default modulesWrapper;

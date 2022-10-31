@@ -32,6 +32,12 @@ const start = async (client: Client) => {
 
 		if (!parsingResult.isError) {
 			console.log(msg);
+			// return client.reply(
+			// 	messageObject.from,
+			// 	'Bot em manutenção. Agradeço à compreensão',
+			// 	messageObject.id
+			// );
+
 			const { command, method } = parsingResult.result;
 			const module = ModulesWrapper.Zaplify.getModule(command);
 			const messageData = filterProperty(parsingResult.result, 'args');
