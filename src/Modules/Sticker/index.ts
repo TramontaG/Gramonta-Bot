@@ -3,7 +3,6 @@ import { Message, MessageTypes } from '@open-wa/wa-automate';
 import fs from 'fs/promises';
 import Logger from '../Logger/Logger';
 import { EntityTypes } from 'src/BigData/JsonDB';
-import { publicMethod } from 'src/Helpers/Decorators';
 
 class Sticker extends Module {
 	logger: Logger;
@@ -22,7 +21,7 @@ class Sticker extends Module {
 
 	async sticker(_: Args, requester: Message) {
 		try {
-			requester = requester?.quotedMsg || requester;
+			requester = requester.quotedMsg || requester;
 
 			const typesAllowed = [MessageTypes.IMAGE, MessageTypes.VIDEO];
 

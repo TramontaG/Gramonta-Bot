@@ -15,6 +15,7 @@ const banned = [
 	'447796457170c.us',
 	'554598345338@c.us',
 	'5521991967597@c.us',
+	'555196222255@c.us',
 ];
 
 dotEnv.config({
@@ -33,16 +34,20 @@ const start = async (client: Client) => {
 			console.log(msg);
 			const { command, method } = parsingResult.result;
 			const module = ModulesWrapper.Zaplify.getModule(command);
-			const messageData = filterProperty(parsingResult.result, "args");
+			const messageData = filterProperty(parsingResult.result, 'args');
 
 			if (!module) return;
 
 			module.setRequester();
 			try {
-				module.callMethod(method, {
-					...messageData,
-					...parsingResult.result.args
-				}, messageObject);
+				module.callMethod(
+					method,
+					{
+						...messageData,
+						...parsingResult.result.args,
+					},
+					messageObject
+				);
 			} catch (e) {
 				console.warn(e);
 			}
@@ -57,7 +62,7 @@ const start = async (client: Client) => {
 			}
 			// if (
 			// 	!message.isGroupMsg &&
-			// 	(message?.caption?.startsWith('!') || message?.body?.startsWith('!'))
+			// 	(message?.caption?.startsWith('!') || message?.body?.startsWith('!'))'
 			// ) {
 			// 	return client.reply(
 			// 		message.from,
@@ -66,8 +71,8 @@ const start = async (client: Client) => {
 			// 	);
 			// }
 			zaplify.setMessageObject(message);
-			handleMsg(message.caption || message.body, message).catch(
-				e => console.warn(e)
+			handleMsg(message.caption || message.body, message).catch(e =>
+				console.warn(e)
 			);
 		} catch (e) {
 			console.warn(e);
@@ -75,11 +80,11 @@ const start = async (client: Client) => {
 	});
 };
 
-const DEBUG_PORT = 4000
+const DEBUG_PORT = 3000;
 DebugServer.listen(DEBUG_PORT, () => {
 	console.log(`[SERVER]: Listening on port ${DEBUG_PORT}`);
 });
 
-// create({ ...options, multiDevice: true }).then(client => {
-// 	start(client);
-// });
+create({ ...options, multiDevice: true }).then(client => {
+	start(client);
+});

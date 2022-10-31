@@ -35,5 +35,5 @@ export function normalizeLetter(letter: keyof NormalizedLetterMap) {
  * @param string the string you want to normalize
  */
 export function normalizeString(string: string) {
-	return string.split('').map(normalizeLetter).join('');
+	return string.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }

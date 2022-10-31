@@ -8,6 +8,8 @@ import API from '../Lyrics/API,';
 import Logger from '../Logger/Logger';
 import { EntityTypes } from 'src/BigData/JsonDB';
 import YouTubeDownloader from 'ytdl-core';
+import BigLog from 'src/Helpers/BigLog';
+import axios from 'axios';
 
 const downloaderOptions = {
 	filter: 'audioonly',
@@ -77,10 +79,10 @@ class Youtube extends Module {
 		this.registerPublicMethod({
 			name: 'video',
 			method: this.downloadVideo.bind(this),
-		})
+		});
 	}
 
-	async downloadVideo(args: YoutubeArgs, requester: Message){
+	async downloadVideo(args: YoutubeArgs, requester: Message) {
 		try {
 			const query = args.immediate;
 			if (!query) return this.askInfo(args, requester);
@@ -88,29 +90,30 @@ class Youtube extends Module {
 			const results = await this.searchResults(query);
 			if (!results) return;
 
-			console.log({results});
+			const firstVideo = results[0];
 
-			const downloadStream = YouTubeDownloader(results[0].link);
-			let video = Buffer.from("");
-
-			downloadStream.on("data", (chunk) => {
-				video += chunk;
-				console.log("Received chunk = ", chunk);
+			const downloadStream = YouTubeDownloader(firstVideo.link, {
+				filter: format =>
+					Number(format.contentLength) < 15700000 && format.container === 'mp4',
 			});
 
+			let video = Buffer.from('');
 
-			downloadStream.on("end", () => {
-				fs.writeFile('./media/ytVideos/' + results[0].title + '.mp4', video);
-				console.log("FINISHED")
-				this.zaplify?.sendFileFromBuffer(video, "video/mp4", results[0].title, requester);
-			})
+			downloadStream.on('data', chunk => {
+				video += chunk;
+			});
 
+			downloadStream.on('end', async () => {
+				const filePath = './media/ytVideos/' + results[0].title + '.mp4';
+				await fs.writeFile(filePath, video);
+				console.log('FINISHED');
+				this.zaplify?.sendFileFromPath(filePath, 'video/mp4', requester);
+			});
 		} catch (e) {
 			console.warn(e);
 			this.zaplify?.replyAuthor(JSON.stringify(e), requester);
 		}
 	}
-
 
 	async downloadSong(args: YoutubeArgs, requester: Message) {
 		try {
@@ -127,7 +130,6 @@ class Youtube extends Module {
 				requester as Message,
 				results[0].title
 			);
-
 		} catch (e) {
 			this.sendErrorMessage('Deu pau', e as string);
 		}
@@ -147,7 +149,7 @@ class Youtube extends Module {
 			};
 			const response = await YTSearch(query, options);
 			console.log({
-				results: response.results
+				results: response.results,
 			});
 
 			return response.results
@@ -173,9 +175,10 @@ class Youtube extends Module {
 
 			this.logger.insertNew(EntityTypes.SONGS, {
 				groupName: requester.isGroupMsg ? requester.chat.name : '_',
-				chatId: requester?.chat?.id || "unknown",
+				chatId: requester?.chat?.id || 'unknown',
 				requester: requester.sender.formattedName,
 				songName: title,
+
 				date: new Date().getTime(),
 			});
 
@@ -214,7 +217,6 @@ class Youtube extends Module {
 				this.videosInProgress.splice(videoInProgressIndex, 1);
 				this.sendErrorMessage('Erro ao baixar mp3', err, requester);
 			});
-
 		} catch (e) {
 			console.warn(e);
 			this.sendErrorMessage('Erro desconhecido', JSON.stringify(e), requester);

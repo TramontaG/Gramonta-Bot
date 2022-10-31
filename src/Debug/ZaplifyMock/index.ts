@@ -10,6 +10,9 @@ import {
 } from './Models';
 import FS from 'fs/promises';
 
+type Mimetype = 'video/mp4' | 'image/gif' | 'image';
+
+
 class MockedClient {
 	req: Req | null;
 	res: Res | null;
@@ -118,6 +121,8 @@ class MockedClient {
 		});
 	}
 
+	async sendFile(fileAddress: string, caption: string, quotedMessage?: Message) {}
+
 	sendFileFromUrl(url: string, fileName: string, requester: Message) {
 		this.addReplyToQueue({
 			type: MessageType.MEDIA,
@@ -129,6 +134,14 @@ class MockedClient {
 	sendFileFromBuffer(){
 		
 	}
+
+	sendVideo(buffer: Buffer, requester: Message, mimeType: Mimetype = "video/mp4"){
+
+	}
+
+	sendFileFromPath(path: string, caption: string = "", requester: Message){
+	}
+
 }
 
 export default MockedClient;

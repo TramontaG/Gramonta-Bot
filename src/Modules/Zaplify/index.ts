@@ -70,7 +70,6 @@ class Zaplify {
 
 	async sendFile(fileAddress: string, caption: string, quotedMessage?: Message) {
 		if (!this.messageObject) throw 'No message object initialized';
-		console.log(fileAddress);
 		const fileHasBeenSent = await this.client.sendFile(
 			quotedMessage?.from || this.messageObject.from,
 			fileAddress,
@@ -200,13 +199,28 @@ class Zaplify {
 		}
 	}
 
-	sendVideo(url: string, name: string, requester: Message, caption = ""){
+	sendFileFromPath(path: string, caption: string = "", requester: Message){
 		try {
-			this.client.sendFileFromUrl(requester.from, url, name, caption)
+			return this.client.sendFile(requester.from, path, "file.mp4", caption, undefined, undefined, undefined, false);
 		} catch (e) {
 			this.replyAuthor(JSON.stringify(e), requester);
 		}
 	}
+
+	// sendVideo(url: string, name: string, requester: Message, caption = ""){
+	// 	try {
+	// 		this.client.sendFileFromUrl(requester.from, url, name, caption)
+	// 	} catch (e) {
+	// 		this.replyAuthor(JSON.stringify(e), requester);
+	// 	}
+	// }
+
+	sendVideo(buffer: Buffer, requester: Message, mimeType: Mimetype = "video/mp4"){
+		const base64 = this.getBase64fromBuffer(buffer, mimeType)
+
+		this.client.sendFile(requester.from, base64, "file", "");
+	}
+	
 
 	async isAdmin(requester: Message) {
 		if (!requester.isGroupMsg) return true;

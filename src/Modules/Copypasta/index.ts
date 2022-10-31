@@ -44,14 +44,17 @@ class Copypasta extends Module {
 
 		this.registerPublicMethod({
 			name: 'random',
-			method: this.sendRandomCopypasta.bind(this)
-		})
+			method: this.sendRandomCopypasta.bind(this),
+		});
 
 		CopypastaManager.getCopypstaList().then(copypastaList => {
 			copypastaList.forEach(item => {
 				this.registerPublicMethod({
 					name: item.copypastaName,
-					method: () => this.sendCopypastaByName(item.copypastaName),
+					method: (...args) => {
+						console.log(...args);
+						this.sendCopypastaByName(item.copypastaName);
+					},
 				});
 			});
 		});
@@ -85,7 +88,9 @@ class Copypasta extends Module {
 		if (!args.immediate)
 			return this.zaplify?.replyAuthor('Preciso de um nome', requester);
 		if (
-			['new', 'all', 'search', 'help', 'number', 'default', 'random'].includes(args.immediate)
+			['new', 'all', 'search', 'help', 'number', 'default', 'random'].includes(
+				args.immediate
+			)
 		)
 			return this.zaplify?.replyAuthor('Nome proibido', requester);
 
@@ -141,6 +146,10 @@ class Copypasta extends Module {
 	async sendCopypastaByName(copypastaName: string) {
 		const requester = this.zaplify?.messageObject as Message;
 		const copypasta = await CopypastaManager.getCopyPastaByName(copypastaName);
+		if (!copypasta) {
+			throw 'No copypasta';
+		}
+
 		this.zaplify?.replyAuthor(copypasta, requester);
 
 		this.logger.insertNew(EntityTypes.COPYPASTAS, {
@@ -179,18 +188,23 @@ class Copypasta extends Module {
 		}
 	}
 
-	async sendRandomCopypasta(args: Args){
+	async sendRandomCopypasta(args: Args) {
 		const copypastaList = await CopypastaManager.getCopypstaList();
 		const randomIndex = Math.round(Math.random() * copypastaList.length);
-		return this.sendCopypastaByIndex({...args, immediate: randomIndex.toString()});
+		return this.sendCopypastaByIndex({ ...args, immediate: randomIndex.toString() });
 	}
 
-	async sendHelp() {
-		const requester = this.zaplify?.messageObject;
-		const helpText = await fs.readFile('src/Modules/Copypasta/Help.txt', {
-			encoding: 'utf-8',
-		});
-		this.zaplify?.replyAuthor(helpText, requester as Message);
+	async sendHelp(args: Args) {
+		try {
+			const copypastaName = args.method + args.immediate;
+			await this.sendCopypastaByName(copypastaName);
+		} catch (e) {
+			const requester = this.zaplify?.messageObject;
+			const helpText = await fs.readFile('src/Modules/Copypasta/Help.txt', {
+				encoding: 'utf-8',
+			});
+			this.zaplify?.replyAuthor(helpText, requester as Message);
+		}
 	}
 }
 

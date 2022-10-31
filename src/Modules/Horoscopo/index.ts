@@ -1,31 +1,11 @@
-import { Module } from '../ModulesRegister';
+import { Args, Module } from '../ModulesRegister';
 import fs from 'fs/promises';
 import axios from 'axios';
 import Logger from '../Logger/Logger';
 import { EntityTypes } from '../../BigData/JsonDB';
 import { Message } from '@open-wa/wa-automate';
-
-const signos = [
-	'aries',
-	'touro',
-	'gemeos',
-	'gêmeos',
-	'cancer',
-	'câncer',
-	'leao',
-	'leão',
-	'escorpiao',
-	'escorpião',
-	'libra',
-	'sagitario',
-	'sagitário',
-	'capricornio',
-	'capricórnio',
-	'aquario',
-	'aquário',
-	'peixes',
-	'virgem',
-];
+import { timingSafeEqual } from 'crypto';
+import { normalizeString } from 'src/Helpers/TextFormatter';
 
 class Horoscopo extends Module {
 	logger: Logger;
@@ -34,23 +14,13 @@ class Horoscopo extends Module {
 		this.logger = new Logger();
 
 		this.registerPublicMethod({
-			name: 'help',
-			method: this.sendInstructions.bind(this),
-		});
-		this.registerPublicMethod({
 			name: 'default',
-			method: this.sendInstructions.bind(this),
-		});
-		signos.forEach(signo => {
-			this.registerPublicMethod({
-				name: signo,
-				method: () => this.default(signo),
-			});
+			method: (args, message) => this.default(args, message),
 		});
 	}
 
-	async default(signo: string) {
-		const requester = this.zaplify?.messageObject as Message;
+	async default(args: Args, requester: Message) {
+		const signo = normalizeString(args.method);
 
 		try {
 			if (!requester.id.startsWith('Debug')) {
@@ -67,39 +37,31 @@ class Horoscopo extends Module {
 
 			switch (signo) {
 				case 'aries':
-				case 'áries':
 					return this.zaplify?.replyAuthor(`${resp.data.aries}`, requester);
 				case 'touro':
 					return this.zaplify?.replyAuthor(`${resp.data.taurus}`, requester);
 				case 'gemeos':
-				case 'gêmeos':
 					return this.zaplify?.replyAuthor(`${resp.data.gemini}`, requester);
 				case 'cancer':
-				case 'câncer':
 					return this.zaplify?.replyAuthor(`${resp.data.cancer}`, requester);
 				case 'leao':
-				case 'leão':
 					return this.zaplify?.replyAuthor(`${resp.data.leo}`, requester);
 				case 'escorpiao':
-				case 'escorpião':
 					return this.zaplify?.replyAuthor(`${resp.data.scorpio}`, requester);
 				case 'libra':
 					return this.zaplify?.replyAuthor(`${resp.data.libra}`, requester);
 				case 'sagitario':
-				case 'sagitário':
 					return this.zaplify?.replyAuthor(`${resp.data.sagittarius}`, requester);
 				case 'capricornio':
-				case 'capricórnio':
 					return this.zaplify?.replyAuthor(`${resp.data.capricorn}`, requester);
 				case 'aquario':
-				case 'aquário':
 					return this.zaplify?.replyAuthor(`${resp.data.aquarius}`, requester);
 				case 'peixes':
 					return this.zaplify?.replyAuthor(`${resp.data.pisces}`, requester);
 				case 'virgem':
 					return this.zaplify?.replyAuthor(`${resp.data.virgo}`, requester);
 				default:
-					return this.zaplify?.replyAuthor(`Não encontrei nada...`, requester);
+					return this.sendInstructions(requester);
 			}
 		} catch (e) {
 			this.zaplify?.replyAuthor(
@@ -109,13 +71,13 @@ class Horoscopo extends Module {
 		}
 	}
 
-	async sendInstructions() {
+	async sendInstructions(requester: Message) {
 		return fs
 			.readFile('src/Modules/Horoscopo/Help.txt', {
 				encoding: 'utf-8',
 			})
 			.then(helpText => {
-				this.zaplify?.replyAuthor(helpText);
+				this.zaplify?.replyAuthor(helpText, requester);
 			});
 	}
 }
