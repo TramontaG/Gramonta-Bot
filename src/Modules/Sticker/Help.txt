@@ -5,4 +5,6 @@ Você pode:
     Enviar um gif
     com a legenda !sticker
 
-Ou você pode simplesmente responder qualquer mensagem com !sticker
+Ou você pode simplesmente responder qualquer mensagem com !s
+
+Para transformar uma figurinha em imagem novamente, responda com "!s toimg"

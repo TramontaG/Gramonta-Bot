@@ -3,6 +3,7 @@ import { Message, MessageTypes } from '@open-wa/wa-automate';
 import fs from 'fs/promises';
 import Logger from '../Logger/Logger';
 import { EntityTypes } from 'src/BigData/JsonDB';
+import Zaplify from '../Zaplify';
 
 class Sticker extends Module {
 	logger: Logger;
@@ -11,11 +12,9 @@ class Sticker extends Module {
 		super();
 		this.logger = new Logger();
 
-		this.registerPublicMethod({
-			name: 'default',
-			method: this.sticker.bind(this),
-		});
-
+		this.makePublic('default', this.sticker);
+		this.makePublic('toimg', this.stickerToImage);
+		this.makePublic('tovideo', this.stickerToVideo);
 		this.makePublic('help', this.help);
 	}
 
@@ -31,6 +30,8 @@ class Sticker extends Module {
 			const media = (await this.zaplify?.getMediaBufferFromMessage(
 				requester
 			)) as Buffer;
+
+			console.log(media.toString('base64url').substring(0, 200));
 
 			if (requester.type === MessageTypes.IMAGE) {
 				this.logSticker(requester, false);
@@ -86,6 +87,24 @@ class Sticker extends Module {
 			requester: messageObject.sender.formattedName,
 			date: new Date().getTime(),
 		});
+	}
+
+	stickerToImage(args: Args, requester: Message) {
+		const quotedMessage = requester.quotedMsg;
+		if (!quotedMessage)
+			return this.zaplify?.replyAuthor(
+				'Por favor, responda alguma figurinha com esse comando para eu enviar a mensagem'
+			);
+		return this.zaplify?.sendImageFromSticker(requester, quotedMessage);
+	}
+
+	stickerToVideo(args: Args, requester: Message) {
+		const quotedMessage = requester.quotedMsg;
+		if (!quotedMessage)
+			return this.zaplify?.replyAuthor(
+				'Por favor, responda alguma figurinha com esse comando para eu enviar a mensagem'
+			);
+		return this.zaplify?.sendVideoFromSticker(requester, quotedMessage);
 	}
 }
 

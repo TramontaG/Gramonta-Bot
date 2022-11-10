@@ -12,7 +12,6 @@ import FS from 'fs/promises';
 
 type Mimetype = 'video/mp4' | 'image/gif' | 'image';
 
-
 class MockedClient {
 	req: Req | null;
 	res: Res | null;
@@ -128,20 +127,17 @@ class MockedClient {
 			type: MessageType.MEDIA,
 			url,
 			fileName,
-		})
+		});
 	}
 
-	sendFileFromBuffer(){
-		
-	}
+	sendFileFromBuffer() {}
 
-	sendVideo(buffer: Buffer, requester: Message, mimeType: Mimetype = "video/mp4"){
+	sendVideo(buffer: Buffer, requester: Message, mimeType: Mimetype = 'video/mp4') {}
 
-	}
+	sendFileFromPath(path: string, caption: string = '', requester: Message) {}
 
-	sendFileFromPath(path: string, caption: string = "", requester: Message){
-	}
-
+	sendImageFromSticker(requester: Message) {}
+	sendVideoFromSticker() {}
 }
 
 export default MockedClient;

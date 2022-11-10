@@ -98,7 +98,7 @@ class Guesser {
 		if (this.tries === 6) throw 'Chances encerradas';
 
 		if (!wordList.includes(guess) && !wordList.includes(normalizedGuess))
-			throw 'Você só pode usar palavras como palpite.';
+			throw 'Não conheço essa palavra 🤔';
 
 		const result = normalizedGuess.split('').map((letter, index) => {
 			if (this.word.hasLetterInIndex(letter, index))

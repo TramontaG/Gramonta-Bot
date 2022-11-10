@@ -1,4 +1,4 @@
-import { NotificationLanguage } from '@open-wa/wa-automate';
+import { ConfigObject, NotificationLanguage } from '@open-wa/wa-automate';
 
 const startup = {
 	licenseKey: process.env.CLIENT_KEY,
@@ -33,4 +33,11 @@ const startup = {
 	],
 };
 
-export default startup;
+export default (): ConfigObject => {
+	console.log(process.env.CLIENT_KEY);
+	console.log(startup.licenseKey);
+	return {
+		...startup,
+		licenseKey: process.env.CLIENT_KEY,
+	};
+};

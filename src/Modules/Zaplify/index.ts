@@ -7,8 +7,9 @@ import {
 } from '@open-wa/wa-automate';
 import fs from 'fs/promises';
 import MockedClient from 'src/Debug/ZaplifyMock';
+import { getFormattedDate } from 'src/Helpers/Date';
 
-type Mimetype = 'video/mp4' | 'image/gif' | 'image';
+type Mimetype = 'video/mp4' | 'image/gif' | 'image' | 'video' | 'video/mpeg';
 
 type Button = {
 	id: string;
@@ -128,8 +129,8 @@ class Zaplify {
 			requester?.from || this.messageObject.from,
 			imgBuffer,
 			{
-				author: 'Tramonta Bot',
-				pack: 'Pack do bot',
+				author: 'Gramonta-bot -+5511947952409',
+				pack: `Criado em ${getFormattedDate()} por ${requester?.notifyName}`,
 				keepScale: true,
 			}
 		);
@@ -147,8 +148,8 @@ class Zaplify {
 				endTime: '00:00:15.0',
 			},
 			{
-				author: 'Bot do tramonta',
-				pack: 'Pack do bot',
+				author: 'Gramonta-bot -+5511947952409',
+				pack: `Criado em ${getFormattedDate()} por ${requester?.notifyName}`,
 				keepScale: true,
 			}
 		);
@@ -162,10 +163,21 @@ class Zaplify {
 		return decryptMedia(sticker);
 	}
 
-	sendFileFromUrl(url: string, fileName: string, requester: Message, caption: string = "") {
+	sendFileFromUrl(
+		url: string,
+		fileName: string,
+		requester: Message,
+		caption: string = ''
+	) {
 		const message = requester || this.messageObject;
 		if (!message) throw 'No message object initialized';
-		return this.client.sendFileFromUrl(requester.from, url, caption, fileName, requester.id);
+		return this.client.sendFileFromUrl(
+			requester.from,
+			url,
+			caption,
+			fileName,
+			requester.id
+		);
 	}
 
 	sendImageAsSticker(imageBuffer: Buffer, requester?: Message) {
@@ -186,22 +198,36 @@ class Zaplify {
 				caption || ''
 			);
 		} catch (e) {
-			this.replyAuthor("erro desconhecido", requester);
+			this.replyAuthor('erro desconhecido', requester);
 		}
 	}
 
-	sendFileFromBuffer(buffer: Buffer, mimeType: Mimetype, caption: string = "", requester: Message){
+	sendFileFromBuffer(
+		buffer: Buffer,
+		mimeType: Mimetype,
+		caption: string = '',
+		requester: Message
+	) {
 		try {
-			const base64 = this.getBase64fromBuffer(buffer, mimeType)
-			return this.client.sendFile(requester.from, base64, "file", caption)
+			const base64 = this.getBase64fromBuffer(buffer, mimeType);
+			return this.client.sendFile(requester.from, base64, 'file', caption);
 		} catch (e) {
 			this.replyAuthor(JSON.stringify(e), requester);
 		}
 	}
 
-	sendFileFromPath(path: string, caption: string = "", requester: Message){
+	sendFileFromPath(path: string, caption: string = '', requester: Message) {
 		try {
-			return this.client.sendFile(requester.from, path, "file.mp4", caption, undefined, undefined, undefined, false);
+			return this.client.sendFile(
+				requester.from,
+				path,
+				'file.mp4',
+				caption,
+				undefined,
+				undefined,
+				undefined,
+				false
+			);
 		} catch (e) {
 			this.replyAuthor(JSON.stringify(e), requester);
 		}
@@ -215,12 +241,11 @@ class Zaplify {
 	// 	}
 	// }
 
-	sendVideo(buffer: Buffer, requester: Message, mimeType: Mimetype = "video/mp4"){
-		const base64 = this.getBase64fromBuffer(buffer, mimeType)
+	sendVideo(buffer: Buffer, requester: Message, mimeType: Mimetype = 'video/mp4') {
+		const base64 = this.getBase64fromBuffer(buffer, mimeType);
 
-		this.client.sendFile(requester.from, base64, "file", "");
+		return this.client.sendFile(requester.from, base64, 'file', '');
 	}
-	
 
 	async isAdmin(requester: Message) {
 		if (!requester.isGroupMsg) return true;
@@ -228,6 +253,39 @@ class Zaplify {
 			requester.chat.groupMetadata.id
 		);
 		return allAdmins.includes(requester.sender.id);
+	}
+
+	async sendImageFromSticker(requester: Message, stickerMsg: Message) {
+		try {
+			const license = await this.client.getLicenseType();
+			console.log({ license });
+			const stickerBuffer = await decryptMedia(stickerMsg);
+			console.log({ stickerBuffer });
+			return this.client.sendFile(
+				requester.to,
+				this.getBase64fromBuffer(stickerBuffer, 'image'),
+				'Gramonta-bot',
+				'',
+				requester.id
+			);
+		} catch (e) {
+			console.warn(e);
+		}
+	}
+
+	async sendVideoFromSticker(requester: Message, stickerMsg: Message) {
+		try {
+			const stickerBuffer = await decryptMedia(stickerMsg);
+			return this.client.sendVideoAsGif(
+				requester.to,
+				this.getBase64fromBuffer(stickerBuffer, 'video/mpeg'),
+				'sticker.mp4',
+				'',
+				requester.id
+			);
+		} catch (e) {
+			console.warn(e);
+		}
 	}
 }
 
