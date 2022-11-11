@@ -13,7 +13,7 @@ import axios from 'axios';
 
 const downloaderOptions = {
 	filter: 'audioonly',
-	ffmpegPath: 'C:/ProgramData/chocolatey/lib/ffmpeg/tools/ffmpeg/bin/ffmpeg', // FFmpeg binary location
+	ffmpegPath: '/usr/bin/ffmpeg', // FFmpeg binary location
 	outputPath: 'media/ytDownload', // Output file location (default: the home directory)
 	youtubeVideoQuality: 'highestaudio', // Desired video quality (default: highestaudio)
 	queueParallelism: 3, // Download parallelism (default: 1)
