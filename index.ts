@@ -54,6 +54,7 @@ const start = async (client: Client) => {
 					},
 					messageObject
 				);
+				client.react(messageObject.id, "👌");
 			} catch (e) {
 				console.warn(e);
 			}

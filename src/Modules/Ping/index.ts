@@ -4,11 +4,7 @@ import { Args, Module } from "../ModulesRegister";
 class Ping extends Module {
     constructor(){
         super();
-
-        this.registerPublicMethod({
-            name: 'default',
-            method: this.pong.bind(this)
-        });
+        this.makePublic("default", this.pong);
     }
 
     pong(_: Args, requester: Message){

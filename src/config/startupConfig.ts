@@ -34,8 +34,6 @@ const startup = {
 };
 
 export default (): ConfigObject => {
-	console.log(process.env.CLIENT_KEY);
-	console.log(startup.licenseKey);
 	return {
 		...startup,
 		licenseKey: process.env.CLIENT_KEY,

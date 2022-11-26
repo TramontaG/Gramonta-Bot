@@ -129,8 +129,8 @@ class Zaplify {
 			requester?.from || this.messageObject.from,
 			imgBuffer,
 			{
-				author: 'Gramonta-bot -+5511947952409',
-				pack: `Criado em ${getFormattedDate()} por ${requester?.notifyName}`,
+				author: 'Gramonta-bot \n+5511947952409',
+				pack: `Criado em ${getFormattedDate()} \npor ${requester?.notifyName}`,
 				keepScale: true,
 			}
 		);

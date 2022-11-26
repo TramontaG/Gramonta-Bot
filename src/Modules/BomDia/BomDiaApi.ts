@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 
-const BASE_URL = 'https://tiapi-production.up.railway.app';
+const BASE_URL = 'http://gramont.ddns.net/Tia';
 
 type MessagesResponse = {
 	texts: string[];
