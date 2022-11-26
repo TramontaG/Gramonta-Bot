@@ -16,8 +16,8 @@
 	"dependencies": {
 		"@google-cloud/speech": "^4.9.0",
 		"@google-cloud/translate": "^6.3.1",
-		"@open-wa/wa-automate": "@latest",
-		"@open-wa/wa-decrypt": "@latest",
+		"@open-wa/wa-automate": "latest",
+		"@open-wa/wa-decrypt": "latest",
 		"axios": "^0.21.2",
 		"brainly-scraper": "^1.0.2",
 		"chalk": "^4.1.2",
@@ -48,9 +48,9 @@
 		"tiktok-scraper": "^1.4.36",
 		"video-url-link": "^0.1.4",
 		"wikijs": "^6.3.2",
-		"youtube-mp3-downloader": "@latest",
-		"youtube-search": "@latest",
-		"ytdl-core": "@latest"
+		"youtube-mp3-downloader": "latest",
+		"youtube-search": "latest",
+		"ytdl-core": "latest"
 	},
 	"directories": {
 		"lib": "lib"
@@ -71,7 +71,7 @@
 		"@types/google-images": "^2.1.1",
 		"@types/he": "^1.1.2",
 		"ts-node": "^10.3.0",
-		"ts-node-dev": "@latest",
+		"ts-node-dev": "latest",
 		"tsconfig-paths": "^3.11.0",
 		"typescript": "^4.7.4"
 	}

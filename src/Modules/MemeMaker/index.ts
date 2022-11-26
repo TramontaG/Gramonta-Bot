@@ -20,28 +20,17 @@ class MemeModule extends Module {
 		this.memeAPI = new MemeApi();
 		this.logger = new Logger();
 
-		this.registerPublicMethod({
-			name: 'search',
-			method: (args: MemeArgs, requester: Message) => this.searchMeme(args, false, requester),
-		});
-
-		this.registerPublicMethod({
-			name: 'create',
-			method: this.createMeme.bind(this),
-		});
-
-		this.registerPublicMethod({
-			name: 'default',
-			method: this.sendHelp.bind(this),
-		});
-
-		this.registerPublicMethod({
-			name: 'random',
-			method: (args: MemeArgs, requester: Message) => this.searchMeme(args, true, requester),
-		});
+		this.makePublic('search', this.searchMeme);
+		this.makePublic('random', this.randomMeme);
+		this.makePublic('create', this.createMeme);
+		this.makePublic('default', this.sendHelp);
 	}
 
-	async searchMeme(args: MemeArgs, random: boolean, requester: Message) {
+	randomMeme(args: MemeArgs, requester: Message) {
+		return this.searchMeme(args, requester, true);
+	}
+
+	async searchMeme(args: MemeArgs, requester: Message, random = false) {
 		const query = args.immediate?.trim();
 
 		if (!query && !random)
@@ -75,8 +64,7 @@ class MemeModule extends Module {
 			});
 	}
 
-	async createMeme(args: MemeArgs) {
-		const requester = this.zaplify?.messageObject as Message;
+	async createMeme(args: MemeArgs, requester: Message) {
 		const id = requester.quotedMsg?.caption.split('#')[1];
 		const textArray = args.immediate
 			?.trim()
@@ -90,7 +78,10 @@ class MemeModule extends Module {
 			);
 
 		if (!textArray)
-			return this.zaplify?.replyAuthor('Envie os textos para a criação do meme!');
+			return this.zaplify?.replyAuthor(
+				'Envie os textos para a criação do meme!',
+				requester
+			);
 
 		const memeJson: MemeCreationModel = {};
 		textArray.forEach((text, index) => {

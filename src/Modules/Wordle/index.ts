@@ -39,12 +39,12 @@ class Wordle extends Module {
 		}
 	}
 
-	help(_: Args) {
-		this.zaplify?.replyAuthor(messages.HELP());
+	help(_: Args, requester: Message) {
+		this.zaplify?.replyAuthor(messages.HELP(), requester);
 	}
 
-	default(_: Args) {
-		this.zaplify?.replyAuthor(messages.WORDLE_DEFAULT());
+	default(_: Args, requester: Message) {
+		this.zaplify?.replyAuthor(messages.WORDLE_DEFAULT(), requester);
 	}
 
 	private validateGuess(guess?: string) {

@@ -14,36 +14,36 @@ class MensagensModule extends Module {
 		super();
 		this.mensagensAPI = new MensagensAPI();
 
-		this.registerPublicMethod({
-			method: this.bomDia.bind(this),
-			name: 'bomdia',
-		});
-
-		this.registerPublicMethod({
-			name: 'default',
-			method: () => {},
-		});
+		this.makePublic('bomdia', this.bomDia);
+		this.makePublic('default', () => {});
 	}
 
 	async bomDia(args: MensagensArgs, requester: Message) {
-		if (args.immediate === 'image' || args.immediate === 'imagem') {
-			const bomDiaImages = await this.allBomDiaImages();
-			const randomImage = randomItem(bomDiaImages);
-			return this.zaplify?.sendImageFromUrl(
-				randomImage.src,
-				randomImage.alt,
+		try {
+			if (args.immediate === 'image' || args.immediate === 'imagem') {
+				const bomDiaImages = await this.allBomDiaImages();
+				const randomImage = randomItem(bomDiaImages);
+				console.log('GOT DATA', { randomImage });
+				return this.zaplify?.sendImageFromUrl(
+					randomImage.src,
+					randomImage.alt,
+					requester
+				);
+			}
+			if (args.immediate === 'text' || args.immediate === 'texto') {
+				const bomDiaTexts = await this.allBomDiaTexts();
+				const randomText = randomItem(bomDiaTexts);
+				console.log('GOT DATA', { randomText });
+				return this.zaplify?.replyAuthor(randomText, requester);
+			}
+
+			return this.zaplify?.replyAuthor(
+				'Bom dia! Escolha imagem ou texto que eu mando pra você!',
 				requester
 			);
+		} catch (e) {
+			this.zaplify?.replyAuthor(`Erro: ${e}`, requester);
 		}
-		if (args.immediate === 'text' || args.immediate === 'texto') {
-			const bomDiaTexts = await this.allBomDiaTexts();
-			const randomText = randomItem(bomDiaTexts);
-			return this.zaplify?.replyAuthor(randomText, requester);
-		}
-
-		return this.zaplify?.replyAuthor(
-			'Bom dia! Escolha imagem ou texto que eu mando pra você!'
-		);
 	}
 
 	private allBomDiaTexts(page?: number) {

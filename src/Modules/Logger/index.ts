@@ -39,10 +39,7 @@ class LoggerModule extends Module {
 			});
 		});
 
-		this.registerPublicMethod({
-			name: 'rank',
-			method: (args: Args) => this.rank(args),
-		});
+		this.makePublic('rank', this.rank);
 
 		// this.registerPublicMethod({
 		// 	name: 'reset',
@@ -55,14 +52,19 @@ class LoggerModule extends Module {
 		});
 	}
 
-	async history(args: Args) {
-		const requester = this.zaplify?.messageObject as Message;
+	async history(args: Args, requester: Message) {
 		const entityType = args.immediate?.trim() as EntityTypes;
 
 		if (!entityType)
-			return this.zaplify?.replyAuthor('Por favor insira algum comando para logar!');
+			return this.zaplify?.replyAuthor(
+				'Por favor insira algum comando para logar!',
+				requester
+			);
 		if (!EntitiesArray.includes(entityType))
-			return this.zaplify?.replyAuthor('Não consigo logar isso, comando inválido!');
+			return this.zaplify?.replyAuthor(
+				'Não consigo logar isso, comando inválido!',
+				requester
+			);
 
 		const allEntities = await this.logger.getAllEntities(entityType);
 
@@ -85,14 +87,19 @@ class LoggerModule extends Module {
 		this.zaplify?.replyAuthor(message, requester);
 	}
 
-	async rank(args: Args) {
-		const requester = this.zaplify?.messageObject as Message;
+	async rank(args: Args, requester: Message) {
 		const entityType = args.immediate?.trim() as EntityTypes;
 
 		if (!entityType)
-			return this.zaplify?.replyAuthor('Por favor insira algum comando para logar!');
+			return this.zaplify?.replyAuthor(
+				'Por favor insira algum comando para logar!',
+				requester
+			);
 		if (!EntitiesArray.includes(entityType))
-			return this.zaplify?.replyAuthor('Não consigo logar isso, comando inválido!');
+			return this.zaplify?.replyAuthor(
+				'Não consigo logar isso, comando inválido!',
+				requester
+			);
 
 		const allEntities = await this.logger.getAllEntities(entityType);
 		const groupMap = this.getGroupMap(allEntities);
@@ -243,9 +250,9 @@ class LoggerModule extends Module {
 		this.zaplify?.replyAuthor(`Erro: ${error}`, requester);
 	}
 
-	private reset() {
+	private reset(_: Args, requester: Message) {
 		this.logger.clearDatabase();
-		this.zaplify?.replyAuthor('Database limpo');
+		this.zaplify?.replyAuthor('Database limpo', requester);
 	}
 }
 

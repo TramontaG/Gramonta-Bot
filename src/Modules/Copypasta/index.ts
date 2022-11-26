@@ -12,49 +12,18 @@ class Copypasta extends Module {
 		super();
 		this.logger = new Logger();
 
-		this.registerPublicMethod({
-			name: 'all',
-			method: this.getCopypastaList.bind(this),
-		});
-
-		this.registerPublicMethod({
-			name: 'new',
-			method: this.newCopypasta.bind(this),
-		});
-
-		this.registerPublicMethod({
-			name: 'help',
-			method: this.sendHelp.bind(this),
-		});
-
-		this.registerPublicMethod({
-			name: 'default',
-			method: this.sendHelp.bind(this),
-		});
-
-		this.registerPublicMethod({
-			name: 'search',
-			method: this.searchCopypasta.bind(this),
-		});
-
-		this.registerPublicMethod({
-			name: 'number',
-			method: this.sendCopypastaByIndex.bind(this),
-		});
-
-		this.registerPublicMethod({
-			name: 'random',
-			method: this.sendRandomCopypasta.bind(this),
-		});
+		this.makePublic('all', this.getCopypastaList);
+		this.makePublic('new', this.newCopypasta);
+		this.makePublic('help', this.sendHelp);
+		this.makePublic('default', this.sendHelp);
+		this.makePublic('search', this.searchCopypasta);
+		this.makePublic('number', this.sendCopypastaByIndex);
+		this.makePublic('random', this.sendRandomCopypasta);
 
 		CopypastaManager.getCopypstaList().then(copypastaList => {
 			copypastaList.forEach(item => {
-				this.registerPublicMethod({
-					name: item.copypastaName,
-					method: (...args) => {
-						console.log(...args);
-						this.sendCopypastaByName(item.copypastaName);
-					},
+				this.makePublic(item.copypastaName, (args, requester) => {
+					this.sendCopypastaByName(item.copypastaName, requester);
 				});
 			});
 		});
@@ -77,9 +46,7 @@ class Copypasta extends Module {
 		}
 	}
 
-	async newCopypasta(args: Args) {
-		const requester = this.zaplify?.messageObject as Message;
-
+	async newCopypasta(args: Args, requester: Message) {
 		if (!requester.quotedMsg)
 			return this.zaplify?.replyAuthor(
 				'Responda uma mensagem para salvá-la como copypasta',
@@ -120,7 +87,7 @@ class Copypasta extends Module {
 
 		this.registerPublicMethod({
 			name: copypastaName,
-			method: () => this.sendCopypastaByName(copypastaName),
+			method: () => this.sendCopypastaByName(copypastaName, requester),
 		});
 
 		this.zaplify?.replyAuthor(
@@ -129,11 +96,11 @@ class Copypasta extends Module {
 		);
 	}
 
-	async searchCopypasta(args: Args) {
+	async searchCopypasta(args: Args, requester: Message) {
 		const query = args.immediate;
-		if (!query) return this.zaplify?.replyAuthor('Preciso de algo pra pesquisar');
+		if (!query)
+			return this.zaplify?.replyAuthor('Preciso de algo pra pesquisar', requester);
 
-		const requester = this.zaplify?.messageObject as Message;
 		const results = await CopypastaManager.searchCopyPasta(query.trim());
 
 		const message = results.reduce((msg, result) => {
@@ -143,8 +110,7 @@ class Copypasta extends Module {
 		this.zaplify?.replyAuthor(message, requester);
 	}
 
-	async sendCopypastaByName(copypastaName: string) {
-		const requester = this.zaplify?.messageObject as Message;
+	async sendCopypastaByName(copypastaName: string, requester: Message) {
 		const copypasta = await CopypastaManager.getCopyPastaByName(copypastaName);
 		if (!copypasta) {
 			throw 'No copypasta';
@@ -194,12 +160,11 @@ class Copypasta extends Module {
 		return this.sendCopypastaByIndex({ ...args, immediate: randomIndex.toString() });
 	}
 
-	async sendHelp(args: Args) {
+	async sendHelp(args: Args, requester: Message) {
 		try {
 			const copypastaName = args.method + args.immediate;
-			await this.sendCopypastaByName(copypastaName);
+			await this.sendCopypastaByName(copypastaName, requester);
 		} catch (e) {
-			const requester = this.zaplify?.messageObject;
 			const helpText = await fs.readFile('src/Modules/Copypasta/Help.txt', {
 				encoding: 'utf-8',
 			});

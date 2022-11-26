@@ -87,7 +87,7 @@ class Youtube extends Module {
 			const query = args.immediate;
 			if (!query) return this.askInfo(args, requester);
 
-			const results = await this.searchResults(query);
+			const results = await this.searchResults(query, requester);
 			if (!results) return;
 
 			const firstVideo = results[0];
@@ -120,10 +120,14 @@ class Youtube extends Module {
 			const query = args.command + args.immediate;
 			if (!query) return this.askInfo(args, requester);
 
-			const results = await this.searchResults(query);
+			const results = await this.searchResults(query, requester);
 			if (!results) return;
 
-			this.sendVideoMetaData(results[0].title, results[0].thumbnail, requester);
+			this.sendVideoMetaData(
+				results[0].title,
+				results[0].thumbnail || '',
+				requester
+			);
 
 			this.downloadVideoFromUrl(
 				results[0].link,
@@ -131,15 +135,15 @@ class Youtube extends Module {
 				results[0].title
 			);
 		} catch (e) {
-			this.sendErrorMessage('Deu pau', e as string);
+			this.sendErrorMessage('Deu pau', e as string, requester);
 		}
 	}
 
 	private async searchResults(
 		query: string,
+		requester: Message,
 		token?: string,
-		maxResults = 3,
-		requester?: Message
+		maxResults = 3
 	) {
 		try {
 			const options = {
@@ -239,11 +243,11 @@ class Youtube extends Module {
 		return this.zaplify?.replyAuthor(helpText, requester);
 	}
 
-	private sendErrorMessage(prefix: string, error: string, requester?: Message) {
+	private sendErrorMessage(prefix: string, error: string, requester: Message) {
 		this.zaplify?.replyAuthor(`${prefix}: ${error}`, requester);
 	}
 
-	private sendVideoMetaData(title: string, thumbnail?: string, requester?: Message) {
+	private sendVideoMetaData(title: string, thumbnail: string, requester: Message) {
 		if (thumbnail)
 			return this.zaplify?.sendImageFromUrl(
 				thumbnail,

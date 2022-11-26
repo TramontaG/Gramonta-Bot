@@ -1,4 +1,4 @@
-import { Message } from '@open-wa/wa-automate';
+import { Message, MessageId } from '@open-wa/wa-automate';
 import { Args, Module } from '../ModulesRegister';
 import API from './API,';
 import fs from 'fs/promises';
@@ -12,20 +12,9 @@ class LyricsFinder extends Module {
 		super();
 		this.logger = new Logger();
 
-		this.registerPublicMethod({
-			name: 'get',
-			method: this.firstSong.bind(this),
-		});
-
-		this.registerPublicMethod({
-			name: 'help',
-			method: this.help.bind(this),
-		});
-
-		this.registerPublicMethod({
-			name: 'default',
-			method: this.firstSong.bind(this),
-		});
+		this.makePublic('get', this.firstSong);
+		this.makePublic('help', this.help);
+		this.makePublic('default', this.firstSong);
 	}
 
 	async firstSong(args: Args, requester: Message) {
@@ -47,15 +36,15 @@ class LyricsFinder extends Module {
 
 			return this.zaplify?.replyAuthor(result, requester);
 		} catch (e) {
-			return this.zaplify?.replyAuthor('Erro desconhecido:' + e);
+			return this.zaplify?.replyAuthor('Erro desconhecido:' + e, requester);
 		}
 	}
 
-	async help() {
+	async help(_: Args, requester: Message) {
 		const helpText = await fs.readFile('src/Modules/Lyrics/Help.txt', {
 			encoding: 'utf-8',
 		});
-		this.zaplify?.replyAuthor(helpText);
+		this.zaplify?.replyAuthor(helpText, requester);
 	}
 }
 

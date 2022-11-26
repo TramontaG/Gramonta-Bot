@@ -20,17 +20,17 @@ class Weather extends Module {
 			name: 'help',
 			method: this.sendHelp.bind(this),
 		});
-		
+
 		this.registerPublicMethod({
 			name: 'default',
 			method: this.fromCity.bind(this),
 		});
 	}
 
-	async fromCity(args: Args) {
-		const requester = this.zaplify?.messageObject as Message;
+	async fromCity(args: Args, requester: Message) {
 		const city = args.immediate?.trim() || args.method;
-		if (!city) return this.zaplify?.replyAuthor('Por favor, insira uma cidade');
+		if (!city)
+			return this.zaplify?.replyAuthor('Por favor, insira uma cidade', requester);
 
 		try {
 			const weather = await this.weatherAPI.getWeatherFromCity(city);

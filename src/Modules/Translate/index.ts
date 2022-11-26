@@ -1,58 +1,57 @@
-
-import { Message } from "@open-wa/wa-automate";
-import { Args, Module } from "../ModulesRegister";
-import TranslateService from "./TranslationService";
+import { Message } from '@open-wa/wa-automate';
+import { Args, Module } from '../ModulesRegister';
+import TranslateService from './TranslationService';
 import fs from 'fs/promises';
 
 type TranslatorArgs = Args & {
-    from?: string;
-    to?: string;
-}
+	from?: string;
+	to?: string;
+};
 
 class Translate extends Module {
-    translateService: TranslateService;
+	translateService: TranslateService;
 
-    constructor(){
-        super();
-        this.translateService = new TranslateService();
+	constructor() {
+		super();
+		this.translateService = new TranslateService();
 
-        ['pt', 'en', 'es', 'ru', 'ja', 'fr', 'de'].forEach(lang => this.registerPublicMethod({
-            method: (args: TranslatorArgs) => this.translate(args, lang),
-            name: lang,
-        }));
+		['pt', 'en', 'es', 'ru', 'ja', 'fr', 'de'].forEach(lang =>
+			this.registerPublicMethod({
+				method: (args: TranslatorArgs) => this.translate(args, lang),
+				name: lang,
+			})
+		);
 
-        this.registerPublicMethod({
-            name: 'default',
-            method: this.help.bind(this),
-        })
-        
-    }
+		this.registerPublicMethod({
+			name: 'default',
+			method: this.help.bind(this),
+		});
+	}
 
-    async translate(args: TranslatorArgs, to: string){
-        const requester = this.requester as Message;
+	async translate(args: TranslatorArgs, to: string) {
+		const requester = this.requester as Message;
 
-        try {
-            if (requester.isMedia) throw "Só consigo traduzir textos!";
-            
-            const text = args.immediate?.trim() || requester.quotedMsg?.body;
-            if (!text) throw "Não consegui encontrar texto para traduzir";
-            
-            const {from} = args;
-            const translation = await this.translateService.translate(text, from, to);
+		try {
+			if (requester.isMedia) throw 'Só consigo traduzir textos!';
 
-            return this.zaplify?.replyAuthor(translation, requester);
+			const text = args.immediate?.trim() || requester.quotedMsg?.body;
+			if (!text) throw 'Não consegui encontrar texto para traduzir';
 
-        } catch (e){                      
-            console.log(e);
-            this.zaplify?.replyAuthor(JSON.stringify(e), requester);
-        }
-    }
+			const { from } = args;
+			const translation = await this.translateService.translate(text, from, to);
 
-    async help() {
+			return this.zaplify?.replyAuthor(translation, requester);
+		} catch (e) {
+			console.log(e);
+			this.zaplify?.replyAuthor(JSON.stringify(e), requester);
+		}
+	}
+
+	async help(_: Args, requester: Message) {
 		fs.readFile('src/Modules/Translate/Help.txt', {
 			encoding: 'utf-8',
 		}).then(helpText => {
-			this.zaplify?.replyAuthor(helpText);
+			this.zaplify?.replyAuthor(helpText, requester);
 		});
 	}
 }

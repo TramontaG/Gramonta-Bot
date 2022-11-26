@@ -39,8 +39,15 @@ class Zaplify {
 		this.messageObject = message;
 	}
 
-	replyAuthor(message: string, author?: Message) {
+	replyAuthor(message: string, author: Message) {
 		if (!this.messageObject) throw 'No message object initialized';
+		const isMe = !!author && author.fromMe;
+
+		if (isMe) {
+			console.log('ITS A ME!!');
+			return this.client.sendText(author.from, message);
+		}
+
 		return this.client.reply(
 			author?.from || this.messageObject.from,
 			message,
@@ -188,15 +195,15 @@ class Zaplify {
 		);
 	}
 
-	sendImageFromUrl(url: string, caption?: string, requester?: Message) {
+	sendImageFromUrl(url: string, caption: string, requester: Message) {
 		try {
 			if (!this.messageObject) throw 'No message object initialized';
-			this.client.sendImage(
-				requester?.from || this.messageObject.from,
-				url,
-				'Youtube Thumbnail',
-				caption || ''
+
+			this.replyAuthor(
+				'Bruh, a lib cagou no envio de ibagens. Ja já conserto isso',
+				requester
 			);
+			return;
 		} catch (e) {
 			this.replyAuthor('erro desconhecido', requester);
 		}

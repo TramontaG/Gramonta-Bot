@@ -14,19 +14,10 @@ class Dictionary extends Module {
 		super();
 		this.dictApi = new DictAPI();
 
-		this.registerPublicMethod({
-			name: 'get',
-			method: this.all.bind(this),
-		});
-
-		this.registerPublicMethod({
-			name: 'de',
-			method: this.all.bind(this),
-		});
+		['all', 'de'].forEach(method => this.makePublic(method, this.all));
 	}
 
-	async all(args: Args) {
-		const requester = this.requester as Message;
+	async all(args: Args, requester: Message) {
 		try {
 			const word = args.immediate?.trim().split(' ')[0];
 			if (!word) throw 'Preciso de uma palavra';

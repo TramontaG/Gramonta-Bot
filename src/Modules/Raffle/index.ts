@@ -31,8 +31,7 @@ class Raffle extends Module {
 		});
 	}
 
-	public create(args: Args) {
-		const requester = this.requester as Message;
+	public create(args: Args, requester: Message) {
 		const thing = args.immediate?.trim();
 		try {
 			const creatorID = requester.sender.formattedName;
@@ -51,7 +50,7 @@ class Raffle extends Module {
 			});
 
 			this.raffles.push(raffle);
-			return this.zaplify?.replyAuthor(replies.raffleCreated(raffle));
+			return this.zaplify?.replyAuthor(replies.raffleCreated(raffle), requester);
 		} catch (e) {
 			this.sendError(e, requester);
 		}

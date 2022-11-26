@@ -16,18 +16,11 @@ class Finance extends Module {
 		this.logger = new Logger();
 
 		['stock', 'ação', 'acao', 'açao', 'acão'].map(methodName =>
-			this.registerPublicMethod({
-				name: methodName,
-				method: this.stock.bind(this),
-			})
+			this.makePublic(methodName, this.stock)
 		);
 
 		['exchange', 'cambio', 'câmbio', 'cotação', 'cotacao', 'cotaçao', 'cotacão'].map(
-			methodName =>
-				this.registerPublicMethod({
-					name: methodName,
-					method: this.exchange.bind(this),
-				})
+			methodName => this.makePublic(methodName, this.exchange)
 		);
 
 		this.registerPublicMethod({
@@ -36,8 +29,7 @@ class Finance extends Module {
 		});
 	}
 
-	async stock(args: Args) {
-		const requester = this.zaplify?.messageObject as Message;
+	async stock(args: Args, requester: Message) {
 		try {
 			const stockSymbol = args.immediate?.trim().toUpperCase();
 
@@ -88,8 +80,7 @@ class Finance extends Module {
 		}
 	}
 
-	async exchange(args: Args) {
-		const requester = this.zaplify?.messageObject as Message;
+	async exchange(args: Args, requester: Message) {
 		try {
 			const [from = undefined, to = 'BRL'] =
 				args.immediate?.toUpperCase().trim().split(' ') || [];
@@ -130,11 +121,11 @@ class Finance extends Module {
 		}
 	}
 
-	async sendInstructions() {
+	async sendInstructions(_: Args, requester: Message) {
 		fs.readFile('src/Modules/Finance/Help.txt', {
 			encoding: 'utf-8',
 		}).then(helpText => {
-			this.zaplify?.replyAuthor(helpText);
+			this.zaplify?.replyAuthor(helpText, requester);
 		});
 	}
 

@@ -25,7 +25,7 @@ class Sticker extends Module {
 			const typesAllowed = [MessageTypes.IMAGE, MessageTypes.VIDEO];
 
 			if (!typesAllowed.includes(stickeredMessage.type))
-				return this.sendError('Preciso de um video, gif ou imagem');
+				return this.sendError('Preciso de um video, gif ou imagem', requester);
 
 			const media = (await this.zaplify?.getMediaBufferFromMessage(
 				stickeredMessage
@@ -51,7 +51,7 @@ class Sticker extends Module {
 		try {
 			return this.zaplify?.sendVideoSticker(media, 'video/mp4', requester);
 		} catch (e) {
-			return this.sendError(e + JSON.stringify(e));
+			return this.sendError(e + JSON.stringify(e), requester);
 		}
 	}
 
@@ -59,8 +59,8 @@ class Sticker extends Module {
 		return this.zaplify?.sendSticker(media, requester);
 	}
 
-	async sendError(error: string | unknown, message?: Message) {
-		return this.zaplify?.replyAuthor(`Erro: ${error}`, message);
+	async sendError(error: string | unknown, requester: Message) {
+		return this.zaplify?.replyAuthor(`Erro: ${error}`, requester);
 	}
 
 	async help(_: Args, requester: Message) {
@@ -84,16 +84,18 @@ class Sticker extends Module {
 		const quotedMessage = requester.quotedMsg;
 		if (!quotedMessage)
 			return this.zaplify?.replyAuthor(
-				'Por favor, responda alguma figurinha com esse comando para eu enviar a mensagem'
+				'Por favor, responda alguma figurinha com esse comando para eu enviar a mensagem',
+				requester
 			);
 		return this.zaplify?.sendImageFromSticker(requester, quotedMessage);
 	}
 
-	stickerToVideo(args: Args, requester: Message) {
+	stickerToVideo(rgs: Args, requester: Message) {
 		const quotedMessage = requester.quotedMsg;
 		if (!quotedMessage)
 			return this.zaplify?.replyAuthor(
-				'Por favor, responda alguma figurinha com esse comando para eu enviar a mensagem'
+				'Por favor, responda alguma figurinha com esse comando para eu enviar a mensagem',
+				requester
 			);
 		return this.zaplify?.sendVideoFromSticker(requester, quotedMessage);
 	}

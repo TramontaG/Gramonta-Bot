@@ -47,14 +47,14 @@ class Google extends Module {
 		});
 	}
 
-	async speak(args: GoogleArgs) {
+	async speak(args: GoogleArgs, requester: Message) {
 		const text = args.immediate?.substr(0, 199);
 		const lang = args.lang;
-		const requester = this.zaplify?.messageObject as Message;
 		try {
 			if (!text)
 				return this.zaplify?.replyAuthor(
-					'Me mande um texto pra mulher do google falar'
+					'Me mande um texto pra mulher do google falar',
+					requester
 				);
 			const audioUrl = getAudioUrl(text, {
 				lang: lang || 'pt_BR',
@@ -86,10 +86,9 @@ class Google extends Module {
 		}
 	}
 
-	async image(args: GoogleArgs) {
+	async image(args: GoogleArgs, requester: Message) {
 		const query = args.immediate;
-		if (!query) return this.showError('Envie algo para buscar');
-		const requester = this.requester as Message;
+		if (!query) return this.showError('Envie algo para buscar', requester);
 		try {
 			const imgAmount = Number(args.imgamount) || 5;
 			const results = await this.getImageSearcher()
@@ -109,13 +108,12 @@ class Google extends Module {
 				// @ts-ignore
 				const caption = `${result.description}\n\n${result.parentPage}`;
 				try {
-					axios.get(result.url).then(() =>
-						this.zaplify?.sendImageFromUrl(
-							result.url,
-							caption,
-							requester,
+					axios
+						.get(result.url)
+						.then(() =>
+							this.zaplify?.sendImageFromUrl(result.url, caption, requester)
 						)
-					).catch(e => console.warn(e));
+						.catch(e => console.warn(e));
 				} catch (e) {
 					console.warn(e);
 				}
@@ -133,13 +131,14 @@ class Google extends Module {
 			});
 		} catch (e) {
 			console.log(e);
-			this.zaplify?.replyAuthor(`Erro inesperado: ${e}`);
+			this.zaplify?.replyAuthor(`Erro inesperado: ${e}`, requester);
 		}
 	}
 
-	search(args: GoogleArgs) {
+	search(args: GoogleArgs, requester: Message) {
 		try {
-			if (!args.immediate) return this.showError('Preciso de algo para pesquisar');
+			if (!args.immediate)
+				return this.showError('Preciso de algo para pesquisar', requester);
 			this.zaplify?.sendButtons(`Como deseja pesquisar ${args.immediate}?`, [
 				{
 					id: `!google web ${args.immediate}`,
@@ -151,23 +150,23 @@ class Google extends Module {
 				},
 			]);
 		} catch (e) {
-			this.showError(`${e}`);
+			this.showError(`${e}`, requester);
 		}
 	}
 
-	async help() {
+	async help(_: Args, requester: Message) {
 		fs.readFile('src/Modules/Google/Help.txt', {
 			encoding: 'utf-8',
 		}).then(helpText => {
-			this.zaplify?.replyAuthor(helpText);
+			this.zaplify?.replyAuthor(helpText, requester);
 		});
 	}
 
-	web(args: GoogleArgs) {
+	web(args: GoogleArgs, requester: Message) {
 		try {
-			if (!args.immediate) return this.showError('Envie algo para eu pesquisar');
+			if (!args.immediate)
+				return this.showError('Envie algo para eu pesquisar', requester);
 			const query = args.immediate;
-			const requester = this.zaplify?.messageObject as Message;
 
 			this.logger.insertNew(EntityTypes.GOOGLESEARCHES, {
 				groupName: requester.isGroupMsg ? requester.chat.name : '_',
@@ -183,8 +182,8 @@ class Google extends Module {
 				.then(({ data }) => {
 					const { searchInformation } = data;
 
-					if (!data.items){
-						this.zaplify?.replyAuthor("Não encontrei nada");
+					if (!data.items) {
+						this.zaplify?.replyAuthor('Não encontrei nada', requester);
 						return;
 					}
 
@@ -201,12 +200,12 @@ class Google extends Module {
 					this.zaplify?.replyAuthor(response, this.requester as Message);
 				});
 		} catch (e) {
-			this.showError(`${e}`);
+			this.showError(`${e}`, requester);
 		}
 	}
 
-	private showError(error: string) {
-		this.zaplify?.replyAuthor(`Erro: ${error}`);
+	private showError(error: string, requester: Message) {
+		this.zaplify?.replyAuthor(`Erro: ${error}`, requester);
 	}
 
 	private getImageSearcher() {
