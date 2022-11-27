@@ -104,15 +104,12 @@ class Zaplify {
 		return Buffer.from(media, 'base64');
 	}
 
-	async getMediaBufferFromMessage(quotedMessage?: Message) {
+	async getMediaBufferFromMessage(quotedMessage: Message) {
 		if (!this.messageObject) throw 'No message object initialized';
 		const message = quotedMessage || this.messageObject;
 		if (message && !message.isMedia && !(message.type === MessageTypes.VOICE))
 			throw 'No media sent on message';
-		const mediaData = await decryptMedia(
-			quotedMessage || this.messageObject,
-			this.userAgentOverride
-		);
+		const mediaData = await decryptMedia(quotedMessage, this.userAgentOverride);
 		return mediaData;
 	}
 
@@ -197,12 +194,7 @@ class Zaplify {
 
 	sendImageFromUrl(url: string, caption: string, requester: Message) {
 		try {
-			if (!this.messageObject) throw 'No message object initialized';
-
-			this.replyAuthor(
-				'Bruh, a lib cagou no envio de ibagens. Ja já conserto isso',
-				requester
-			);
+			this.client.sendImage(requester.to, url, 'Gramonta-Bot Image', caption);
 			return;
 		} catch (e) {
 			this.replyAuthor('erro desconhecido', requester);
@@ -240,14 +232,6 @@ class Zaplify {
 		}
 	}
 
-	// sendVideo(url: string, name: string, requester: Message, caption = ""){
-	// 	try {
-	// 		this.client.sendFileFromUrl(requester.from, url, name, caption)
-	// 	} catch (e) {
-	// 		this.replyAuthor(JSON.stringify(e), requester);
-	// 	}
-	// }
-
 	sendVideo(buffer: Buffer, requester: Message, mimeType: Mimetype = 'video/mp4') {
 		const base64 = this.getBase64fromBuffer(buffer, mimeType);
 
@@ -264,10 +248,7 @@ class Zaplify {
 
 	async sendImageFromSticker(requester: Message, stickerMsg: Message) {
 		try {
-			const license = await this.client.getLicenseType();
-			console.log({ license });
 			const stickerBuffer = await decryptMedia(stickerMsg);
-			console.log({ stickerBuffer });
 			return this.client.sendFile(
 				requester.to,
 				this.getBase64fromBuffer(stickerBuffer, 'image'),
@@ -293,6 +274,10 @@ class Zaplify {
 		} catch (e) {
 			console.warn(e);
 		}
+	}
+
+	async react(emoji: string, requester: Message) {
+		return this.client.react(requester.id, emoji);
 	}
 }
 

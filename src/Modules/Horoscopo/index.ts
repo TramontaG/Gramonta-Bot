@@ -4,7 +4,6 @@ import axios from 'axios';
 import Logger from '../Logger/Logger';
 import { EntityTypes } from '../../BigData/JsonDB';
 import { Message } from '@open-wa/wa-automate';
-import { timingSafeEqual } from 'crypto';
 import { normalizeString } from 'src/Helpers/TextFormatter';
 
 class Horoscopo extends Module {
@@ -43,6 +42,7 @@ class Horoscopo extends Module {
 				case 'gemeos':
 					return this.zaplify?.replyAuthor(`${resp.data.gemini}`, requester);
 				case 'cancer':
+				case 'câncer':
 					return this.zaplify?.replyAuthor(`${resp.data.cancer}`, requester);
 				case 'leao':
 					return this.zaplify?.replyAuthor(`${resp.data.leo}`, requester);

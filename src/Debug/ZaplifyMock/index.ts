@@ -138,6 +138,7 @@ class MockedClient {
 
 	sendImageFromSticker(requester: Message) {}
 	sendVideoFromSticker() {}
+	react() {}
 }
 
 export default MockedClient;

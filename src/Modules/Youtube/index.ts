@@ -71,10 +71,7 @@ class Youtube extends Module {
 			method: this.askInfo.bind(this),
 		});
 
-		this.registerPublicMethod({
-			name: 'download',
-			method: this.downloadSong.bind(this),
-		});
+		this.makePublic('download', this.downloadSong);
 
 		this.registerPublicMethod({
 			name: 'video',
@@ -88,7 +85,8 @@ class Youtube extends Module {
 			if (!query) return this.askInfo(args, requester);
 
 			const results = await this.searchResults(query, requester);
-			if (!results) return;
+			if (!results)
+				return this.zaplify?.replyAuthor('Não encontrei nada', requester);
 
 			const firstVideo = results[0];
 
@@ -106,7 +104,6 @@ class Youtube extends Module {
 			downloadStream.on('end', async () => {
 				const filePath = './media/ytVideos/' + results[0].title + '.mp4';
 				await fs.writeFile(filePath, video);
-				console.log('FINISHED');
 				this.zaplify?.sendFileFromPath(filePath, 'video/mp4', requester);
 			});
 		} catch (e) {
@@ -121,7 +118,8 @@ class Youtube extends Module {
 			if (!query) return this.askInfo(args, requester);
 
 			const results = await this.searchResults(query, requester);
-			if (!results) return;
+			if (!results)
+				return this.zaplify?.replyAuthor('Não encontrei nada', requester);
 
 			this.sendVideoMetaData(
 				results[0].title,
@@ -129,11 +127,7 @@ class Youtube extends Module {
 				requester
 			);
 
-			this.downloadVideoFromUrl(
-				results[0].link,
-				requester as Message,
-				results[0].title
-			);
+			this.downloadVideoFromUrl(results[0].link, requester, results[0].title);
 		} catch (e) {
 			this.sendErrorMessage('Deu pau', e as string, requester);
 		}
@@ -193,6 +187,13 @@ class Youtube extends Module {
 				progress: 0,
 				videoId: ID_VIDEO,
 			});
+
+			YD.on('progress', video => {
+				const emojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
+				const emojiIndex = Math.floor(video.progress.percentage / 10);
+				this.zaplify?.react(emojis[emojiIndex], requester);
+			});
+
 			YD.on('finished', async (err, data) => {
 				if (err)
 					return this.zaplify?.replyAuthor(
