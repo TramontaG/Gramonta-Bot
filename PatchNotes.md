@@ -1,32 +1,13 @@
 > @latest
 
-# Patch notes
+# [27/11/2022]
 
-This is a test Patch note
-
-It should parse just fine
-
-`this is a simple code string`
-
-**this is supposed to be bold**
-
-_this is supposed to be italic_
-
-**_this is supposed to be bold and italic_**
-
-the parser should be able to mix **bold**, _italic_, **_bold and italic_**, `code` and ~stroke~ text in the same line
-
-- this is a list item
-- this is another list item
-
-here it should display the number three {{myNumber}} and keep on parsing just fine
-
-> ---
-
-> @old
-
-# old patch notes
-
-That's old, it should not appear;
+- **Criado o módulo de parser dos arquivos .zap.md!!!!**
+  Foi criado um parser de arquivos de texto estilizado do tipo Markdown específico para o bot do whatsapp.
+  Agora o bot consegue ter todas as respostas das mensagens vindo de uma fonte externa ao código.
+  Conforme o tempo vou refatorando o bot para eliminar todas as mensagens vindo de strings hard coded!
+  Ele conta com uma injeção de valores por meio de template strings semelhantes à das linguagens de programação
+  <br>
+  **Para ver os patches anteriores, clique aqui: https://github.com/TramontaG/Gramonta-Bot/blob/main/PatchNotes.md**
 
 > ---

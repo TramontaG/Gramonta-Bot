@@ -82,6 +82,11 @@ const listItem = T.transform(
 	})
 );
 
+const lineBreak = T.transform(T.str('<br>'), _ => ({
+	style: 'lineBreak',
+	text: '',
+}));
+
 const textLine = T.transform(
 	T.sequenceOf(
 		[
@@ -96,6 +101,7 @@ const textLine = T.transform(
 					italic,
 					code,
 					template,
+					lineBreak,
 					normalText,
 				])
 			),

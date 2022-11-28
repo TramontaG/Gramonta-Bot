@@ -29,6 +29,7 @@ const styleMap = {
 	template: (s: string) => s,
 	paragraph: (s: string) => `${bold(s)}\n`,
 	listItem: (s: string) => `  - ${s}`,
+	lineBreak: (s: string) => '',
 };
 
 export const getMessage = (
