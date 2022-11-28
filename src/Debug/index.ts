@@ -11,11 +11,12 @@ DebugServer.use(Express.json());
 DebugServer.use(Express.urlencoded({ extended: false }));
 
 DebugServer.get('/', async (req, res) => {
+	console.log('AAAAAA');
+
 	const queryParamsCommand = req.query.command as string;
 	const parseResult = parse(queryParamsCommand);
 
 	if (parseResult.isError) return res.status(400).send('Invalid command');
-
 
 	const mockedCient = MockedClient.getInstance(req, res);
 	const sender = mockedCient.messageObject?.sender as Message['sender'];
@@ -36,9 +37,9 @@ DebugServer.get('/', async (req, res) => {
 
 	module.setRequester();
 	const messageArgs = {
-		...filterProperty(parseResult.result, "args"),
-		...parseResult.result.args
-	}
+		...filterProperty(parseResult.result, 'args'),
+		...parseResult.result.args,
+	};
 
 	await module.callMethod(method, messageArgs, mockedCient.messageObject as Message);
 

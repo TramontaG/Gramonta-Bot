@@ -54,7 +54,7 @@ const start = async (client: Client) => {
 					},
 					messageObject
 				);
-				client.react(messageObject.id, "👌");
+				client.react(messageObject.id, '👌');
 			} catch (e) {
 				console.warn(e);
 			}
@@ -63,6 +63,15 @@ const start = async (client: Client) => {
 
 	client.onAnyMessage(message => {
 		try {
+			if (message.body.startsWith('!') && !message.fromMe) {
+				client.reply(
+					message.from,
+					'Bot em manutenção. Agradeço a compreensão :)',
+					message.id
+				);
+				return;
+			}
+
 			if (banned.includes(message.author) && message.body.startsWith('!')) {
 				client.reply(message.from, 'Você está bloqueado :)', message.id);
 				return;

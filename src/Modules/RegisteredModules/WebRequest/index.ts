@@ -23,6 +23,7 @@ import Downloader from 'src/Modules/Downloader';
 import { kudurolify } from '../../TextTransform/Transformations';
 import Wordle from '../..//Wordle';
 import MensagensModule from 'src/Modules/BomDia';
+import PatchNotes from 'src/Modules/PatchNotes';
 
 const modulesWrapper = new ModulesWrapper();
 
@@ -60,5 +61,6 @@ modulesWrapper.registerModule('significado', dictionary);
 modulesWrapper.registerModule('openai', new OpenAI());
 modulesWrapper.registerModule('download', new Downloader());
 modulesWrapper.registerModule('tia', new MensagensModule());
+modulesWrapper.registerModule('patches', new PatchNotes());
 
 export default modulesWrapper;
