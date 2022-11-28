@@ -22,10 +22,10 @@ class Admin extends Module {
 
 	private async validatePermissions(requester: Message) {
 		const iAmAdm = await this.zaplify?.iAmAdmin(requester);
-		if (!iAmAdm) throw getMessage('i-am-not-admin', this.messages);
+		if (!iAmAdm) throw getMessage('iAmNotAdmin', this.messages);
 
 		const requesterIsAdm = await this.zaplify?.isAdmin(requester);
-		if (!requesterIsAdm) throw getMessage('you-are-not-admin', this.messages);
+		if (!requesterIsAdm) throw getMessage('youAreNotAdmin', this.messages);
 	}
 
 	async ban(args: Args, requester: Message) {
@@ -37,7 +37,7 @@ class Admin extends Module {
 
 			console.log({ mentionedPeople });
 			if (!mentionedPeople || mentionedPeople.length < 1) {
-				throw getMessage('need-to-mention-someone', this.messages);
+				throw getMessage('needToMentionSomeone', this.messages);
 			}
 
 			this.zaplify.replyAuthor(getMessage('banning', this.messages), requester);
