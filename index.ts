@@ -63,14 +63,14 @@ const start = async (client: Client) => {
 
 	client.onAnyMessage(message => {
 		try {
-			if (message.body.startsWith('!') && !message.fromMe) {
-				client.reply(
-					message.from,
-					'Bot em manutenção. Agradeço a compreensão :)',
-					message.id
-				);
-				return;
-			}
+			// if (message.body.startsWith('!') && !message.fromMe) {
+			// 	client.reply(
+			// 		message.from,
+			// 		'Bot em manutenção. Agradeço a compreensão :)',
+			// 		message.id
+			// 	);
+			// 	return;
+			// }
 
 			if (banned.includes(message.author) && message.body.startsWith('!')) {
 				client.reply(message.from, 'Você está bloqueado :)', message.id);

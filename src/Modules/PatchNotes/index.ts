@@ -9,7 +9,7 @@ class PatchNotes extends Module {
 		this.makePublic('default', this.sendPatchNotes);
 	}
 
-	async sendPatchNotes(args: Args, requester: Message) {
+	async sendPatchNotes(_: Args, requester: Message) {
 		try {
 			const patches = await fs.readFile('./PatchNotes.md', { encoding: 'utf-8' });
 			const message = getMessage('latest', patches, {
