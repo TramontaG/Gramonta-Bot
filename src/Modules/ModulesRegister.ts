@@ -22,12 +22,11 @@ type ModuleAddresser = {
 
 export class Module {
 	publicMethods: PublicMethod[];
-	zaplify: Zaplify | ZaplifyMock | null;
+	zaplify!: Zaplify | ZaplifyMock;
 	requester: Message | MockedMessageObject | undefined;
 
 	constructor() {
 		this.publicMethods = [];
-		this.zaplify = null;
 		this.requester = undefined;
 	}
 

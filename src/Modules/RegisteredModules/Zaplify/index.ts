@@ -28,6 +28,7 @@ import PatchNotes from 'src/Modules/PatchNotes';
 const modulesWrapper = new ModulesWrapper();
 import { kudurolify } from '../../TextTransform/Transformations';
 import MensagensModule from 'src/Modules/BomDia';
+import Admin from 'src/Modules/Admin';
 
 const help = new Help();
 const sticker = new Sticker();
@@ -70,5 +71,6 @@ modulesWrapper.registerModule('openai', new OpenAI());
 // modulesWrapper.registerModule("download", new Downloader());
 modulesWrapper.registerModule('tia', new MensagensModule());
 modulesWrapper.registerModule('patches', new PatchNotes());
+modulesWrapper.registerModule('admin', new Admin());
 
 export default modulesWrapper;

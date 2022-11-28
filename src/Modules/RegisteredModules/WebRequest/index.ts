@@ -24,6 +24,7 @@ import { kudurolify } from '../../TextTransform/Transformations';
 import Wordle from '../..//Wordle';
 import MensagensModule from 'src/Modules/BomDia';
 import PatchNotes from 'src/Modules/PatchNotes';
+import Admin from 'src/Modules/Admin';
 
 const modulesWrapper = new ModulesWrapper();
 
@@ -62,5 +63,6 @@ modulesWrapper.registerModule('openai', new OpenAI());
 modulesWrapper.registerModule('download', new Downloader());
 modulesWrapper.registerModule('tia', new MensagensModule());
 modulesWrapper.registerModule('patches', new PatchNotes());
+modulesWrapper.registerModule('admin', new Admin());
 
 export default modulesWrapper;

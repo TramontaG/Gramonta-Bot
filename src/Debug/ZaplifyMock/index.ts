@@ -139,6 +139,10 @@ class MockedClient {
 	sendImageFromSticker(requester: Message) {}
 	sendVideoFromSticker() {}
 	react() {}
+	isAdmin(requester: Message) {}
+	iAmAdmin() {}
+	getMentionedPeople() {}
+	banFromGroup() {}
 }
 
 export default MockedClient;

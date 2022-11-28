@@ -1,5 +1,7 @@
 import {
 	Client,
+	Contact,
+	ContactId,
 	decryptMedia,
 	Message,
 	MessageTypes,
@@ -194,7 +196,7 @@ class Zaplify {
 
 	sendImageFromUrl(url: string, caption: string, requester: Message) {
 		try {
-			this.client.sendImage(requester.to, url, 'Gramonta-Bot Image', caption);
+			this.client.sendImage(requester.from, url, 'Gramonta-Bot Image', caption);
 			return;
 		} catch (e) {
 			this.replyAuthor('erro desconhecido', requester);
@@ -246,6 +248,15 @@ class Zaplify {
 		return allAdmins.includes(requester.sender.id);
 	}
 
+	async iAmAdmin(requester: Message) {
+		if (!requester.isGroupMsg) return true;
+		const allAdmins = await this.client.getGroupAdmins(
+			requester.chat.groupMetadata.id
+		);
+		const me = await this.client.getMe();
+		return allAdmins.includes(me.status);
+	}
+
 	async sendImageFromSticker(requester: Message, stickerMsg: Message) {
 		try {
 			const stickerBuffer = await decryptMedia(stickerMsg);
@@ -278,6 +289,17 @@ class Zaplify {
 
 	async react(emoji: string, requester: Message) {
 		return this.client.react(requester.id, emoji);
+	}
+
+	async getMentionedPeople(requester: Message) {
+		return requester.mentionedJidList;
+	}
+
+	async banFromGroup(requester: Message, participantId: ContactId) {
+		return this.client.removeParticipant(
+			requester.chat.groupMetadata.id,
+			participantId
+		);
 	}
 }
 
