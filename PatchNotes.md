@@ -1,5 +1,21 @@
 > @latest
 
+# [01/12/2022]
+
+Criado módulo da ofensa!
+
+- Marque alguém para o bot ofender. Os xingamentos vem da API `http://xinga-me.appspot.com/api`
+  <br>
+- Exemplo de uso: `!offend @pessoa`
+
+<br>
+
+**Para ver os patches anteriores, clique aqui: https://github.com/TramontaG/Gramonta-Bot/blob/main/PatchNotes.md**
+
+> ---
+
+> @old
+
 # [28/11/2022]
 
 - **Adicionado módulo Admin**
@@ -17,6 +33,5 @@
   Ele conta com uma injeção de valores por meio de template strings semelhantes à das linguagens de programação
 
     <br>
-  **Para ver os patches anteriores, clique aqui: https://github.com/TramontaG/Gramonta-Bot/blob/main/PatchNotes.md**
 
 > ---

@@ -3,6 +3,8 @@ import MockedClient from 'src/Debug/ZaplifyMock';
 import ZaplifyMock from 'src/Debug/ZaplifyMock';
 import { MockedMessageObject } from 'src/Debug/ZaplifyMock/Models';
 import Zaplify from './Zaplify';
+import fs from 'fs/promises';
+import * as helpers from 'src/Helpers/messageGetter';
 
 export interface Args {
 	command: string;
@@ -22,12 +24,26 @@ type ModuleAddresser = {
 
 export class Module {
 	publicMethods: PublicMethod[];
-	zaplify!: Zaplify | ZaplifyMock;
+	zaplify!: Zaplify;
 	requester: Message | MockedMessageObject | undefined;
+	protected messagesPath: string;
 
 	constructor() {
 		this.publicMethods = [];
 		this.requester = undefined;
+		this.messagesPath = '';
+	}
+
+	private getMessages(messagesPath: string) {
+		return fs.readFile(messagesPath, { encoding: 'utf-8' }).then(messages => {
+			return messages;
+		});
+	}
+
+	getMessage(messageName: string, templateData?: helpers.TemplateData) {
+		return this.getMessages(this.messagesPath).then(messages =>
+			helpers.getMessage(messageName, messages, templateData)
+		);
 	}
 
 	callMethod(methodName: string, args: Args, requester: Message): Promise<any> {
@@ -90,11 +106,7 @@ class ModulesWrapper {
 		});
 	}
 
-	registerMockedZaplify(mockedZaplify: MockedClient) {
-		this.modules.forEach(module => {
-			module.module.zaplify = mockedZaplify;
-		});
-	}
+	registerMockedZaplify(zaplify: ZaplifyMock) {}
 }
 
 export default ModulesWrapper;

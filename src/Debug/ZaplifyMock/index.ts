@@ -1,4 +1,4 @@
-import { Message } from '@open-wa/wa-automate';
+import { Contact, Message } from '@open-wa/wa-automate';
 import { Button } from '@open-wa/wa-automate/dist/api/model/button';
 import {
 	Req,
@@ -143,6 +143,9 @@ class MockedClient {
 	iAmAdmin() {}
 	getMentionedPeople() {}
 	banFromGroup() {}
+	getNumberFromContactId(): string {
+		return '';
+	}
 }
 
 export default MockedClient;

@@ -15,9 +15,9 @@ class PatchNotes extends Module {
 			const message = getMessage('latest', patches, {
 				myNumber: 3,
 			});
-			this.zaplify?.replyAuthor(message, requester);
+			this.zaplify.replyAuthor(message, requester);
 		} catch (e) {
-			this.zaplify?.replyAuthor(`Erro: ${e}`, requester);
+			this.zaplify.replyAuthor(`Erro: ${e}`, requester);
 		}
 	}
 }

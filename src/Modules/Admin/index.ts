@@ -29,18 +29,18 @@ class Admin extends Module {
 	}
 
 	async ban(args: Args, requester: Message) {
-		console.log('RAN FUNCTION');
 		try {
 			await this.validatePermissions(requester);
-			console.log('validations passed');
 			const mentionedPeople = await this.zaplify.getMentionedPeople(requester);
 
-			console.log({ mentionedPeople });
 			if (!mentionedPeople || mentionedPeople.length < 1) {
 				throw getMessage('needToMentionSomeone', this.messages);
 			}
 
-			this.zaplify.replyAuthor(getMessage('banning', this.messages), requester);
+			await this.zaplify.replyAuthor(
+				getMessage('banning', this.messages),
+				requester
+			);
 			mentionedPeople.forEach(id => {
 				this.zaplify.banFromGroup(requester, id);
 			});

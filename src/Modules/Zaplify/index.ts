@@ -295,6 +295,14 @@ class Zaplify {
 		return requester.mentionedJidList;
 	}
 
+	async getNumberFromContactId(contactId: ContactId): Promise<string> {
+		return contactId.split('@')[0];
+	}
+
+	async getContactInfoFromContactId(contactId: ContactId) {
+		return this.client.getContact(contactId);
+	}
+
 	async banFromGroup(requester: Message, participantId: ContactId) {
 		return this.client.removeParticipant(
 			requester.chat.groupMetadata.id,
