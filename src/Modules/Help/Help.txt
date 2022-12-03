@@ -6,6 +6,10 @@ Sou composto por vários módulos! Cada módulo possui sua seção de ajuda, que
 Informações sobre o bot e seu criador
 Acesso ao módulo: *_!about_*
 
+*|--------Patches!-------|*
+Acompanhe o desenvolvimento do bot!
+Acesso ao módulo: *_!patches_*
+
 *|---------Ping---------|*
 Responde pong. Util para verificar se o bot está on e tempo de latência
 Acesso ao módulo: *_!ping_*
@@ -71,7 +75,7 @@ Acesso ao módulo: *_!translate_*
 Serviço de dicionário
 Acesso ao módulo: *_!significado*
 
-*|--------Patches!-------|*
-Acompanhe o desenvolvimento do bot!
-Acesso ao módulo: *_!patches_*
 
+*|--------Offend!-------|*
+Ofenda alguém do grupo de maneira criativa!
+Acesso ao módulo: *_!offend_*
