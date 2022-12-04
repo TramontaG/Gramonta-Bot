@@ -30,6 +30,7 @@ import { kudurolify } from '../../TextTransform/Transformations';
 import MensagensModule from 'src/Modules/BomDia';
 import Admin from 'src/Modules/Admin';
 import Offend from 'src/Modules/Offend';
+import Bored from 'src/Modules/Bored';
 
 const help = new Help();
 const sticker = new Sticker();
@@ -74,5 +75,5 @@ modulesWrapper.registerModule('tia', new MensagensModule());
 modulesWrapper.registerModule('patches', new PatchNotes());
 modulesWrapper.registerModule('admin', new Admin());
 modulesWrapper.registerModule('offend', new Offend());
-
+modulesWrapper.registerModule('bored', new Bored());
 export default modulesWrapper;

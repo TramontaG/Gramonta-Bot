@@ -1,5 +1,17 @@
 > @latest
 
+# [03/12/2022]
+
+- Criado módulo Bored:
+  <br>
+  Receba sugestões do que fazer quando estiver entediado!
+
+**Para ver os patches anteriores, clique aqui: https://github.com/TramontaG/Gramonta-Bot/blob/main/PatchNotes.md**
+
+> ---
+
+> @old
+
 # [01/12/2022]
 
 Criado módulo da ofensa!
@@ -9,12 +21,6 @@ Criado módulo da ofensa!
 - Exemplo de uso: `!offend @pessoa`
 
 <br>
-
-**Para ver os patches anteriores, clique aqui: https://github.com/TramontaG/Gramonta-Bot/blob/main/PatchNotes.md**
-
-> ---
-
-> @old
 
 # [28/11/2022]
 

@@ -73,9 +73,13 @@ Acesso ao módulo: *_!translate_*
 
 *|--------Dicionário!-------|*
 Serviço de dicionário
-Acesso ao módulo: *_!significado*
+Acesso ao módulo: *_!significado_*
 
 
 *|--------Offend!-------|*
 Ofenda alguém do grupo de maneira criativa!
 Acesso ao módulo: *_!offend_*
+
+*|--------Bored!-------|*
+Receba sugestões do que fazer quando estiver entediado!
+Acesso ao módulo: *_!bored_*
