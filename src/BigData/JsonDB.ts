@@ -169,8 +169,8 @@ class Database {
 			properties: {
 				id: 'string',
 				reason: 'string',
-				banDate: 'number',
-				banTime: 'number',
+				banDate: 'int',
+				banTime: 'int',
 			},
 		},
 	};
