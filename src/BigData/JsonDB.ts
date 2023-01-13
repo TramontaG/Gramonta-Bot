@@ -4,7 +4,7 @@ class Database {
 	DatabaseVersion: number;
 	_RealmInstance: Realm | undefined;
 	constructor() {
-		this.DatabaseVersion = 8;
+		this.DatabaseVersion = 9;
 		this._RealmInstance = undefined;
 	}
 
@@ -163,6 +163,16 @@ class Database {
 				date: 'int',
 			},
 		},
+		bannedUsers: {
+			name: 'banned-users',
+			primaryKey: 'id',
+			properties: {
+				id: 'string',
+				reason: 'string',
+				banDate: 'number',
+				banTime: 'number',
+			},
+		},
 	};
 }
 
@@ -241,6 +251,12 @@ export type AllEntitiesModel = {
 		tries: number;
 		gameID: string;
 	};
+	bannedUsers: {
+		id: string;
+		reason: string;
+		banDate: number;
+		banTime: number;
+	};
 };
 
 export enum EntityTypes {
@@ -254,6 +270,7 @@ export enum EntityTypes {
 	MEME = 'meme',
 	FINANCE = 'finance',
 	WORDLE = 'wordle',
+	BANNEDUSERS = 'bannedUsers',
 }
 
 export type WithID<T extends keyof AllEntitiesModel> = {

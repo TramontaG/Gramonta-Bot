@@ -66,17 +66,19 @@ class Youtube extends Module {
 
 		this.logger = new Logger();
 
-		this.registerPublicMethod({
-			name: 'default',
-			method: this.askInfo.bind(this),
-		});
+		// this.registerPublicMethod({
+		// 	name: 'default',
+		// 	method: this.askInfo.bind(this),
+		// });
 
-		this.makePublic('download', this.downloadSong);
+		// this.makePublic('download', this.downloadSong);
 
-		this.registerPublicMethod({
-			name: 'video',
-			method: this.downloadVideo.bind(this),
-		});
+		// this.registerPublicMethod({
+		// 	name: 'video',
+		// 	method: this.downloadVideo.bind(this),
+		// });
+
+		this.makePublic('default', this.askInfo);
 	}
 
 	async downloadVideo(args: YoutubeArgs, requester: Message) {

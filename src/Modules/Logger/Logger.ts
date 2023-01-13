@@ -88,6 +88,38 @@ class Logger {
 			console.warn(e);
 		}
 	}
+
+	async upsert<T extends keyof AllEntitiesModel>(
+		entityName: T,
+		entityData: AllEntitiesModel[T]
+	) {
+		try {
+			const DB = await this.DB.getInstance();
+			DB.write(() => {
+				// typing is wrong, Docs says that this method call is correct:
+				// https://www.mongodb.com/docs/realm/sdk/node/examples/read-and-write-data/#upsert-an-object
+				// @ts-ignore
+				DB.create(entityName, entityData, Realm.UpdateMode.Modified);
+			});
+		} catch (e) {
+			console.warn(e);
+		}
+	}
+
+	async deleteEntity<T extends keyof AllEntitiesModel>(
+		entityName: T,
+		entityId: string | number
+	) {
+		try {
+			const DB = await this.DB.getInstance();
+			DB.write(() => {
+				const obj = DB.objectForPrimaryKey(entityName, entityId);
+				DB.delete(obj);
+			});
+		} catch (e) {
+			console.warn(e);
+		}
+	}
 }
 
 export default Logger;

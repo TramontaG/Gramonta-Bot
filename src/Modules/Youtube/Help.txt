@@ -1,6 +1,5 @@
-O bot de download do youtube está quebrado!!!
+Estou reescrevendo o módulo do youtube.
 
-O youtube teve alguma alteração que fez com que todos os bots parassem de conseguir baixar as músicas
-Já estou trabalhando em uma solução.
+Ele ficará bem melhor, vou resolver todos os bugs e implementar novas funcionalidades
 
-Obrigado pela compreensao <3
+Obrigado pela paciência!!

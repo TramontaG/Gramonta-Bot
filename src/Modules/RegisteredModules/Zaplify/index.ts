@@ -31,6 +31,8 @@ import MensagensModule from 'src/Modules/BomDia';
 import Admin from 'src/Modules/Admin';
 import Offend from 'src/Modules/Offend';
 import Bored from 'src/Modules/Bored';
+import Reset from 'src/Modules/Reset';
+import Ban from 'src/Modules/Ban';
 
 const help = new Help();
 const sticker = new Sticker();
@@ -76,4 +78,6 @@ modulesWrapper.registerModule('patches', new PatchNotes());
 modulesWrapper.registerModule('admin', new Admin());
 modulesWrapper.registerModule('offend', new Offend());
 modulesWrapper.registerModule('bored', new Bored());
+modulesWrapper.registerModule('reset', new Reset());
+modulesWrapper.registerModule('ban', new Ban());
 export default modulesWrapper;

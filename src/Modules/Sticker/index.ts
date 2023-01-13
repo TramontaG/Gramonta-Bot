@@ -1,9 +1,7 @@
 import { Args, Module } from '../ModulesRegister';
 import { Message, MessageTypes } from '@open-wa/wa-automate';
-import fs from 'fs/promises';
 import Logger from '../Logger/Logger';
 import { EntityTypes } from 'src/BigData/JsonDB';
-import Zaplify from '../Zaplify';
 
 class Sticker extends Module {
 	logger: Logger;
@@ -12,9 +10,10 @@ class Sticker extends Module {
 		super();
 		this.logger = new Logger();
 
+		this.messagesPath = './src/Modules/Sticker/messages.zap.md';
+
 		this.makePublic('default', this.sticker);
 		this.makePublic('toimg', this.stickerToImage);
-		this.makePublic('tovideo', this.stickerToVideo);
 		this.makePublic('help', this.help);
 	}
 
@@ -25,7 +24,9 @@ class Sticker extends Module {
 			const typesAllowed = [MessageTypes.IMAGE, MessageTypes.VIDEO];
 
 			if (!typesAllowed.includes(stickeredMessage.type))
-				return this.sendError('Preciso de um video, gif ou imagem', requester);
+				return await this.getMessage('invalidData').then(msg =>
+					this.sendMessage(msg, requester)
+				);
 
 			const media = (await this.zaplify?.getMediaBufferFromMessage(
 				stickeredMessage
@@ -40,9 +41,8 @@ class Sticker extends Module {
 				return await this.sendAnimatedSticker(media, requester);
 			}
 		} catch (e) {
-			this.sendError(
-				'Erro desconhecido: ' + e,
-				(this.requester as Message) || undefined
+			this.getMessage('error', { errorMessage: e }).then(msg =>
+				this.sendMessage(msg, requester)
 			);
 		}
 	}
@@ -51,7 +51,7 @@ class Sticker extends Module {
 		try {
 			return this.zaplify?.sendVideoSticker(media, 'video/mp4', requester);
 		} catch (e) {
-			return this.sendError(e + JSON.stringify(e), requester);
+			return this.getMessage('error').then(msg => this.sendMessage(msg, requester));
 		}
 	}
 
@@ -59,15 +59,12 @@ class Sticker extends Module {
 		return this.zaplify?.sendSticker(media, requester);
 	}
 
-	async sendError(error: string | unknown, requester: Message) {
-		return this.zaplify?.replyAuthor(`Erro: ${error}`, requester);
+	async sendMessage(message: string, requester: Message) {
+		return this.zaplify?.replyAuthor(message, requester);
 	}
 
 	async help(_: Args, requester: Message) {
-		const helpText = await fs.readFile('src/Modules/Sticker/Help.txt', {
-			encoding: 'utf-8',
-		});
-		this.zaplify?.replyAuthor(helpText, requester);
+		this.getMessage('help').then(msg => this.zaplify.sendMessage(msg, requester));
 	}
 
 	logSticker(messageObject: Message, animated: boolean) {
@@ -80,24 +77,13 @@ class Sticker extends Module {
 		});
 	}
 
-	stickerToImage(args: Args, requester: Message) {
+	stickerToImage(_: Args, requester: Message) {
 		const quotedMessage = requester.quotedMsg;
 		if (!quotedMessage)
-			return this.zaplify?.replyAuthor(
-				'Por favor, responda alguma figurinha com esse comando para eu enviar a mensagem',
-				requester
+			return this.getMessage('no-sticker').then(msg =>
+				this.zaplify.sendMessage(msg, requester)
 			);
 		return this.zaplify?.sendImageFromSticker(requester, quotedMessage);
-	}
-
-	stickerToVideo(rgs: Args, requester: Message) {
-		const quotedMessage = requester.quotedMsg;
-		if (!quotedMessage)
-			return this.zaplify?.replyAuthor(
-				'Por favor, responda alguma figurinha com esse comando para eu enviar a mensagem',
-				requester
-			);
-		return this.zaplify?.sendVideoFromSticker(requester, quotedMessage);
 	}
 }
 

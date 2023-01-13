@@ -4,7 +4,6 @@ import options from 'src/config/startupConfig';
 import parse from 'src/lib/T-Parser';
 import ModulesWrapper from 'src/Modules';
 import Zaplify from 'src/Modules/Zaplify';
-import DebugServer from './src/Debug';
 import { filterProperty } from 'src/Helpers/ObjectManipulation';
 
 const banned = [
@@ -17,6 +16,12 @@ const banned = [
 	'5521991967597@c.us',
 	'555196222255@c.us',
 	'558881803667@c.us',
+	'553398082321@c.us',
+	'554891418193@c.us',
+	'556993749999@c.us',
+	'5519987510627@c.s',
+	'556993018716@c.us',
+	'558594062647@c.us',
 ];
 
 dotEnv.config({
@@ -32,7 +37,6 @@ const start = async (client: Client) => {
 		const parsingResult = parse(msg.toLowerCase() || 'null');
 
 		if (!parsingResult.isError) {
-			console.log(msg);
 			// return client.reply(
 			// 	messageObject.from,
 			// 	'Bot em manutenção. Agradeço à compreensão',
@@ -96,11 +100,6 @@ const start = async (client: Client) => {
 		}
 	});
 };
-
-const DEBUG_PORT = 3000;
-DebugServer.listen(DEBUG_PORT, () => {
-	console.log(`[SERVER]: Listening on port ${DEBUG_PORT}`);
-});
 
 create({ ...options(), multiDevice: true }).then(client => {
 	start(client);

@@ -1,4 +1,4 @@
-import axios, { AxiosAdapter, AxiosInstance } from 'axios';
+import axios, { AxiosInstance } from 'axios';
 
 type OffenseResponse = {
 	xingamento: string;

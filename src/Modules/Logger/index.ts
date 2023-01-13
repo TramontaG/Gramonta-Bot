@@ -14,7 +14,7 @@ type PersonMap = {
 	[key: string]: number;
 };
 
-const EntitiesArray = [
+const EntitiesArray: MessageEntitiesKey[] = [
 	EntityTypes.STICKERS,
 	EntityTypes.COPYPASTAS,
 	EntityTypes.GOOGLESEARCHES,
@@ -24,6 +24,8 @@ const EntitiesArray = [
 	EntityTypes.MEME,
 	EntityTypes.FINANCE,
 ];
+
+type MessageEntitiesKey = Exclude<keyof AllEntitiesModel, "bannedUsers">;
 
 class LoggerModule extends Module {
 	logger: Logger;
@@ -46,32 +48,10 @@ class LoggerModule extends Module {
 		// 	method: () => this.reset(),
 		// });
 
-		this.registerPublicMethod({
-			name: 'me',
-			method: (args: Args) => this.me(args),
-		});
+		this.makePublic("me", this.me);
 	}
 
-	async history(args: Args, requester: Message) {
-		const entityType = args.immediate?.trim() as EntityTypes;
-
-		if (!entityType)
-			return this.zaplify?.replyAuthor(
-				'Por favor insira algum comando para logar!',
-				requester
-			);
-		if (!EntitiesArray.includes(entityType))
-			return this.zaplify?.replyAuthor(
-				'Não consigo logar isso, comando inválido!',
-				requester
-			);
-
-		const allEntities = await this.logger.getAllEntities(entityType);
-
-		let message = [];
-	}
-
-	async logAll(entityType: EntityTypes) {
+	async logAll(entityType: MessageEntitiesKey) {
 		const requester = this.zaplify?.messageObject as Message;
 		const allRegisters = await this.logger.getAllEntities(entityType);
 		const personMap = this.getPersonMap(allRegisters);
@@ -88,7 +68,7 @@ class LoggerModule extends Module {
 	}
 
 	async rank(args: Args, requester: Message) {
-		const entityType = args.immediate?.trim() as EntityTypes;
+		const entityType = args.immediate?.trim() as MessageEntitiesKey;
 
 		if (!entityType)
 			return this.zaplify?.replyAuthor(
@@ -134,8 +114,8 @@ class LoggerModule extends Module {
 		this.zaplify?.replyAuthor(message, requester);
 	}
 
-	async me(_: Args) {
-		const requester = this.zaplify?.messageObject as Message;
+	async me(_: Args, requester: Message) {
+
 		let message = '*Seu uso do bot*\n';
 		EntitiesArray.forEach(async (entity, index) => {
 			const totalUse = await this.getTotalUse(
@@ -143,13 +123,14 @@ class LoggerModule extends Module {
 				requester.sender.formattedName
 			);
 			message += `*${entity}:* _${totalUse} vezes_\n`;
+
 			if (index === EntitiesArray.length - 1) {
 				this.zaplify?.replyAuthor(message, requester);
 			}
 		});
 	}
 
-	private async getTotalUse(entityType: EntityTypes, senderName: string) {
+	private async getTotalUse(entityType: MessageEntitiesKey, senderName: string) {
 		const allEntities = await this.logger.getAllEntities(entityType);
 		const personMap = this.getPersonMap(allEntities);
 		return personMap[senderName] || 0;
@@ -210,7 +191,7 @@ class LoggerModule extends Module {
 	}
 
 	private getGroupMap<T extends keyof AllEntitiesModel>(
-		allEntities: AllEntitiesModel[T][]
+		allEntities: Exclude<AllEntitiesModel[T], AllEntitiesModel['bannedUsers']>[]
 	) {
 		const groupMap: GroupMap = {};
 
@@ -233,7 +214,7 @@ class LoggerModule extends Module {
 	}
 
 	private getPersonMap<T extends keyof AllEntitiesModel>(
-		allEntities: AllEntitiesModel[T][]
+		allEntities: Exclude<AllEntitiesModel[T], AllEntitiesModel['bannedUsers']>[]
 	) {
 		const usesByPerson: PersonMap = {};
 

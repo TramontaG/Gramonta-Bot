@@ -43,15 +43,9 @@ class Zaplify {
 
 	replyAuthor(message: string, author: Message) {
 		if (!this.messageObject) throw 'No message object initialized';
-		const isMe = !!author && author.fromMe;
-
-		if (isMe) {
-			console.log('ITS A ME!!');
-			return this.client.sendText(author.from, message);
-		}
 
 		return this.client.reply(
-			author?.from || this.messageObject.from,
+			author.chatId,
 			message,
 			author?.id || this.messageObject.id
 		);
@@ -59,7 +53,10 @@ class Zaplify {
 
 	sendMessage(message: string, requester?: Message) {
 		if (!this.messageObject) throw 'No message object initialized';
-		return this.client.sendText(requester?.from || this.messageObject.from, message);
+		return this.client.sendText(
+			requester?.chatId || this.messageObject.chatId,
+			message
+		);
 	}
 
 	sendButtons(
@@ -70,7 +67,7 @@ class Zaplify {
 	) {
 		if (!this.messageObject) throw 'No message object initialized';
 		return this.client.sendButtons(
-			requester?.from || this.messageObject.from,
+			requester?.chatId || this.messageObject.chatId,
 			caption,
 			buttons,
 			title || '',
@@ -81,7 +78,7 @@ class Zaplify {
 	async sendFile(fileAddress: string, caption: string, quotedMessage?: Message) {
 		if (!this.messageObject) throw 'No message object initialized';
 		const fileHasBeenSent = await this.client.sendFile(
-			quotedMessage?.from || this.messageObject.from,
+			quotedMessage?.chatId || this.messageObject.chatId,
 			fileAddress,
 			'',
 			caption || '',
@@ -93,7 +90,7 @@ class Zaplify {
 	async sendSong(fileAddress: string, caption: string, quotedMessage?: Message) {
 		if (!this.messageObject) throw 'No message object initialized';
 		const fileHasBeenSent = await this.client.sendAudio(
-			quotedMessage?.from || this.messageObject.from,
+			quotedMessage?.chatId || this.messageObject.chatId,
 			fileAddress
 		);
 		return fileHasBeenSent;
@@ -132,7 +129,7 @@ class Zaplify {
 			imgBuffer = imgBufferOrAddress;
 		}
 		return this.client.sendImageAsSticker(
-			requester?.from || this.messageObject.from,
+			requester?.chatId || this.messageObject.chatId,
 			imgBuffer,
 			{
 				author: 'Gramonta-bot \n+5511947952409',
@@ -146,7 +143,7 @@ class Zaplify {
 		if (!this.messageObject) throw 'No message object initialized';
 		const videoBase64 = this.getBase64fromBuffer(videoBuffer, mimetype);
 		return this.client.sendMp4AsSticker(
-			requester?.from || this.messageObject.from,
+			requester?.chatId || this.messageObject.chatId,
 			videoBase64,
 			{
 				fps: 30,
@@ -165,7 +162,6 @@ class Zaplify {
 		const message = quotedMessage || this.messageObject;
 		if (!message) throw 'No message object initialized';
 		const sticker = await this.client.getStickerDecryptable(message.id);
-		console.log(sticker, message.id);
 		return decryptMedia(sticker);
 	}
 
@@ -178,7 +174,7 @@ class Zaplify {
 		const message = requester || this.messageObject;
 		if (!message) throw 'No message object initialized';
 		return this.client.sendFileFromUrl(
-			requester.from,
+			requester.chatId,
 			url,
 			caption,
 			fileName,
@@ -189,14 +185,14 @@ class Zaplify {
 	sendImageAsSticker(imageBuffer: Buffer, requester?: Message) {
 		if (!this.messageObject) throw 'No message object initialized';
 		this.client.sendImageAsSticker(
-			requester?.from || this.messageObject?.from,
+			requester?.chatId || this.messageObject.from,
 			imageBuffer
 		);
 	}
 
 	sendImageFromUrl(url: string, caption: string, requester: Message) {
 		try {
-			this.client.sendImage(requester.from, url, 'Gramonta-Bot Image', caption);
+			this.client.sendImage(requester.chatId, url, 'Gramonta-Bot Image', caption);
 			return;
 		} catch (e) {
 			this.replyAuthor('erro desconhecido', requester);
@@ -220,7 +216,7 @@ class Zaplify {
 	sendFileFromPath(path: string, caption: string = '', requester: Message) {
 		try {
 			return this.client.sendFile(
-				requester.from,
+				requester.chatId,
 				path,
 				'file.mp4',
 				caption,
@@ -237,7 +233,7 @@ class Zaplify {
 	sendVideo(buffer: Buffer, requester: Message, mimeType: Mimetype = 'video/mp4') {
 		const base64 = this.getBase64fromBuffer(buffer, mimeType);
 
-		return this.client.sendFile(requester.from, base64, 'file', '');
+		return this.client.sendFile(requester.chatId, base64, 'file', '');
 	}
 
 	async isAdmin(requester: Message) {
@@ -261,7 +257,7 @@ class Zaplify {
 		try {
 			const stickerBuffer = await decryptMedia(stickerMsg);
 			return this.client.sendFile(
-				requester.to,
+				requester.chatId,
 				this.getBase64fromBuffer(stickerBuffer, 'image'),
 				'Gramonta-bot',
 				'',
