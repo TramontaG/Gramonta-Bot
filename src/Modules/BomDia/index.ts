@@ -23,7 +23,6 @@ class MensagensModule extends Module {
 			if (args.immediate === 'image' || args.immediate === 'imagem') {
 				const bomDiaImages = await this.allBomDiaImages();
 				const randomImage = randomItem(bomDiaImages);
-				console.log('GOT DATA', { randomImage });
 				return this.zaplify?.sendImageFromUrl(
 					randomImage.src,
 					randomImage.alt,

@@ -51,15 +51,20 @@ class Google extends Module {
 		const text = args.immediate?.substr(0, 199);
 		const lang = args.lang;
 		try {
-			if (!text)
-				return this.zaplify?.replyAuthor(
-					'Me mande um texto pra mulher do google falar',
-					requester
-				);
-			const audioUrl = getAudioUrl(text, {
+			// if (!text)
+			const audioUrl = getAudioUrl(text!, {
 				lang: lang || 'pt_BR',
 			});
-			return this.zaplify?.sendFileFromUrl(audioUrl, 'googleTts', requester);
+
+			console.log(audioUrl);
+			// return;
+
+			// return this.zaplify?.replyAuthor(
+			// 	'A voz do google ta bugada. Já já conserto!',
+			// 	requester
+			// );
+
+			return this.zaplify?.sendFileFromUrl(audioUrl, 'googleTts.ogg', requester);
 		} catch (e) {
 			return this.zaplify?.replyAuthor('Erro: ' + e, requester);
 		}

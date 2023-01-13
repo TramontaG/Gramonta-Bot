@@ -1,6 +1,5 @@
 import {
 	Client,
-	Contact,
 	ContactId,
 	decryptMedia,
 	Message,
@@ -8,7 +7,6 @@ import {
 	useragent,
 } from '@open-wa/wa-automate';
 import fs from 'fs/promises';
-import MockedClient from 'src/Debug/ZaplifyMock';
 import { getFormattedDate } from 'src/Helpers/Date';
 
 type Mimetype = 'video/mp4' | 'image/gif' | 'image' | 'video' | 'video/mpeg';
@@ -173,13 +171,17 @@ class Zaplify {
 	) {
 		const message = requester || this.messageObject;
 		if (!message) throw 'No message object initialized';
-		return this.client.sendFileFromUrl(
-			requester.chatId,
-			url,
-			caption,
-			fileName,
-			requester.id
-		);
+		try {
+			return this.client.sendFileFromUrl(
+				requester.chatId,
+				url,
+				caption,
+				fileName,
+				requester.id
+			);
+		} catch (e) {
+			this.replyAuthor(`${e}`, message);
+		}
 	}
 
 	sendImageAsSticker(imageBuffer: Buffer, requester?: Message) {
@@ -190,9 +192,10 @@ class Zaplify {
 		);
 	}
 
-	sendImageFromUrl(url: string, caption: string, requester: Message) {
+	async sendImageFromUrl(url: string, caption: string, requester: Message) {
+		console.log(url);
 		try {
-			this.client.sendImage(requester.chatId, url, 'Gramonta-Bot Image', caption);
+			this.client.sendFile(requester.chatId, url, 'file', caption);
 			return;
 		} catch (e) {
 			this.replyAuthor('erro desconhecido', requester);
@@ -218,7 +221,7 @@ class Zaplify {
 			return this.client.sendFile(
 				requester.chatId,
 				path,
-				'file.mp4',
+				'file',
 				caption,
 				undefined,
 				undefined,

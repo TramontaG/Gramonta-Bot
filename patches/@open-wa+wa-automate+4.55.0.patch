@@ -1,0 +1,101 @@
+diff --git a/node_modules/@open-wa/wa-automate/dist/api/Client.js b/node_modules/@open-wa/wa-automate/dist/api/Client.js
+index 7f0549a..58fcf5f 100644
+--- a/node_modules/@open-wa/wa-automate/dist/api/Client.js
++++ b/node_modules/@open-wa/wa-automate/dist/api/Client.js
+@@ -1672,7 +1672,7 @@ class Client {
+             return `data:${m.mimetype};base64,${mediaData.toString('base64')}`;
+         });
+     }
+-    /**
++ /**
+      * Sends a image to given chat, with caption or not, using base64
+      * @param to chat id `xxxxx@c.us`
+      * @param file DataURL data:image/xxx;base64,xxx or the RELATIVE (should start with `./` or `../`) path of the file you want to send. With the latest version, you can now set this to a normal URL (for example [GET] `https://file-examples-com.github.io/uploads/2017/10/file_example_JPG_2500kB.jpg`).
+@@ -1682,47 +1682,36 @@ class Client {
+      * @param hideTags boolean default: false [INSIDERS] set this to try silent tag someone in the caption
+      * @returns `Promise <boolean | string>` This will either return true or the id of the message. It will return true after 10 seconds even if waitForId is true
+      */
+-    sendImage(to, file, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce, requestConfig) {
+-        return __awaiter(this, void 0, void 0, function* () {
+-            const err = [
+-                'Not able to send message to broadcast',
+-                'Not a contact',
+-                'Error: Number not linked to WhatsApp Account',
+-                'ERROR: Please make sure you have at least one chat'
+-            ];
+-            /**
+-             * TODO: File upload improvements
+-             * 1. *Create an arbitrary file input element
+-             * 2. *Take the file parameter and create a tempfile in temp dir
+-             * 3. Forward the tempfile path to the file input, upload the file to the browser context.
+-             * 4. Instruct the WAPI.sendImage function to consume the file from the element in step 1.
+-             * 5. *Destroy the input element from the page (happens in wapi.sendimage)
+-             * 6. *Unlink/rm the tempfile
+-             * 7. Return the ID of the WAPI.sendImage function.
+-             */
+-            const [[inputElementId, inputElement], fileAsLocalTemp] = yield Promise.all([
+-                (() => __awaiter(this, void 0, void 0, function* () {
+-                    const inputElementId = yield this._page.evaluate(() => WAPI.createTemporaryFileInput());
+-                    const inputElement = yield this._page.$(`#${inputElementId}`);
+-                    return [inputElementId, inputElement];
+-                }))(),
+-                (0, tools_1.assertFile)(file, filename, tools_1.FileOutputTypes.TEMP_FILE_PATH, requestConfig || {})
+-            ]);
+-            //@ts-ignore
+-            yield inputElement.uploadFile(fileAsLocalTemp);
+-            file = inputElementId;
+-            /**
+-             * Old method of asserting that the file be a data url - cons = time wasted serializing/deserializing large file to and from b64.
+-             */
+-            // file = await assertFile(file, filename, FileOutputTypes.DATA_URL as any,requestConfig || {}) as string
+-            const res = yield this.pup(({ to, file, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce }) => WAPI.sendImage(file, to, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce), { to, file, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce });
+-            if (fileAsLocalTemp)
+-                yield (0, tools_1.rmFileAsync)(fileAsLocalTemp);
+-            if (err.includes(res))
+-                console.error(res);
+-            return (err.includes(res) ? false : res);
+-        });
+-    }
++ sendImage(to, file, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce) {
++    return __awaiter(this, void 0, void 0, function* () {
++        //check if the 'base64' file exists
++        if (!(0, tools_1.isDataURL)(file) && !(0, tools_1.isBase64)(file) && !file.includes("data:")) {
++            //must be a file then
++            const relativePath = path.join(path.resolve(process.cwd(), file || ''));
++            if (fs.existsSync(file) || fs.existsSync(relativePath)) {
++                file = yield (0, datauri_1.default)(fs.existsSync(file) ? file : relativePath);
++            }
++            else if ((0, is_url_superb_1.default)(file)) {
++                return yield this.sendFileFromUrl(to, file, filename, caption, quotedMsgId, {}, waitForId, ptt, withoutPreview, hideTags, viewOnce);
++            }
++            else
++                throw new errors_1.CustomError(errors_1.ERROR_NAME.FILE_NOT_FOUND, `Cannot find file. Make sure the file reference is relative, a valid URL or a valid DataURL: ${file.slice(0, 25)}`);
++        }
++        else if (file.includes("data:") && file.includes("undefined") || file.includes("application/octet-stream") && filename && mime_types_1.default.lookup(filename)) {
++            file = `data:${mime_types_1.default.lookup(filename)};base64,${file.split(',')[1]}`;
++        }
++        const err = [
++            'Not able to send message to broadcast',
++            'Not a contact',
++            'Error: Number not linked to WhatsApp Account',
++            'ERROR: Please make sure you have at least one chat'
++        ];
++        const res = yield this.pup(({ to, file, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce }) => WAPI.sendImage(file, to, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce), { to, file, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce });
++        if (err.includes(res))
++            console.error(res);
++        return (err.includes(res) ? false : res);
++    });
++}
+     /**
+      * Automatically sends a youtube link with the auto generated link preview. You can also add a custom message.
+      * @param chatId
+@@ -1942,7 +1931,8 @@ class Client {
+      */
+     sendFileFromUrl(to, url, filename, caption, quotedMsgId, requestConfig = {}, waitForId, ptt, withoutPreview, hideTags, viewOnce) {
+         return __awaiter(this, void 0, void 0, function* () {
+-            return yield this.sendFile(to, url, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce, requestConfig);
++            const base64 = yield (0, tools_1.getDUrl)(url, requestConfig);
++            return yield this.sendFile(to, base64, filename, caption, quotedMsgId, waitForId, ptt, withoutPreview, hideTags, viewOnce);
+         });
+     }
+     /**

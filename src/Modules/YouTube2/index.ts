@@ -301,11 +301,11 @@ class Youtube extends Module {
 		if (this.videos.length > 5) this.videos.pop();
 	}
 
-	async help() {
+	async help(_: Args, requester: Message) {
 		const helpText = await fs.readFile('src/Modules/Youtube/Help.txt', {
 			encoding: 'utf-8',
 		});
-		this.zaplify?.replyAuthor(helpText);
+		this.zaplify?.replyAuthor(helpText, requester);
 	}
 }
 
