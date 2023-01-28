@@ -8,7 +8,7 @@
 		"start:prod": "node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/index.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "ts-node-dev --exit-child -r tsconfig-paths/register index.ts",
-		"lines": "lineCounter count --path=\"src\"",
+		"lines": "linecounter count --path=\"src\"",
 		"postinstall": "patch-package"
 	},
 	"module": "index.ts",
@@ -59,6 +59,7 @@
 		"@types/express": "^4.17.13",
 		"@types/google-images": "^2.1.1",
 		"@types/he": "^1.1.2",
+		"linecounter": "^3.3.1",
 		"ts-node": "^10.3.0",
 		"ts-node-dev": "latest",
 		"tsconfig-paths": "^3.11.0",

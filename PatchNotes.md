@@ -3,24 +3,20 @@
 # [03/12/2022]
 
 - Criado módulo Bored:
-  <br>
   Receba sugestões do que fazer quando estiver entediado!
 
-**Para ver os patches anteriores, clique aqui: https://github.com/TramontaG/Gramonta-Bot/blob/main/PatchNotes.md**
-
-> ---
-
-> @old
+  <br>
+  <br>
 
 # [01/12/2022]
 
 Criado módulo da ofensa!
 
 - Marque alguém para o bot ofender. Os xingamentos vem da API `http://xinga-me.appspot.com/api`
-  <br>
 - Exemplo de uso: `!offend @pessoa`
 
 <br>
+  <br>
 
 # [28/11/2022]
 
@@ -28,7 +24,7 @@ Criado módulo da ofensa!
   Por enquanto so possui o método ban
 - Exemplo de uso: `!admin ban @pessoa`
   <br>
-  `____________________`
+  <br>
 
 # [27/11/2022]
 
@@ -39,5 +35,13 @@ Criado módulo da ofensa!
   Ele conta com uma injeção de valores por meio de template strings semelhantes à das linguagens de programação
 
     <br>
+
+  **Para ver os patches anteriores, clique aqui: https://github.com/TramontaG/Gramonta-Bot/blob/main/PatchNotes.md**
+
+> ---
+
+> @old
+
+- this should not appear
 
 > ---
