@@ -5,80 +5,57 @@ import Logger from '../Logger/Logger';
 import { EntityTypes } from '../../BigData/JsonDB';
 import { Message } from '@open-wa/wa-automate';
 import { normalizeString } from 'src/Helpers/TextFormatter';
+import Horoscope from './API';
 
 class Horoscopo extends Module {
 	logger: Logger;
+	Api: Horoscope;
+
 	constructor() {
 		super();
 		this.logger = new Logger();
+		this.Api = new Horoscope();
 
-		this.registerPublicMethod({
-			name: 'default',
-			method: (args, message) => this.default(args, message),
-		});
+		this.makePublic('default', this.default);
+		this.makePublic('help', this.help);
+
+		this.messagesPath = './src/Modules/Horoscopo/messages.zap.md';
 	}
 
 	async default(args: Args, requester: Message) {
 		const signo = normalizeString(args.method);
 
 		try {
-			if (!requester.id.startsWith('Debug')) {
-				this.logger.insertNew(EntityTypes.HOROSCOPE, {
-					groupName: requester.isGroupMsg ? requester.chat.name : '_',
-					chatId: requester.chatId,
-					requester: requester.sender.formattedName,
-					sign: signo,
-					date: new Date().getTime(),
-				});
+			const horoscope = await this.Api.getDaily(signo);
+
+			if (!horoscope) {
+				return this.sendMessageFromTemplate('NotFound', requester);
 			}
 
-			const resp = await axios.get(`https://horoscopefree.herokuapp.com/daily/pt/`);
+			this.log(requester, horoscope);
 
-			switch (signo) {
-				case 'aries':
-					return this.zaplify?.replyAuthor(`${resp.data.aries}`, requester);
-				case 'touro':
-					return this.zaplify?.replyAuthor(`${resp.data.taurus}`, requester);
-				case 'gemeos':
-					return this.zaplify?.replyAuthor(`${resp.data.gemini}`, requester);
-				case 'cancer':
-				case 'câncer':
-					return this.zaplify?.replyAuthor(`${resp.data.cancer}`, requester);
-				case 'leao':
-					return this.zaplify?.replyAuthor(`${resp.data.leo}`, requester);
-				case 'escorpiao':
-					return this.zaplify?.replyAuthor(`${resp.data.scorpio}`, requester);
-				case 'libra':
-					return this.zaplify?.replyAuthor(`${resp.data.libra}`, requester);
-				case 'sagitario':
-					return this.zaplify?.replyAuthor(`${resp.data.sagittarius}`, requester);
-				case 'capricornio':
-					return this.zaplify?.replyAuthor(`${resp.data.capricorn}`, requester);
-				case 'aquario':
-					return this.zaplify?.replyAuthor(`${resp.data.aquarius}`, requester);
-				case 'peixes':
-					return this.zaplify?.replyAuthor(`${resp.data.pisces}`, requester);
-				case 'virgem':
-					return this.zaplify?.replyAuthor(`${resp.data.virgo}`, requester);
-				default:
-					return this.sendInstructions(requester);
-			}
+			return this.sendMessageFromTemplate('Horoscope', requester, {
+				horoscope,
+			});
 		} catch (e) {
-			this.zaplify?.replyAuthor(
-				'Erro ao pesquisar seu horóscopo, tente novamente mais tarde',
-				requester
-			);
+			return this.sendMessageFromTemplate('Error', requester, {
+				error: e,
+			});
 		}
 	}
 
-	async sendInstructions(requester: Message) {
-		return fs
-			.readFile('src/Modules/Horoscopo/Help.txt', {
-				encoding: 'utf-8',
-			})
-			.then(helpText => {
-				this.zaplify?.replyAuthor(helpText, requester);
-			});
+	private log(requester: Message, signo: string) {
+		this.logger.insertNew(EntityTypes.HOROSCOPE, {
+			groupName: requester.isGroupMsg ? requester.chat.name : '_',
+			chatId: requester.chatId,
+			requester: requester.sender.formattedName,
+			sign: signo,
+			date: new Date().getTime(),
+		});
+	}
+
+	async help(_: Args, requester: Message) {
+		return this.sendMessageFromTemplate('Help', requester);
 	}
 }
 
