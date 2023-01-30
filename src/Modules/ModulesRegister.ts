@@ -25,12 +25,11 @@ type ModuleAddresser = {
 export class Module {
 	publicMethods: PublicMethod[];
 	zaplify!: Zaplify;
-	requester: Message | MockedMessageObject | undefined;
+	requester!: Message;
 	protected messagesPath: string;
 
 	constructor() {
 		this.publicMethods = [];
-		this.requester = undefined;
 		this.messagesPath = '';
 	}
 
@@ -44,6 +43,16 @@ export class Module {
 		return this.getMessages(this.messagesPath).then(messages =>
 			helpers.getMessage(messageName, messages, templateData)
 		);
+	}
+
+	sendMessageFromTemplate(
+		messageName: string,
+		requester: Message,
+		templateData?: helpers.TemplateData
+	) {
+		return this.getMessage(messageName, templateData)
+			.then(msg => this.zaplify.replyAuthor(msg, requester))
+			.catch(err => console.warn(err));
 	}
 
 	callMethod(methodName: string, args: Args, requester: Message): Promise<any> {
@@ -105,8 +114,6 @@ class ModulesWrapper {
 			module.module.zaplify = zaplify;
 		});
 	}
-
-	registerMockedZaplify(zaplify: ZaplifyMock) {}
 }
 
 export default ModulesWrapper;

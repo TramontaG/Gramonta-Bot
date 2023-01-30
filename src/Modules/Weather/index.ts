@@ -1,5 +1,4 @@
 import { Args, Module } from '../ModulesRegister';
-import fs from 'fs/promises';
 import { Message } from '@open-wa/wa-automate';
 import WeatherAPI from './WeatherAPI';
 import * as F from 'src/Helpers/TextFormatter';
@@ -16,76 +15,57 @@ class Weather extends Module {
 		this.weatherAPI = new WeatherAPI();
 		this.Logger = new Logger();
 
-		this.registerPublicMethod({
-			name: 'help',
-			method: this.sendHelp.bind(this),
-		});
-
-		this.registerPublicMethod({
-			name: 'default',
-			method: this.fromCity.bind(this),
-		});
+		this.makePublic('help', this.sendHelp);
+		this.makePublic('default', this.fromCity);
+		this.messagesPath = './src/Modules/Weather/messages.zap.md';
 	}
 
 	async fromCity(args: Args, requester: Message) {
-		const city = args.immediate?.trim() || args.method;
-		if (!city)
-			return this.zaplify?.replyAuthor('Por favor, insira uma cidade', requester);
+		const location = `${args.method} ${args.immediate}`.replace(/^city/, '');
+
+		if (!location) return this.sendMessageFromTemplate('EmptyQuery', requester);
 
 		try {
-			const weather = await this.weatherAPI.getWeatherFromCity(city);
+			const weather = await this.weatherAPI.getWeatherFromCity(location);
 			if (weather.cod == 404)
-				return this.zaplify?.replyAuthor(
-					`Ih, deu ruim. Não encontrei essa cidade, erro ${weather.cod}`,
-					requester
-				);
+				return this.sendMessageFromTemplate('NotFound', requester);
 			if (weather.cod != 200)
-				return this.zaplify?.replyAuthor(
-					`Ih, deu ruim. Request voltou com status ${weather.cod}`,
-					requester
-				);
-
-			if (!requester.id.startsWith('Debug')) {
-				this.Logger.insertNew(EntityTypes.WEATHER, {
-					query: city,
-					groupName: requester.isGroupMsg ? requester.chat.name : '_',
-					chatId: requester.chat.id,
-					requester: requester.sender.formattedName,
-					date: new Date().getTime(),
+				return this.sendMessageFromTemplate('Error', requester, {
+					error:
+						'Não consegui efetuar a consulta do clima. Tente novamente mais tarde. ReqStatus:' +
+						weather.cod,
 				});
-			}
 
-			const message = [
-				`${F.italic(F.bold(`Clima atual de ${weather.name}`))}`,
-				'',
-				`${F.monospace('Clima:')} ${F.bold(weather.weather[0].description)}`,
-				`${F.monospace('Temperatura Atual:')} ${F.bold(
-					weather.main.temp.toString().replace('.', ',') + 'ºC'
-				)}`,
-				`${F.monospace('Min:')} ${F.bold(
-					weather.main.temp_min.toString().replace('.', ',') + 'ºC'
-				)}, ${F.monospace('Max:')} ${F.bold(
-					weather.main.temp_max.toString().replace('.', ',') + 'ºC'
-				)}`,
-				`${F.monospace('Sensação Térmica:')} ${F.bold(
-					weather.main.feels_like.toString().replace('.', ',') + 'ºC'
-				)}`,
-				`${F.monospace('Umidade:')} ${F.bold(
-					weather.main.humidity.toString().replace('.', ',') + '%'
-				)}`,
-			].join('\n');
-			this.zaplify?.replyAuthor(message, requester);
+			this.logWeather(location, requester);
+
+			return this.sendMessageFromTemplate('Weather', requester, {
+				location,
+				description: weather.weather[0].description,
+				temperature: weather.main.temp.toString().replace('.', ',') + 'ºC',
+				minimum: weather.main.temp_min.toString().replace('.', ',') + 'ºC',
+				maximum: weather.main.temp_max.toString().replace('.', ',') + 'ºC',
+				feelsLike: weather.main.feels_like.toString().replace('.', ',') + 'ºC',
+				humidity: weather.main.humidity.toString().replace('.', ',') + '%',
+			});
 		} catch (e) {
-			this.zaplify?.replyAuthor('Erro desconhcido: ' + e, requester);
+			return this.sendMessageFromTemplate('Error', requester, {
+				error: e,
+			});
 		}
 	}
 
-	async sendHelp() {
-		const requester = this.zaplify?.messageObject;
-		const helpText = await fs.readFile('src/Modules/Weather/Help.txt', {
-			encoding: 'utf-8',
+	async sendHelp(_: Args, requester: Message) {
+		return this.sendMessageFromTemplate('Help', requester);
+	}
+
+	async logWeather(location: string, requester: Message) {
+		return this.Logger.insertNew(EntityTypes.WEATHER, {
+			query: location,
+			groupName: requester.isGroupMsg ? requester.chat.name : '_',
+			chatId: requester.chat.id,
+			requester: requester.sender.formattedName,
+			date: new Date().getTime(),
 		});
-		this.zaplify?.replyAuthor(helpText, requester as Message);
 	}
 }
 

@@ -1,5 +1,20 @@
 > @latest
 
+# [29/01/2023]
+
+- Corrigido bug do módulo Weather!
+  Antes, o módulo precisava inserir a palavra `"city"` para a consulta do clima da cidade
+  <br>
+  Exemplo:`!weather city rio de janeiro`
+  <br>
+  Quando eu removi a necessidade do "city", ele estava com um bug. Caso a cidade tivesse mais de uma palavra no nome, era necessário incluir city para a pesquisa ser feita
+  <br>
+- ✅`!weather curitiba       |` pesquisava por "curitiba"
+- ❌`!weather rio de janeiro |` pesquisava por "de janeiro"
+  <br>
+  Esse bug foi corrigido.
+  <br><br>
+
 # [03/12/2022]
 
 - Criado módulo Bored:
