@@ -1,5 +1,17 @@
 > @latest
 
+# [30/01/2023]
+
+- Refeito módulo do horóscopo!
+  Agora o módulo de horóscopo pode ser usado novamente.
+  Basta digitar `!horoscopo` _seu signo_
+  <br>
+
+- Corrigido bug do parser de comandos que evitava que a primeira palavra possuisse acentuação
+  O parser dava problema quando o usuário digitava algo como...
+  `!weather são paulo`
+  <br>
+
 # [29/01/2023]
 
 - Corrigido bug do módulo Weather!
@@ -14,6 +26,10 @@
   <br>
   Esse bug foi corrigido.
   <br><br>
+
+> ---
+
+> @old
 
 # [03/12/2022]
 
@@ -52,10 +68,6 @@ Criado módulo da ofensa!
     <br>
 
   **Para ver os patches anteriores, clique aqui: https://github.com/TramontaG/Gramonta-Bot/blob/main/PatchNotes.md**
-
-> ---
-
-> @old
 
 - this should not appear
 
