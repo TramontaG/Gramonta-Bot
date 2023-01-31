@@ -41,7 +41,7 @@ class Sticker extends Module {
 				return await this.sendAnimatedSticker(media, requester);
 			}
 		} catch (e) {
-			this.getMessage('error', { errorMessage: e }).then(msg =>
+			return this.getMessage('error', { errorMessage: e }).then(msg =>
 				this.sendMessage(msg, requester)
 			);
 		}

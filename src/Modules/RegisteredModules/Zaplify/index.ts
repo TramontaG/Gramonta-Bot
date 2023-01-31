@@ -33,6 +33,7 @@ import Offend from 'src/Modules/Offend';
 import Bored from 'src/Modules/Bored';
 import Reset from 'src/Modules/Reset';
 import Ban from 'src/Modules/Ban';
+import Reveal from 'src/Modules/Reveal';
 
 const help = new Help();
 const sticker = new Sticker();
@@ -80,4 +81,5 @@ modulesWrapper.registerModule('offend', new Offend());
 modulesWrapper.registerModule('bored', new Bored());
 modulesWrapper.registerModule('reset', new Reset());
 modulesWrapper.registerModule('ban', new Ban());
+modulesWrapper.registerModule('reveal', new Reveal());
 export default modulesWrapper;

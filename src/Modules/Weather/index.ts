@@ -21,7 +21,7 @@ class Weather extends Module {
 	}
 
 	async fromCity(args: Args, requester: Message) {
-		const location = `${args.method} ${args.immediate}`.replace(/^city/, '');
+		const location = `${args.method} ${args.immediate || ''}`.replace(/^city/, '');
 
 		if (!location) return this.sendMessageFromTemplate('EmptyQuery', requester);
 

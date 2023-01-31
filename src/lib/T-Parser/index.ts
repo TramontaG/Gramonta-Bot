@@ -25,19 +25,9 @@ const objToString = (obj: ArgObj) => {
 		.join(' ');
 };
 
-const deepLog = (obj: any) => {
-	console.log(
-		util.inspect(obj, {
-			colors: true,
-			depth: null,
-			showHidden: true,
-		})
-	);
-};
-
 const command = M.transform(
-	C.sequenceOf([T.str('!'), T.regexMatch(/^((?! ).)+/)]),
-	({ result }) => result[1]
+	C.sequenceOf([T.str('!'), M.maybe(T.whiteSpace), T.regexMatch(/^((?! ).)+/)]),
+	({ result }) => result[2]
 );
 
 const method = M.transform(

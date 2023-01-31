@@ -25,13 +25,14 @@ Erro desconhecido: {{error}}
 > @Weather
 
 Clima atual de {{location}}
-
+`------------------------------`
 `Tempo:             | `{{description}}
 `Temperatura atual: | `{{temperature}}
 `Min:               | `{{minimum}}
 `Max:               | `{{maximum}}
 `Sensação termica:  | `{{feelsLike}}
 `Umidade:           | `{{humidity}}
+`------------------------------`
 
 > ---
 
@@ -39,6 +40,10 @@ Clima atual de {{location}}
 
 Digite `!weather` seguido do nome do local para consutar o tempo!
 <br>
-Exemplo: - `!weather rio de janeiro` - `!weather curitiba` - `!weather alabama`
+Exemplo:
+
+- `!weather rio de janeiro`
+- `!weather curitiba`
+- `!weather alabama`
 
 > ---

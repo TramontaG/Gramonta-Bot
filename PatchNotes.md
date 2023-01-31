@@ -1,5 +1,26 @@
 > @latest
 
+# [31/01/2023]
+
+- _Criado módulo `!reveal`_
+  Responda uma mensagem de visualização única que o bot vai capturar a mídia e reenviar para ti de modo que você veja quantas vezes quiser.
+  <br>
+- _Alterações no parser de comandos:_
+  Agora você pode enviar comandos com um espaço depois da `!`. Isso porque vários corretores de celular inserem um espaço automaticamente caso você toque na sugestão.
+- `ANTES: ! horoscopo peixes ` ❌ Comando inválido
+- `AGORA: ! horoscopo peixes ` ✅ Comando válido
+  <br>
+- _Consertada mensagem de ajuda do módulo `!weather`_
+- ❌ `ANTES: ` "Exemplo: - !weather rio de janeiro - !weather curitiba - !weather alabama"
+  <br>
+- ✅ `AGORA: ` "Exemplo:
+- !weather rio de janeiro
+- !weather curitiba
+- !weather alabama"
+
+<br>
+<br>
+
 # [30/01/2023]
 
 - Refeito módulo do horóscopo!

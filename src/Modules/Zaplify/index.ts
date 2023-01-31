@@ -9,7 +9,7 @@ import {
 import fs from 'fs/promises';
 import { getFormattedDate } from 'src/Helpers/Date';
 
-type Mimetype = 'video/mp4' | 'image/gif' | 'image' | 'video' | 'video/mpeg';
+export type Mimetype = 'video/mp4' | 'image/gif' | 'image' | 'video' | 'video/mpeg';
 
 type Button = {
 	id: string;
@@ -210,7 +210,7 @@ class Zaplify {
 	) {
 		try {
 			const base64 = this.getBase64fromBuffer(buffer, mimeType);
-			return this.client.sendFile(requester.from, base64, 'file', caption);
+			return this.client.sendFile(requester.chatId, base64, 'file', caption);
 		} catch (e) {
 			this.replyAuthor(JSON.stringify(e), requester);
 		}
