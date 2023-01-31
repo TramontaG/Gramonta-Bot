@@ -6,13 +6,11 @@ class Help extends Module {
 	constructor() {
 		super();
 		this.makePublic('default', this.sendHelp);
+		this.messagesPath = './src/Modules/Help/messages.zap.md';
 	}
 
 	async sendHelp(_: Args, requester: Message) {
-		const helpText = await fs.readFile('src/Modules/Help/Help.txt', {
-			encoding: 'utf-8',
-		});
-		this.zaplify?.replyAuthor(helpText, requester);
+		return this.sendMessageFromTemplate('Help', requester);
 	}
 }
 
