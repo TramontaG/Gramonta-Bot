@@ -2,40 +2,43 @@
 
 # [31/01/2023]
 
-- _Criado módulo `!reveal`_
+- _*Criado módulo `!reveal`:*_
   Responda uma mensagem de visualização única que o bot vai capturar a mídia e reenviar para ti de modo que você veja quantas vezes quiser.
   <br>
-- _Alterações no parser de comandos:_
+- _*Alterações no parser de comandos:*_
   Agora você pode enviar comandos com um espaço depois da `!`. Isso porque vários corretores de celular inserem um espaço automaticamente caso você toque na sugestão.
 - `ANTES: ! horoscopo peixes ` ❌ Comando inválido
 - `AGORA: ! horoscopo peixes ` ✅ Comando válido
   <br>
-- _Consertada mensagem de ajuda do módulo `!weather`_
+- _*Consertada mensagem de ajuda do módulo `!weather`:*_
 - ❌ `ANTES: ` "Exemplo: - !weather rio de janeiro - !weather curitiba - !weather alabama"
   <br>
 - ✅ `AGORA: ` "Exemplo:
 - !weather rio de janeiro
 - !weather curitiba
 - !weather alabama"
+  <br>
+- _*Melhorada a seção de ajuda*:_
+  Agora a parte do `!help` foi modernizada para enviar mensagens a partir de um arquivo .zap.md em vez de usar um .txt. Além disso, o texto da seção de help foi atualizado!
 
 <br>
 <br>
 
 # [30/01/2023]
 
-- Refeito módulo do horóscopo!
+- _*Refeito módulo do horóscop:*_
   Agora o módulo de horóscopo pode ser usado novamente.
   Basta digitar `!horoscopo` _seu signo_
   <br>
 
-- Corrigido bug do parser de comandos que evitava que a primeira palavra possuisse acentuação
+- _*Corrigido bug do parser de comandos que evitava que a primeira palavra possuisse acentuação:*_
   O parser dava problema quando o usuário digitava algo como...
   `!weather são paulo`
   <br>
 
 # [29/01/2023]
 
-- Corrigido bug do módulo Weather!
+- _*Corrigido bug do módulo Weather*_!
   Antes, o módulo precisava inserir a palavra `"city"` para a consulta do clima da cidade
   <br>
   Exemplo:`!weather city rio de janeiro`
