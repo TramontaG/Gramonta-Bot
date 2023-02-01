@@ -1,5 +1,4 @@
 import { Args, Module } from '../ModulesRegister';
-import fs from 'fs/promises';
 import { Message } from '@open-wa/wa-automate';
 
 class Help extends Module {

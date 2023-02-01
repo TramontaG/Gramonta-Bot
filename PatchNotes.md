@@ -1,5 +1,10 @@
 > @latest
 
+# [01/02/2023]
+
+- _*Criado módulo `!delete`:*_
+  Responda qualquer mensagem que o bot enviou com `!delete` para que o bot a delete. Muito útil para quem faz figurinhas com conteúdo sensível ou com a sua foto sem autorização.
+
 # [31/01/2023]
 
 - _*Criado módulo `!reveal`:*_

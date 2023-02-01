@@ -34,6 +34,7 @@ import Bored from 'src/Modules/Bored';
 import Reset from 'src/Modules/Reset';
 import Ban from 'src/Modules/Ban';
 import Reveal from 'src/Modules/Reveal';
+import Delete from 'src/Modules/Delete';
 
 const help = new Help();
 const sticker = new Sticker();
@@ -82,4 +83,6 @@ modulesWrapper.registerModule('bored', new Bored());
 modulesWrapper.registerModule('reset', new Reset());
 modulesWrapper.registerModule('ban', new Ban());
 modulesWrapper.registerModule('reveal', new Reveal());
+modulesWrapper.registerModule('delete', new Delete());
+
 export default modulesWrapper;

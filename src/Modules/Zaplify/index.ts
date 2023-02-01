@@ -308,6 +308,10 @@ class Zaplify {
 			participantId
 		);
 	}
+
+	async deleteMessage(message: Message) {
+		return this.client.deleteMessage(message.chatId, message.id);
+	}
 }
 
 export default Zaplify;
