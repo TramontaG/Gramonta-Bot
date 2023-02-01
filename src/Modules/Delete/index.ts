@@ -6,6 +6,8 @@ class Delete extends Module {
 		super();
 
 		this.makePublic('default', this.default);
+		this.makePublic('help', this.help);
+
 		this.messagesPath = './src/Modules/Delete/messages.zap.md';
 	}
 
