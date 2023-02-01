@@ -3,6 +3,7 @@ import {
 	ContactId,
 	decryptMedia,
 	Message,
+	MessageId,
 	MessageTypes,
 	useragent,
 } from '@open-wa/wa-automate';
@@ -313,6 +314,10 @@ class Zaplify {
 
 	async deleteMessage(message: Message) {
 		return this.client.deleteMessage(message.chatId, message.id);
+	}
+
+	async fetchMessageDetails(messageId: MessageId) {
+		return this.client.getMessageById(messageId);
 	}
 }
 

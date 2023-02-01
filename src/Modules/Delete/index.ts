@@ -30,10 +30,11 @@ class Delete extends Module {
 		}
 	}
 
-	isResponseForCommand(quoteMap: QuoteMap, firstMessageId: MessageId) {
+	async isResponseForCommand(quoteMap: QuoteMap, firstMessageId: MessageId) {
 		let currMessage = quoteMap[firstMessageId];
 		while (currMessage.quotes) {
-			currMessage = quoteMap[currMessage.quotes];
+			console.log(currMessage);
+			currMessage = await this.zaplify.fetchMessageDetails(currMessage.quotes);
 
 			if (currMessage.body.startsWith('!')) {
 				return true;
