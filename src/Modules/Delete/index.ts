@@ -30,17 +30,11 @@ class Delete extends Module {
 		}
 	}
 
-	async isResponseForCommand(quoteMap: QuoteMap, firstMessageId: MessageId) {
-		let currMessage = quoteMap[firstMessageId];
-		while (currMessage.quotes) {
-			console.log(currMessage);
-			currMessage = await this.zaplify.fetchMessageDetails(currMessage.quotes);
-
-			if (currMessage.body.startsWith('!')) {
-				return true;
-			}
-		}
-		return false;
+	isResponseForCommand(quoteMap: QuoteMap, firstMessageId: MessageId) {
+		const maybeResponseForCommand = quoteMap[quoteMap[firstMessageId].quotes!];
+		if (!maybeResponseForCommand.quotes) return false;
+		const maybeCommand = quoteMap[maybeResponseForCommand.quotes];
+		return maybeCommand.body.startsWith('!');
 	}
 
 	help(_: Args, requester: Message) {
