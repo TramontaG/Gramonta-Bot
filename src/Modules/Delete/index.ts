@@ -31,10 +31,11 @@ class Delete extends Module {
 	isResponseForCommand(quoteMap: QuoteMap, firstMessageId: MessageId) {
 		let currMessage = quoteMap[firstMessageId];
 		while (currMessage.quotes) {
+			currMessage = quoteMap[currMessage.quotes];
+
 			if (currMessage.body.startsWith('!')) {
 				return true;
 			}
-			currMessage = quoteMap[currMessage.quotes];
 		}
 		return false;
 	}

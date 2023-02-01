@@ -5,6 +5,9 @@
 - _*Criado módulo `!delete`:*_
   Responda qualquer mensagem que o bot enviou com `!delete` para que o bot a delete. Muito útil para quem faz figurinhas com conteúdo sensível ou com a sua foto sem autorização.
 
+- _*Figurinhas vem como resposta*_
+  As figurinhas agora são enviadar respondendo a mensagem que solicitou o comando, não mais são largadas no chat. Isso é necessário para eu saber que a figurinha foi feita a partir de um comando e o bot poder apagá-la caso seja solicitado pelo módulo `!delete`
+
 # [31/01/2023]
 
 - _*Criado módulo `!reveal`:*_

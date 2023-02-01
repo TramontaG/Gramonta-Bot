@@ -126,9 +126,10 @@ class Zaplify {
 		} else {
 			imgBuffer = imgBufferOrAddress;
 		}
-		return this.client.sendImageAsSticker(
+		return this.client.sendImageAsStickerAsReply(
 			requester?.chatId || this.messageObject.chatId,
 			imgBuffer,
+			requester?.id || this.messageObject.id,
 			{
 				author: 'Gramonta-bot \n+5511947952409',
 				pack: `Criado em ${getFormattedDate()} \npor ${requester?.notifyName}`,
@@ -152,7 +153,8 @@ class Zaplify {
 				author: 'Gramonta-bot -+5511947952409',
 				pack: `Criado em ${getFormattedDate()} por ${requester?.notifyName}`,
 				keepScale: true,
-			}
+			},
+			requester?.id
 		);
 	}
 
