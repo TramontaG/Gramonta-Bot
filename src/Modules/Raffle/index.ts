@@ -123,8 +123,6 @@ class Raffle extends Module {
 				sendError: () => this.sendError(replies.noCommand(), requester),
 			};
 
-			console.log('COMMAND', commandMap[command]);
-
 			if (commandMap[command]) return commandMap[command]();
 			return commandMap.sendError();
 		}).bind(this);

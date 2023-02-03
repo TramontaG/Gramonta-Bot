@@ -7,10 +7,19 @@ import {
 	MessageTypes,
 	useragent,
 } from '@open-wa/wa-automate';
+import { AdvancedButton } from '@open-wa/wa-automate/dist/api/model/button';
 import fs from 'fs/promises';
+import { sliceButtons } from 'src/Helpers/Buttons';
 import { getFormattedDate } from 'src/Helpers/Date';
+import ffmpeg from 'fluent-ffmpeg';
 
-export type Mimetype = 'video/mp4' | 'image/gif' | 'image' | 'video' | 'video/mpeg';
+export type Mimetype =
+	| 'video/mp4'
+	| 'image/gif'
+	| 'image'
+	| 'video'
+	| 'video/mpeg'
+	| 'audio/webm';
 
 type Button = {
 	id: string;
@@ -58,20 +67,48 @@ class Zaplify {
 		);
 	}
 
-	sendButtons(
+	async sendButtons(
 		caption: string,
 		buttons: Button[],
-		requester?: Message,
-		title?: string
+		requester: Message,
+		title?: string,
+		footer?: string
 	) {
 		if (!this.messageObject) throw 'No message object initialized';
-		return this.client.sendButtons(
-			requester?.chatId || this.messageObject.chatId,
-			caption,
-			buttons,
-			title || '',
-			''
-		);
+		const buttonsInChunks = sliceButtons(buttons);
+
+		if (title) await this.replyAuthor(title, requester);
+
+		if (buttonsInChunks.length > 1) await this.replyAuthor(caption, requester);
+
+		let index = 1;
+		for await (const btn of buttonsInChunks) {
+			await this.client.sendButtons(
+				requester.chatId,
+				buttonsInChunks.length > 1
+					? `${index} de ${buttonsInChunks.length}`
+					: caption,
+				btn
+			);
+			index++;
+		}
+
+		if (footer) await this.replyAuthor(footer, requester);
+	}
+
+	sendAdvancedButtons(
+		caption: string,
+		buttons: AdvancedButton[],
+		requester: Message,
+		title: string,
+		footer: string
+	) {
+		if (!this.messageObject) throw 'No message object initialized';
+		const buttonsInChunks = sliceButtons(buttons);
+		buttonsInChunks.forEach(btn => {
+			// @ts-ignore
+			this.client.sendAdvancedButtons(requester.chatId, caption, btn, title, footer);
+		});
 	}
 
 	async sendFile(fileAddress: string, caption: string, quotedMessage?: Message) {
@@ -86,13 +123,20 @@ class Zaplify {
 		return fileHasBeenSent;
 	}
 
-	async sendSong(fileAddress: string, caption: string, quotedMessage?: Message) {
+	async sendSong(fileAddress: string, requester: Message) {
 		if (!this.messageObject) throw 'No message object initialized';
-		const fileHasBeenSent = await this.client.sendAudio(
-			quotedMessage?.chatId || this.messageObject.chatId,
-			fileAddress
-		);
-		return fileHasBeenSent;
+		const outFile = './media/ytDownload/song.mp3';
+		ffmpeg(fileAddress)
+			.output(outFile)
+			.saveToFile(outFile)
+
+			.on('end', () => {
+				this.client.sendAudio(requester.chatId, outFile, requester.id);
+			})
+
+			.on('start', () => {
+				this.replyAuthor('Sua música será enviada em instantes', requester);
+			});
 	}
 
 	async getMediaBuffer(mediaAddress: string) {
@@ -196,7 +240,6 @@ class Zaplify {
 	}
 
 	async sendImageFromUrl(url: string, caption: string, requester: Message) {
-		console.log(url);
 		try {
 			this.client.sendFile(requester.chatId, url, 'file', caption);
 			return;

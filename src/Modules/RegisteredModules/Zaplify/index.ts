@@ -2,10 +2,8 @@ import ModulesWrapper from '../../ModulesRegister';
 import Help from '../../Help';
 import About from '../../About';
 import SingleCommandModule from '../../SingleCommandModule';
-
 import Sticker from '../../Sticker';
-import Youtube from '../../Youtube';
-import Youtube2 from '../../YouTube2';
+import YouTube from '../../YouTube';
 import Horoscopo from '../../Horoscopo';
 import Google from '../../Google';
 import Transcribe from '../../Transcribe';
@@ -22,10 +20,8 @@ import Translate from 'src/Modules/Translate';
 import Ping from '../../Ping';
 import Dictionary from '../../Dictionary';
 import OpenAI from 'src/Modules/OpenAi';
-import Downloader from 'src/Modules/Downloader';
 import PatchNotes from 'src/Modules/PatchNotes';
 
-const modulesWrapper = new ModulesWrapper();
 import { kudurolify } from '../../TextTransform/Transformations';
 import MensagensModule from 'src/Modules/BomDia';
 import Admin from 'src/Modules/Admin';
@@ -36,14 +32,15 @@ import Ban from 'src/Modules/Ban';
 import Reveal from 'src/Modules/Reveal';
 import Delete from 'src/Modules/Delete';
 
+const modulesWrapper = new ModulesWrapper();
 const help = new Help();
 const sticker = new Sticker();
-const youtube = new Youtube();
 const horoscope = new Horoscopo();
 const google = new Google();
 const replySpeak = new SingleCommandModule(google.replySpeak, google);
 const raffle = new Raffle();
 const dictionary = new Dictionary();
+const youtube = new YouTube();
 
 modulesWrapper.registerModule('help', help);
 modulesWrapper.registerModule('menu', help);
@@ -57,7 +54,6 @@ modulesWrapper.registerModule('horoscopo', horoscope);
 modulesWrapper.registerModule('horóscopo', horoscope);
 modulesWrapper.registerModule('google', google);
 modulesWrapper.registerModule('speak', replySpeak);
-// modulesWrapper.registerModule('yt2', Youtube2);
 modulesWrapper.registerModule('transcribe', new Transcribe());
 modulesWrapper.registerModule('lyrics', new LyricsFinder());
 modulesWrapper.registerModule('copypasta', new CopypastaManager());

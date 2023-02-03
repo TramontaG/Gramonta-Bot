@@ -13,7 +13,6 @@ class Transcriber {
 
 	async transcribe(audioPath: string) {
 		const audioContent = fs.readFileSync(audioPath).toString('base64');
-		console.log(audioContent);
 
 		const request = this.client.recognize({
 			audio: {

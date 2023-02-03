@@ -56,7 +56,6 @@ class Google extends Module {
 				lang: lang || 'pt_BR',
 			});
 
-			console.log(audioUrl);
 			// return;
 
 			// return this.zaplify?.replyAuthor(
@@ -140,24 +139,26 @@ class Google extends Module {
 		}
 	}
 
-	search(args: GoogleArgs, requester: Message) {
-		try {
-			if (!args.immediate)
-				return this.showError('Preciso de algo para pesquisar', requester);
-			this.zaplify?.sendButtons(`Como deseja pesquisar ${args.immediate}?`, [
-				{
-					id: `!google web ${args.immediate}`,
-					text: 'Pesquisa Web',
-				},
-				{
-					id: `!google image ${args.immediate}`,
-					text: 'Imagens',
-				},
-			]);
-		} catch (e) {
-			this.showError(`${e}`, requester);
-		}
-	}
+	// search(args: GoogleArgs, requester: Message) {
+	// 	try {
+	// 		if (!args.immediate)
+	// 			return this.showError('Preciso de algo para pesquisar', requester);
+	// 		this.zaplify?.sendButtons(`Como deseja pesquisar ${args.immediate}?`, [
+	// 			{
+	// 				id: `!google web ${args.immediate}`,
+	// 				text: 'Pesquisa Web',
+	// 			},
+	// 			{
+	// 				id: `!google image ${args.immediate}`,
+	// 				text: 'Imagens',
+	// 			},
+	// 			"",
+	// 			""
+	// 		]);
+	// 	} catch (e) {
+	// 		this.showError(`${e}`, requester);
+	// 	}
+	// }
 
 	async help(_: Args, requester: Message) {
 		fs.readFile('src/Modules/Google/Help.txt', {

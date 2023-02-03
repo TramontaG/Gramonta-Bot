@@ -33,7 +33,6 @@ const url = M.transform(
 	]),
 	({ result }) => {
 		const flattenedString = result.toString().replace(/,/g, '');
-		console.log(flattenedString);
 		return flattenedString;
 	}
 );

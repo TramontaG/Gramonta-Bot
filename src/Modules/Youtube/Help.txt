@@ -1,5 +1,0 @@
-Estou reescrevendo o módulo do youtube.
-
-Ele ficará bem melhor, vou resolver todos os bugs e implementar novas funcionalidades
-
-Obrigado pela paciência!!

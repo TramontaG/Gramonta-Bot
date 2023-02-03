@@ -21,6 +21,12 @@ Responde pong. Util para verificar se o bot está on e tempo de latência
 Acesso ao módulo: _*!ping*_
 <br>
 
+`|----------Youtube----------|`
+_*O MÓDULO DO YOUTUBE VOLTOU*_
+Agora baixa músicas e vídeos também, com resultados paginados e botões!
+Acesso ao módulo: _*!yt*_
+<br>
+
 `|----------Sticker----------|`
 Faz figurinhas a partir de fotos, videos e gifs!
 Acesso ao módulo: _*!s*_ ou _*!sticker*_
@@ -100,5 +106,9 @@ Acesso ao módulo: _*!bored*_
 `|---------Revelação--------|`
 Revela mídias de visualização únioa!
 Acesso ao módulo: _*!reveal*_
+
+`|----------Delete----------|`
+Deleta mensagens que o bot enviou
+Acesso ao módulo: _*!delete*_
 
 > ---

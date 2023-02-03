@@ -67,10 +67,10 @@ export class Module {
 		return choosenMethod.method(args, requester);
 	}
 
-	makePublic(name: string, method: (args: Args, req: Message) => any) {
+	makePublic<T extends Args>(name: string, method: (args: T, req: Message) => any) {
 		this.registerPublicMethod({
 			name,
-			method: (args, req) => method.bind(this)(args, req),
+			method: (args, req) => method.bind(this)(args as T, req),
 		});
 	}
 

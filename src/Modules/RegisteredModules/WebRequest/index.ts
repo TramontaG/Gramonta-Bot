@@ -3,7 +3,7 @@ import Help from '../../Help';
 import About from '../../About';
 
 import Sticker from '../../Sticker';
-import Youtube from '../../Youtube';
+// import Youtube from '../../Youtube';
 import Horoscopo from '../../Horoscopo';
 import Google from '../../Google';
 import Transcribe from '../../Transcribe';
@@ -30,7 +30,7 @@ const modulesWrapper = new ModulesWrapper();
 
 const help = new Help();
 const sticker = new Sticker();
-const youtube = new Youtube();
+// const youtube = new Youtube();
 const horoscope = new Horoscopo();
 const dictionary = new Dictionary();
 
@@ -40,8 +40,8 @@ modulesWrapper.registerModule('about', new About());
 
 modulesWrapper.registerModule('sticker', sticker);
 modulesWrapper.registerModule('s', sticker);
-modulesWrapper.registerModule('yt', youtube);
-modulesWrapper.registerModule('youtube', youtube);
+// modulesWrapper.registerModule('yt', youtube);
+// modulesWrapper.registerModule('youtube', youtube);
 modulesWrapper.registerModule('horoscopo', horoscope);
 modulesWrapper.registerModule('horóscopo', horoscope);
 modulesWrapper.registerModule('google', new Google());

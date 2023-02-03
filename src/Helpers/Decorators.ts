@@ -6,7 +6,6 @@ export function publicMethod(name: string) {
 		key: string,
 		descriptor: PropertyDescriptor
 	) {
-		console.log({ target });
 		target.registerPublicMethod({
 			name,
 			method: (args: Args) => descriptor.value(args),

@@ -27,12 +27,12 @@ const objToString = (obj: ArgObj) => {
 
 const command = M.transform(
 	C.sequenceOf([T.str('!'), M.maybe(T.whiteSpace), T.regexMatch(/^((?! ).)+/)]),
-	({ result }) => result[2]
+	({ result }) => result[2].toLowerCase()
 );
 
 const method = M.transform(
 	C.sequenceOf([T.whiteSpace, T.regexMatch(/^((?! ).)+/)]),
-	({ result }) => result[1]
+	({ result }) => result[1].toLowerCase()
 );
 
 const argName = M.transform(
@@ -43,7 +43,6 @@ const argName = M.transform(
 const argValue = M.transform(
 	C.choice([url, T.regexMatch(/^((?! -).)+/)]),
 	({ result }) => {
-		console.log(result);
 		return result;
 	}
 );

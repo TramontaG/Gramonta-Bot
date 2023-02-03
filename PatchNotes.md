@@ -1,5 +1,12 @@
 > @latest
 
+# [03/02/2023]
+
+- _*REFEITO O MÓDULO DO YOUTUBE!*_
+  Agora o módulo do youtube está na sua versão 2.0.
+  Ele foi refeito do zero para poder conter download mais robusto de mp3 e ainda baixa vídeos!
+  Confira no _*`!yt help`*_
+
 # [01/02/2023]
 
 - _*Criado módulo `!delete`:*_

@@ -25,6 +25,7 @@ const banned = [
 	'5514988079818@c.us',
 	'5521992529593@c.us',
 	'5511981743350@c.us',
+	'558586838742@c.us',
 ];
 
 dotEnv.config({
@@ -37,7 +38,7 @@ const start = async (client: Client) => {
 	ModulesWrapper.Zaplify.registerZaplify(zaplify);
 
 	const handleMsg = async (msg: string, messageObject: Message) => {
-		const parsingResult = parse(msg.toLowerCase() || 'null');
+		const parsingResult = parse(msg || 'null');
 
 		if (!parsingResult.isError) {
 			const { command, method } = parsingResult.result;
@@ -95,6 +96,12 @@ const start = async (client: Client) => {
 		} catch (e) {
 			console.warn(e);
 		}
+	});
+
+	client.onButton(message => {
+		const buttons = message.quotedMsg!.buttons!;
+		const option = buttons.find(btn => btn.text === message.body)!;
+		handleMsg(option.id, message);
 	});
 };
 

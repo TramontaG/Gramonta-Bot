@@ -32,7 +32,6 @@ class MensagensModule extends Module {
 			if (args.immediate === 'text' || args.immediate === 'texto') {
 				const bomDiaTexts = await this.allBomDiaTexts();
 				const randomText = randomItem(bomDiaTexts);
-				console.log('GOT DATA', { randomText });
 				return this.zaplify?.replyAuthor(randomText, requester);
 			}
 

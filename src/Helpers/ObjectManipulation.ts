@@ -21,3 +21,18 @@ export const filterProperty = <T extends string>(
 export const randomItem = <T>(array: T[]) => {
 	return array[Math.round(Math.random() * (array.length - 1))];
 };
+
+export const sliceArrayInChunks =
+	(chunkLength: number) =>
+	<T extends any[]>(arr: T): T[] =>
+		arr.reduce((resultArray, item, index) => {
+			const chunkIndex = Math.floor(index / chunkLength);
+
+			if (!resultArray[chunkIndex]) {
+				resultArray[chunkIndex] = [];
+			}
+
+			resultArray[chunkIndex].push(item);
+
+			return resultArray;
+		}, []);
