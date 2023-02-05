@@ -111,32 +111,33 @@ class Zaplify {
 		});
 	}
 
-	async sendFile(fileAddress: string, caption: string, quotedMessage?: Message) {
-		if (!this.messageObject) throw 'No message object initialized';
+	async sendFile(fileAddress: string, caption: string, quotedMessage: Message) {
 		const fileHasBeenSent = await this.client.sendFile(
-			quotedMessage?.chatId || this.messageObject.chatId,
+			quotedMessage.chatId,
 			fileAddress,
 			'',
 			caption || '',
-			quotedMessage?.id || this.messageObject.id
+			quotedMessage.id
 		);
 		return fileHasBeenSent;
 	}
 
 	async sendSong(fileAddress: string, requester: Message) {
-		if (!this.messageObject) throw 'No message object initialized';
 		const outFile = './media/ytDownload/song.mp3';
-		ffmpeg(fileAddress)
-			.output(outFile)
-			.saveToFile(outFile)
 
-			.on('end', () => {
-				this.client.sendAudio(requester.chatId, outFile, requester.id);
-			})
+		return new Promise((resolve, reject) => {
+			ffmpeg(fileAddress)
+				.output(outFile)
+				.saveToFile(outFile)
 
-			.on('start', () => {
-				this.replyAuthor('Sua música será enviada em instantes', requester);
-			});
+				.on('end', () => {
+					resolve(this.client.sendAudio(requester.chatId, outFile, requester.id));
+				})
+
+				.on('error', err => {
+					reject(err);
+				});
+		});
 	}
 
 	async getMediaBuffer(mediaAddress: string) {

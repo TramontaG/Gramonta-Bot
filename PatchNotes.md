@@ -6,6 +6,8 @@
   Agora o módulo do youtube está na sua versão 2.0.
   Ele foi refeito do zero para poder conter download mais robusto de mp3 e ainda baixa vídeos!
   Confira no _*`!yt help`*_
+  <br>
+  <br>
 
 # [01/02/2023]
 

@@ -36,35 +36,41 @@ class YouTube extends Module {
 
 	search(searchType: SearchType) {
 		return async (args: SearchArgs, requester: Message) => {
-			const query = args.immediate;
-			const { token = '', currPage = '1' } = args;
+			try {
+				const query = args.immediate;
+				const { token = '', currPage = '1' } = args;
 
-			if (!query) {
-				return this.sendMessageFromTemplate('BadQuery', requester);
+				if (!query) {
+					return this.sendMessageFromTemplate('BadQuery', requester);
+				}
+
+				const response = await searchResults(query, token.toUpperCase());
+				if (!response) {
+					return this.sendMessageFromTemplate('EmptySearchResult', requester);
+				}
+
+				const command = (() => {
+					if (searchType === 'search') return 'ask';
+					if (searchType === 'search-song') return 'mp3-from-id';
+					if (searchType === 'search-video') return 'mp4-from-id';
+				})();
+
+				const resultsButtons: Button[] = response?.results.map(result => ({
+					id: `!yt ${command} ${this.extractIdFromUrl(result.link)}`,
+					text: result.title,
+				}));
+
+				await this.zaplify.sendButtons('Resultados:', resultsButtons, requester);
+				await this.zaplify.sendButtons(
+					'Navegação:',
+					this.getNavigationButtons(searchType, query, response, currPage),
+					requester
+				);
+			} catch (e) {
+				return this.sendMessageFromTemplate('Error', requester, {
+					error: 'Unable to search for results:' + e,
+				});
 			}
-
-			const response = await searchResults(query, token.toUpperCase());
-			if (!response) {
-				return this.sendMessageFromTemplate('EmptySearchResult', requester);
-			}
-
-			const command = (() => {
-				if (searchType === 'search') return 'ask';
-				if (searchType === 'search-song') return 'mp3-from-id';
-				if (searchType === 'search-video') return 'mp4-from-id';
-			})();
-
-			const resultsButtons: Button[] = response?.results.map(result => ({
-				id: `!yt ${command} ${this.extractIdFromUrl(result.link)}`,
-				text: result.title,
-			}));
-
-			await this.zaplify.sendButtons('Resultados:', resultsButtons, requester);
-			await this.zaplify.sendButtons(
-				'Navegação:',
-				this.getNavigationButtons(searchType, query, response, currPage),
-				requester
-			);
 		};
 	}
 
@@ -90,21 +96,34 @@ class YouTube extends Module {
 
 	first(fn: (id: string) => Promise<string>, type: 'song' | 'video') {
 		return async (args: Args, requester: Message) => {
-			const query = args.immediate;
-			if (!query) {
-				return this.sendMessageFromTemplate('BadQuery', requester);
-			}
-			const response = await searchResults(query);
-			if (!response) {
-				return this.sendMessageFromTemplate('EmptySearchResult', requester);
-			}
+			try {
+				const query = args.immediate;
+				if (!query) {
+					return this.sendMessageFromTemplate('BadQuery', requester);
+				}
+				const response = await searchResults(query);
 
-			const path = await fn(this.extractIdFromUrl(response.results[0].link));
+				if (!response) {
+					return this.sendMessageFromTemplate('EmptySearchResult', requester);
+				}
 
-			if (type === 'song') {
-				return this.zaplify.sendSong(path, requester);
-			} else {
-				return this.zaplify.sendFile(path, '', requester);
+				await this.zaplify.react('🎶', requester);
+
+				const path = await fn(this.extractIdFromUrl(response.results[0].link));
+
+				await this.zaplify.react('🔃', requester);
+
+				if (type === 'song') {
+					await this.zaplify.sendSong(path, requester);
+					return this.zaplify.react('✅', requester);
+				} else {
+					await this.zaplify.sendFile(path, '', requester);
+					return this.zaplify.react('✅', requester);
+				}
+			} catch (e) {
+				return this.sendMessageFromTemplate('Error', requester, {
+					error: 'Unable to send file:' + e,
+				});
 			}
 		};
 	}
@@ -120,11 +139,18 @@ class YouTube extends Module {
 					});
 				}
 
+				await this.zaplify.react('🎶', requester);
+
 				const path = await fn(id);
+
+				await this.zaplify.react('🔃', requester);
+
 				if (path.endsWith('webm')) {
-					return this.zaplify.sendSong(path, requester);
+					await this.zaplify.sendSong(path, requester);
+					return this.zaplify.react('✅', requester);
 				} else {
-					return this.zaplify.sendFile(path, '', requester);
+					await this.zaplify.sendFile(path, '', requester);
+					return this.zaplify.react('✅', requester);
 				}
 			} catch (e) {
 				return this.sendMessageFromTemplate('Error', requester, {
@@ -152,19 +178,9 @@ class YouTube extends Module {
 			id: `!yt ${search} ${query} -token ${response!.pageInfo.nextPageToken} -page ${
 				Number(currPage) + 1
 			}`,
-			text: 'Proxima página',
+			text: 'Mais resultados',
 		};
 
-		const prevPage = {
-			id: `!yt search ${query} -token ${response!.pageInfo.prevPageToken} -page ${
-				Number(currPage) - 1
-			}`,
-			text: 'Página anterior página',
-		};
-
-		if (Number(currPage) > 1) {
-			return [prevPage, nextPage];
-		}
 		return [nextPage];
 	}
 

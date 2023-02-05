@@ -14,6 +14,14 @@ _*!yt search-song [pesquisa]*_: Pesquisa de músicas em botões paginados
 <br>
 
 Todo o restante é feito por meio dos botões
+<br>
+
+# Legenda das reações:
+
+- 👌: Recebido comando
+- 🎶: Obtido vídeo / musica
+- 🔃: Baixando e convertendo antes de enviar
+- ✅: Enviado.
 
 > ---
 
