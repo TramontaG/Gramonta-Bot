@@ -1,12 +1,10 @@
 import { Args, Module } from '../ModulesRegister';
-import ImageSearch from 'google-images';
-import { Message } from '@open-wa/wa-automate';
-import GoogleSearch from './GoogleWebSearcher';
+import { Message, MessageTypes } from '@open-wa/wa-automate';
 import Logger from '../Logger/Logger';
 import { EntityTypes } from 'src/BigData/JsonDB';
 import { getAudioUrl } from 'google-tts-api';
-import fs from 'fs/promises';
-import axios from 'axios';
+import GoogleAPI from './GoogleAPI';
+import { bold } from 'src/Helpers/TextFormatter';
 
 interface GoogleArgs extends Args {
 	imgamount?: string;
@@ -14,221 +12,193 @@ interface GoogleArgs extends Args {
 }
 
 class Google extends Module {
-	GoogleImage: ImageSearch | null;
-	GoogleSearch: GoogleSearch | null;
 	logger: Logger;
+	googleAPI: GoogleAPI;
 
 	constructor() {
 		super();
-		this.GoogleImage = null;
-		this.GoogleSearch = null;
+
+		this.googleAPI = new GoogleAPI(
+			process.env.GOOGLE_KEY!,
+			process.env.GOOGLE_CSE_KEY!
+		);
 
 		this.logger = new Logger();
 
-		this.registerPublicMethod({
-			name: 'help',
-			method: this.help.bind(this),
-		});
-		this.registerPublicMethod({
-			name: 'default',
-			method: this.help.bind(this),
-		});
-		this.registerPublicMethod({
-			name: 'image',
-			method: this.image.bind(this),
-		});
-		this.registerPublicMethod({
-			name: 'web',
-			method: this.web.bind(this),
-		});
-		this.registerPublicMethod({
-			name: 'speak',
-			method: this.speak.bind(this),
-		});
+		this.makePublic('help', this.help);
+		this.makePublic('image', this.image);
+		this.makePublic('web', this.web);
+		this.makePublic('speak', this.speak);
+		this.makePublic('default', this.help);
+		this.makePublic('search', this.search);
+
+		this.messagesPath = './src/Modules/Google/messages.zap.md';
 	}
 
 	async speak(args: GoogleArgs, requester: Message) {
-		const text = args.immediate?.substr(0, 199);
-		const lang = args.lang;
 		try {
-			// if (!text)
-			const audioUrl = getAudioUrl(text!, {
+			const text = args.immediate;
+			const lang = args.lang;
+
+			if (!text) {
+				return this.sendMessageFromTemplate('NoTextToSpeak', requester);
+			}
+
+			if (text.length > 200) {
+				this.sendMessageFromTemplate('MaxCharsExceeded', requester);
+			}
+
+			const audioUrl = getAudioUrl(text.substring(0, 199), {
 				lang: lang || 'pt_BR',
 			});
-
-			// return;
-
-			// return this.zaplify?.replyAuthor(
-			// 	'A voz do google ta bugada. Já já conserto!',
-			// 	requester
-			// );
 
 			return this.zaplify?.sendFileFromUrl(audioUrl, 'googleTts.ogg', requester);
 		} catch (e) {
-			return this.zaplify?.replyAuthor('Erro: ' + e, requester);
+			return this.sendMessageFromTemplate('Error', requester, {
+				error: e,
+			});
 		}
 	}
 
-	async replySpeak(args: GoogleArgs) {
-		const requester = this.zaplify?.messageObject as Message;
-		const quotedRequester = requester.quotedMsgObj;
-		const lang = args.lang;
+	async replySpeak(args: GoogleArgs, requester: Message) {
 		try {
-			if (!quotedRequester)
-				return this.zaplify?.replyAuthor(
-					'Responda uma mensagem para eu narrar',
-					requester
-				);
+			const quotedMessage = requester.quotedMsgObj;
+			const lang = args.lang;
 
-			const text = quotedRequester.body.substr(0, 199);
-			const audioUrl = getAudioUrl(text, {
+			if (!quotedMessage) {
+				return this.sendMessageFromTemplate('NoQuoteToTTS', requester);
+			}
+
+			if (quotedMessage.type !== MessageTypes.TEXT) {
+				return this.sendMessageFromTemplate('OnlyTextMessages', requester);
+			}
+
+			const text = quotedMessage.body;
+
+			if (text.length > 200) {
+				this.sendMessageFromTemplate('MaxCharsExceeded', requester);
+			}
+
+			const audioUrl = getAudioUrl(text.substring(0, 199), {
 				lang: lang || 'pt_BR',
 			});
+
 			return this.zaplify?.sendFileFromUrl(audioUrl, 'googleTts', requester);
 		} catch (e) {
-			this.zaplify?.replyAuthor('Erro:' + e, requester);
+			return this.sendMessageFromTemplate('Error', requester, {
+				error: e,
+			});
 		}
 	}
 
 	async image(args: GoogleArgs, requester: Message) {
-		const query = args.immediate;
-		if (!query) return this.showError('Envie algo para buscar', requester);
 		try {
-			const imgAmount = Number(args.imgamount) || 5;
-			const results = await this.getImageSearcher()
-				.search(query, {
-					safe: 'high',
-				})
-				.catch(e => {
-					throw e;
-				});
-			let amountSend = 0;
+			const query = args.immediate;
+			if (!query) {
+				return this.sendMessageFromTemplate('EmptyQuery', requester);
+			}
+
+			const imgAmount = Number(args.imgamount) || 3;
+
+			const results = await this.googleAPI.searchImages(query, imgAmount);
+
+			if (results.length === 0) {
+				return this.sendMessageFromTemplate('NoResults', requester);
+			}
+
+			this.logGoogleSearch(query, requester, 'image');
 
 			results.forEach(result => {
-				if (amountSend >= imgAmount) return;
-				if (result.type !== 'image/jpeg') return;
-				if (!result.url.startsWith('https')) return;
-
+				// The typing of the library is wrong.
 				// @ts-ignore
 				const caption = `${result.description}\n\n${result.parentPage}`;
-				try {
-					axios
-						.get(result.url)
-						.then(() =>
-							this.zaplify?.sendImageFromUrl(result.url, caption, requester)
-						)
-						.catch(e => console.warn(e));
-				} catch (e) {
-					console.warn(e);
-				}
-
-				amountSend++;
-			});
-
-			this.logger.insertNew(EntityTypes.GOOGLESEARCHES, {
-				groupName: requester.isGroupMsg ? requester.chat.name : '_',
-				chatId: requester.chat.id,
-				requester: requester.sender.formattedName,
-				query,
-				type: 'image',
-				date: new Date().getTime(),
+				this.zaplify.sendImageFromUrl(result.url, caption, requester);
 			});
 		} catch (e) {
-			console.log(e);
-			this.zaplify?.replyAuthor(`Erro inesperado: ${e}`, requester);
+			this.sendMessageFromTemplate('Error', requester, {
+				error: e,
+			});
 		}
 	}
 
-	// search(args: GoogleArgs, requester: Message) {
-	// 	try {
-	// 		if (!args.immediate)
-	// 			return this.showError('Preciso de algo para pesquisar', requester);
-	// 		this.zaplify?.sendButtons(`Como deseja pesquisar ${args.immediate}?`, [
-	// 			{
-	// 				id: `!google web ${args.immediate}`,
-	// 				text: 'Pesquisa Web',
-	// 			},
-	// 			{
-	// 				id: `!google image ${args.immediate}`,
-	// 				text: 'Imagens',
-	// 			},
-	// 			"",
-	// 			""
-	// 		]);
-	// 	} catch (e) {
-	// 		this.showError(`${e}`, requester);
-	// 	}
-	// }
-
-	async help(_: Args, requester: Message) {
-		fs.readFile('src/Modules/Google/Help.txt', {
-			encoding: 'utf-8',
-		}).then(helpText => {
-			this.zaplify?.replyAuthor(helpText, requester);
-		});
-	}
-
-	web(args: GoogleArgs, requester: Message) {
+	search(args: GoogleArgs, requester: Message) {
 		try {
-			if (!args.immediate)
-				return this.showError('Envie algo para eu pesquisar', requester);
 			const query = args.immediate;
 
-			this.logger.insertNew(EntityTypes.GOOGLESEARCHES, {
-				groupName: requester.isGroupMsg ? requester.chat.name : '_',
-				chatId: requester.chat.id,
-				requester: requester.sender.formattedName,
-				query: args.immediate,
-				type: 'web',
-				date: new Date().getTime(),
-			});
+			if (!query) {
+				return this.sendMessageFromTemplate('EmptyQuery', requester);
+			}
 
-			this.getWebSearcher()
-				.search(query)
-				.then(({ data }) => {
-					const { searchInformation } = data;
-
-					if (!data.items) {
-						this.zaplify?.replyAuthor('Não encontrei nada', requester);
-						return;
-					}
-
-					let response = ``;
-					response += `*_O google encontrou ${searchInformation.totalResults} em ${searchInformation.formattedSearchTime} segundos_*`;
-					response += `\n\n`;
-					response += data.items.reduce((string: string, result: any) => {
-						let resultString = ``;
-						resultString += `*${result.title}*\n`;
-						resultString += `${result.snippet}\n`;
-						resultString += `${result.link}\n\n`;
-						return string + resultString;
-					}, ``);
-					this.zaplify?.replyAuthor(response, this.requester as Message);
-				});
+			this.zaplify.sendButtons(
+				`Como deseja pesquisar ${query}?`,
+				[
+					{
+						id: `!google web ${query}`,
+						text: 'Pesquisa Web',
+					},
+					{
+						id: `!google image ${query}`,
+						text: 'Imagens',
+					},
+				],
+				requester
+			);
 		} catch (e) {
-			this.showError(`${e}`, requester);
+			this.sendMessageFromTemplate('Error', requester, {
+				error: e,
+			});
 		}
 	}
 
-	private showError(error: string, requester: Message) {
-		this.zaplify?.replyAuthor(`Erro: ${error}`, requester);
+	async web(args: GoogleArgs, requester: Message) {
+		try {
+			const query = args.immediate;
+
+			if (!query) {
+				return this.sendMessageFromTemplate('EmptyQuery', requester);
+			}
+
+			this.logGoogleSearch('query', requester, 'web');
+
+			const { searchInformation, items } = await this.googleAPI.searchWeb(query);
+
+			if (!items) {
+				this.zaplify?.replyAuthor('Não encontrei nada', requester);
+				return;
+			}
+
+			this.sendMessageFromTemplate('SearchResults', requester, {
+				totalResults: searchInformation.formattedTotalResults.replce(/,/g, '.'),
+				searchTime: searchInformation.formattedSearchTime,
+				results: items.reduce((string: string, result: any) => {
+					return (string += [
+						bold(result.title),
+						result.snippet,
+						result.link,
+						'',
+					].join('\n'));
+				}, ''),
+			});
+		} catch (e) {
+			this.sendMessageFromTemplate('Error', requester, {
+				error: e,
+			});
+		}
 	}
 
-	private getImageSearcher() {
-		if (!this.GoogleImage)
-			this.GoogleImage = new ImageSearch(
-				process.env.GOOGLE_CSE_KEY as string,
-				process.env.GOOGLE_KEY as string
-			);
-		return this.GoogleImage;
+	async help(_: Args, requester: Message) {
+		this.sendMessageFromTemplate('Help', requester);
 	}
-	private getWebSearcher() {
-		if (!this.GoogleSearch)
-			this.GoogleSearch = new GoogleSearch(
-				process.env.GOOGLE_KEY as string,
-				process.env.GOOGLE_CSE_KEY as string
-			);
-		return this.GoogleSearch;
+
+	private logGoogleSearch(query: string, requester: Message, type: 'web' | 'image') {
+		this.logger.insertNew(EntityTypes.GOOGLESEARCHES, {
+			groupName: requester.isGroupMsg ? requester.chat.name : '_',
+			chatId: requester.chat.id,
+			requester: requester.sender.formattedName,
+			query,
+			type,
+			date: new Date().getTime(),
+		});
 	}
 }
 

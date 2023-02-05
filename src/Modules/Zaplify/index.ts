@@ -217,19 +217,13 @@ class Zaplify {
 		requester: Message,
 		caption: string = ''
 	) {
-		const message = requester || this.messageObject;
-		if (!message) throw 'No message object initialized';
-		try {
-			return this.client.sendFileFromUrl(
-				requester.chatId,
-				url,
-				caption,
-				fileName,
-				requester.id
-			);
-		} catch (e) {
-			this.replyAuthor(`${e}`, message);
-		}
+		return this.client.sendFileFromUrl(
+			requester.chatId,
+			url,
+			fileName,
+			caption,
+			requester.id
+		);
 	}
 
 	sendImageAsSticker(imageBuffer: Buffer, requester?: Message) {

@@ -1,4 +1,9 @@
 import dotEnv from 'dotenv';
+
+dotEnv.config({
+	path: '.env',
+});
+
 import { create, Client, Message } from '@open-wa/wa-automate';
 import options from 'src/config/startupConfig';
 import parse from 'src/lib/T-Parser';
@@ -27,10 +32,6 @@ const banned = [
 	'5511981743350@c.us',
 	'558586838742@c.us',
 ];
-
-dotEnv.config({
-	path: '.env',
-});
 
 const start = async (client: Client) => {
 	console.log('[SERVER] Servidor iniciado!');
