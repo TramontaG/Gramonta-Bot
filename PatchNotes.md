@@ -1,5 +1,13 @@
 > @latest
 
+# [05/02/2023]
+
+- _*Modernizado módulo do Google*_
+  Agora o módulo de buscas do google foi completamente refatorado para o codigo estar de acordo com as mudanças do restante do bot.
+  <br>
+- _*Melhorada experiencia de usuário com o módulo do youtube*_
+  O módulo do youtube agora fornece um feedback sobre o progresso do vídeo. Esse feedback é por meio de reações à mensagem, assim não flooda o grupo. Digite _*`!yt help`*_ para ver a legenda e entender o que significa cada reação.
+
 # [03/02/2023]
 
 - _*REFEITO O MÓDULO DO YOUTUBE!*_
