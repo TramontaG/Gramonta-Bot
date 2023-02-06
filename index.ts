@@ -48,8 +48,14 @@ const start = async (client: Client) => {
 
 			if (!module) return;
 
+			if (banned.includes(messageObject.author)) {
+				client.reply(messageObject.from, 'Você está bloqueado :)', messageObject.id);
+				return;
+			}
+
 			module.setRequester();
 			try {
+				client.react(messageObject.id, '👌');
 				module.callMethod(
 					method,
 					{
@@ -58,7 +64,6 @@ const start = async (client: Client) => {
 					},
 					messageObject
 				);
-				client.react(messageObject.id, '👌');
 			} catch (e) {
 				console.warn(e);
 			}
@@ -67,29 +72,6 @@ const start = async (client: Client) => {
 
 	client.onAnyMessage(message => {
 		try {
-			// if (message.body.startsWith('!') && !message.fromMe) {
-			// 	client.reply(
-			// 		message.from,
-			// 		'Bot em manutenção. Agradeço a compreensão :)',
-			// 		message.id
-			// 	);
-			// 	return;
-			// }
-
-			if (banned.includes(message.author) && message.body.startsWith('!')) {
-				client.reply(message.from, 'Você está bloqueado :)', message.id);
-				return;
-			}
-			// if (
-			// 	!message.isGroupMsg &&
-			// 	(message?.caption?.startsWith('!') || message?.body?.startsWith('!'))'
-			// ) {
-			// 	return client.reply(
-			// 		message.from,
-			// 		'Esse bot só funciona em grupos',
-			// 		message.id
-			// 	);
-			// }
 			zaplify.setMessageObject(message);
 			handleMsg(message.caption || message.body, message).catch(e =>
 				console.warn(e)
@@ -103,6 +85,10 @@ const start = async (client: Client) => {
 		const buttons = message.quotedMsg!.buttons!;
 		const option = buttons.find(btn => btn.text === message.body)!;
 		handleMsg(option.id, message);
+	});
+
+	client.onReaction(ev => {
+		console.log(ev);
 	});
 };
 

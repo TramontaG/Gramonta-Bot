@@ -7,6 +7,8 @@
   <br>
 - _*Melhorada experiencia de usuário com o módulo do youtube*_
   O módulo do youtube agora fornece um feedback sobre o progresso do vídeo. Esse feedback é por meio de reações à mensagem, assim não flooda o grupo. Digite _*`!yt help`*_ para ver a legenda e entender o que significa cada reação.
+  <br>
+  <br>
 
 # [03/02/2023]
 

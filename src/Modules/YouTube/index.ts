@@ -55,7 +55,7 @@ class YouTube extends Module {
 					if (searchType === 'search-video') return 'mp4-from-id';
 				})();
 
-				const resultsButtons: Button[] = response?.results.map(result => ({
+				const resultsButtons: Button[] = response.results.map(result => ({
 					id: `!yt ${command} ${this.extractIdFromUrl(result.link)}`,
 					text: result.title,
 				}));

@@ -31,6 +31,7 @@ import Reset from 'src/Modules/Reset';
 import Ban from 'src/Modules/Ban';
 import Reveal from 'src/Modules/Reveal';
 import Delete from 'src/Modules/Delete';
+import Debug from 'src/Modules/Debug';
 
 const modulesWrapper = new ModulesWrapper();
 const help = new Help();
@@ -80,5 +81,5 @@ modulesWrapper.registerModule('reset', new Reset());
 modulesWrapper.registerModule('ban', new Ban());
 modulesWrapper.registerModule('reveal', new Reveal());
 modulesWrapper.registerModule('delete', new Delete());
-
+modulesWrapper.registerModule('debug', new Debug());
 export default modulesWrapper;
