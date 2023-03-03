@@ -10,28 +10,7 @@ import parse from 'src/lib/T-Parser';
 import ModulesWrapper from 'src/Modules';
 import Zaplify from 'src/Modules/Zaplify';
 import { filterProperty } from 'src/Helpers/ObjectManipulation';
-
-const banned = [
-	'556997479999@c.us',
-	'551198783111@c.us',
-	'557183543921@c.us',
-	'5521969693229@c.us',
-	'447796457170c.us',
-	'554598345338@c.us',
-	'5521991967597@c.us',
-	'555196222255@c.us',
-	'558881803667@c.us',
-	'553398082321@c.us',
-	'554891418193@c.us',
-	'556993749999@c.us',
-	'5519987510627@c.s',
-	'556993018716@c.us',
-	'558594062647@c.us',
-	'5514988079818@c.us',
-	'5521992529593@c.us',
-	'5511981743350@c.us',
-	'558586838742@c.us',
-];
+import fs from 'fs/promises';
 
 const start = async (client: Client) => {
 	console.log('[SERVER] Servidor iniciado!');
@@ -48,7 +27,11 @@ const start = async (client: Client) => {
 
 			if (!module) return;
 
-			if (banned.includes(messageObject.author)) {
+			const { banned } = JSON.parse(await fs.readFile('./banned.json', 'utf-8')) as {
+				banned: string[];
+			};
+
+			if (banned.some(ban => messageObject.author.includes(ban))) {
 				client.reply(messageObject.from, 'Você está bloqueado :)', messageObject.id);
 				return;
 			}
@@ -87,9 +70,40 @@ const start = async (client: Client) => {
 		handleMsg(option.id, message);
 	});
 
-	client.onReaction(ev => {
-		console.log(ev);
-	});
+	/**
+	 * That's too buggy in order to be used yet. My code works, but the events
+	 * doesn't seem to trigger properly. Too bad :(
+	 */
+	// client.onReaction(ev => {
+	// 	const { message, reactions, type, reactionByMe } = ev;
+
+	// 	const payload = decodePayloadFromMessage(message.caption || message.body);
+	// 	const emoji: Emoji = reactions[0].id;
+
+	// 	if (!payload) {
+	// 		return;
+	// 	}
+
+	// 	const { isError, result } = parse(payload[emoji] || 'null');
+
+	// 	if (isError) {
+	// 		return;
+	// 	}
+
+	// 	const { command } = result;
+
+	// 	const module = ModulesWrapper.Zaplify.getModule(command);
+
+	// 	if (!module) return;
+
+	// 	module.setRequester();
+
+	// 	const messageData = filterProperty(result, 'args');
+	// 	return module.callReactionCB(emoji, message, {
+	// 		...messageData,
+	// 		...result.args,
+	// 	});
+	// });
 };
 
 create({ ...options(), multiDevice: true }).then(client => {

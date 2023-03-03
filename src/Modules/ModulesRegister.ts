@@ -1,10 +1,8 @@
-import { Client, Message, MessageTypes } from '@open-wa/wa-automate';
-import MockedClient from 'src/Debug/ZaplifyMock';
-import ZaplifyMock from 'src/Debug/ZaplifyMock';
-import { MockedMessageObject } from 'src/Debug/ZaplifyMock/Models';
+import { Message, MessageTypes } from '@open-wa/wa-automate';
 import Zaplify from './Zaplify';
 import fs from 'fs/promises';
 import * as helpers from 'src/Helpers/messageGetter';
+import { EmojiPayload } from 'src/lib/T-Parser/HiddenPayload';
 
 export interface Args {
 	command: string;
@@ -17,19 +15,37 @@ type PublicMethod = {
 	name: string;
 	method: (args: Args, requester: Message) => any;
 };
+
 type ModuleAddresser = {
 	name: string;
 	module: Module;
 };
 
+export enum DefaultEmoji {
+	like = '👍',
+	love = '❤',
+	laugh = '😂',
+	wow = '😲',
+	sad = '😢',
+	highfive = '🙏',
+}
+
+export type Emoji = DefaultEmoji | string;
+export type ReactionCallback = (requester: Message, payload: Args) => any;
+export type ReactionHandler = {
+	[key in Emoji]: ReactionCallback;
+};
+
 export class Module {
-	publicMethods: PublicMethod[];
+	private publicMethods: PublicMethod[];
 	zaplify!: Zaplify;
-	requester!: Message;
 	protected messagesPath: string;
+	reactionHandlers: ReactionHandler;
+	requester!: Message;
 
 	constructor() {
 		this.publicMethods = [];
+		this.reactionHandlers = {};
 		this.messagesPath = '';
 	}
 
@@ -59,11 +75,11 @@ export class Module {
 		const choosenMethod = this.publicMethods.filter(
 			method => method.name === methodName
 		)[0];
-		if (!choosenMethod) {
-			if (methodName !== 'default') {
-				return this.callMethod('default', args, requester);
-			}
+
+		if (!choosenMethod && methodName !== 'default') {
+			return this.callMethod('default', args, requester);
 		}
+
 		return choosenMethod.method(args, requester);
 	}
 
@@ -72,6 +88,14 @@ export class Module {
 			name,
 			method: (args, req) => method.bind(this)(args as T, req),
 		});
+	}
+
+	onReact(reaction: Emoji, reactionCB: ReactionCallback) {
+		this.reactionHandlers[reaction] = reactionCB;
+	}
+
+	callReactionCB(reaction: Emoji, requester: Message, payload: Args) {
+		return this.reactionHandlers[reaction](requester, payload);
 	}
 
 	registerPublicMethod(method: PublicMethod) {

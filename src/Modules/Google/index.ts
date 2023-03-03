@@ -168,14 +168,14 @@ class Google extends Module {
 			}
 
 			this.sendMessageFromTemplate('SearchResults', requester, {
-				totalResults: searchInformation.formattedTotalResults.replce(/,/g, '.'),
+				totalResults: searchInformation.formattedTotalResults.replace(/,/g, '.'),
 				searchTime: searchInformation.formattedSearchTime,
 				results: items.reduce((string: string, result: any) => {
 					return (string += [
 						bold(result.title),
 						result.snippet,
 						result.link,
-						'',
+						'\n',
 					].join('\n'));
 				}, ''),
 			});

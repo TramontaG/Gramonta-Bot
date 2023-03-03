@@ -1,3 +1,4 @@
+import { Emoji } from 'src/Modules/ModulesRegister';
 import T from './src/AtomicParsers';
 import C from './src/Combinators';
 import M from './src/Modifiers';
@@ -5,6 +6,10 @@ import M from './src/Modifiers';
 export const zero = '⁫';
 export const one = '‎';
 export const separator = '﻿';
+
+export type EmojiPayload = {
+	[key in Emoji]: string;
+};
 
 export const hidePayload = (text: string) =>
 	text
@@ -38,5 +43,5 @@ const messageWithPayload = M.transform(
 export const decodePayloadFromMessage = (messageBody: string) => {
 	const { error, result } = C.parse(messageBody, messageWithPayload);
 	if (error) return undefined;
-	return result;
+	return JSON.parse(result) as EmojiPayload;
 };

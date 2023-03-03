@@ -63,8 +63,8 @@ O google encontrou {{totalResults}} em {{searchTime}} segundos
   Procure páginas web com o comando _*`!google web [pesquisa]`*_
   <br>
 - _*Google Images*_
-  Procure imagens na web com comando _*`!google images [pesquisa]`*_
-  Especifique a quantidade de imagens com o comando _*`!google images [pesquisa] -imgamount [quantidade]`*_
+  Procure imagens na web com comando _*`!google image [pesquisa]`*_
+  Especifique a quantidade de imagens com o comando _*`!google image [pesquisa] -imgamount [quantidade]`*_
   <br>
 - _*Google Speak*_
   Peça para a mulher do google narrar um texto com o comando _*`!google speak [texto]`*_

@@ -52,7 +52,7 @@ class Zaplify {
 	replyAuthor(message: string, author: Message) {
 		if (!this.messageObject) throw 'No message object initialized';
 
-		return this.client.reply(
+		return this.client.sendReplyWithMentions(
 			author.chatId,
 			message,
 			author?.id || this.messageObject.id

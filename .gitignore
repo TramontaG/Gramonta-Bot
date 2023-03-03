@@ -26,3 +26,6 @@ googleAppCredentials.json
 
 #media in general
 media/**/*
+
+#banned users
+banned.json
