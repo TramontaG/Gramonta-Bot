@@ -1,5 +1,18 @@
 > @latest
 
+# [03/03/2023]
+
+- _*Banned list*_
+  Agora a lista de usuários banidos do bot não está mais versionada no git. É um arquivo .json que está na raiz do projeto no .gitignore.
+  <br>
+- _*Refactors gerais*_
+  Com o passar do tempo, eu vou me tornando um desenvolvedor melhor e vou modernizando o código do bot. Vários modulos foram modernizados, mas o comportamento deles deve permanecer o mesmo.
+  <br>
+- _*Correção do help do google*_
+  O help do google indicava usar `!google images` para pesquisar imagens, mas o comando é na verdade `!google image` (no singular). O texto de ajuda foi corrigido e o comando permanece intacto.
+  <br>
+  <br>
+
 # [05/02/2023]
 
 - _*Modernizado módulo do Google*_
@@ -28,6 +41,10 @@
   As figurinhas agora são enviadar respondendo a mensagem que solicitou o comando, não mais são largadas no chat. Isso é necessário para eu saber que a figurinha foi feita a partir de um comando e o bot poder apagá-la caso seja solicitado pelo módulo `!delete`
   <br>
   <br>
+
+> ---
+
+> @old
 
 # [31/01/2023]
 
@@ -79,10 +96,6 @@
   <br>
   Esse bug foi corrigido.
   <br><br>
-
-> ---
-
-> @old
 
 # [03/12/2022]
 

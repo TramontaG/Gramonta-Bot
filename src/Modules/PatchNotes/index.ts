@@ -7,15 +7,12 @@ class PatchNotes extends Module {
 	constructor() {
 		super();
 		this.makePublic('default', this.sendPatchNotes);
+		this.messagesPath = './PatchNotes.md';
 	}
 
 	async sendPatchNotes(_: Args, requester: Message) {
 		try {
-			const patches = await fs.readFile('./PatchNotes.md', { encoding: 'utf-8' });
-			const message = getMessage('latest', patches, {
-				myNumber: 3,
-			});
-			this.zaplify.replyAuthor(message, requester);
+			return this.sendMessageFromTemplate('latest', requester);
 		} catch (e) {
 			this.zaplify.replyAuthor(`Erro: ${e}`, requester);
 		}
