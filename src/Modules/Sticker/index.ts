@@ -24,9 +24,7 @@ class Sticker extends Module {
 			const typesAllowed = [MessageTypes.IMAGE, MessageTypes.VIDEO];
 
 			if (!typesAllowed.includes(stickeredMessage.type))
-				return await this.getMessage('invalidData').then(msg =>
-					this.sendMessage(msg, requester)
-				);
+				return this.sendMessageFromTemplate('invalidData', requester);
 
 			const media = (await this.zaplify?.getMediaBufferFromMessage(
 				stickeredMessage
@@ -41,9 +39,9 @@ class Sticker extends Module {
 				return await this.sendAnimatedSticker(media, requester);
 			}
 		} catch (e) {
-			return this.getMessage('error', { errorMessage: e }).then(msg =>
-				this.sendMessage(msg, requester)
-			);
+			this.sendMessageFromTemplate('error', requester, {
+				errorMessage: e,
+			});
 		}
 	}
 
@@ -64,7 +62,7 @@ class Sticker extends Module {
 	}
 
 	async help(_: Args, requester: Message) {
-		this.getMessage('help').then(msg => this.zaplify.sendMessage(msg, requester));
+		return this.sendMessageFromTemplate('help', requester);
 	}
 
 	logSticker(messageObject: Message, animated: boolean) {

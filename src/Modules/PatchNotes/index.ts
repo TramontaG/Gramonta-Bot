@@ -1,7 +1,5 @@
 import { Message } from '@open-wa/wa-automate';
 import { Args, Module } from '../ModulesRegister';
-import fs from 'fs/promises';
-import { getMessage } from 'src/Helpers/messageGetter';
 
 class PatchNotes extends Module {
 	constructor() {

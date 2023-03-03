@@ -1,8 +1,6 @@
 import T from './src/AtomicParsers';
 import C from './src/Combinators';
 import M from './src/Modifiers';
-
-import util from 'util';
 import url from './UrlParser';
 
 const flatArgs = (args: any[]) => {

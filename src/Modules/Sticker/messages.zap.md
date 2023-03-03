@@ -9,6 +9,8 @@
 As midias podem ser foto, video ou gif
 
 Lembre-se que o whatsapp tem uma limitação de tamanho de figurinhas animadas! Se der erro ao tentar fazer a figurinha, tente cortar o vídeo ou enviar em uma resolução mais baixa.
+<br>
+<br>
 
 # Extrair imagem de figurinha
 

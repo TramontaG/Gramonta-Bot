@@ -12,6 +12,7 @@ import fs from 'fs/promises';
 import { sliceButtons } from 'src/Helpers/Buttons';
 import { getFormattedDate } from 'src/Helpers/Date';
 import ffmpeg from 'fluent-ffmpeg';
+import { hidePayload } from 'src/lib/T-Parser/HiddenPayload';
 
 export type Mimetype =
 	| 'video/mp4'
@@ -25,6 +26,8 @@ type Button = {
 	id: string;
 	text: string;
 };
+
+export const signature = hidePayload('Gramonta-Bot');
 
 class Zaplify {
 	client: Client;
@@ -54,7 +57,7 @@ class Zaplify {
 
 		return this.client.sendReplyWithMentions(
 			author.chatId,
-			message,
+			signature + message,
 			author?.id || this.messageObject.id
 		);
 	}
@@ -63,7 +66,7 @@ class Zaplify {
 		if (!this.messageObject) throw 'No message object initialized';
 		return this.client.sendText(
 			requester?.chatId || this.messageObject.chatId,
-			message
+			signature + message
 		);
 	}
 
@@ -85,9 +88,10 @@ class Zaplify {
 		for await (const btn of buttonsInChunks) {
 			await this.client.sendButtons(
 				requester.chatId,
-				buttonsInChunks.length > 1
-					? `${index} de ${buttonsInChunks.length}`
-					: caption,
+				signature +
+					(buttonsInChunks.length > 1
+						? `${index} de ${buttonsInChunks.length}`
+						: caption),
 				btn
 			);
 			index++;
@@ -107,7 +111,13 @@ class Zaplify {
 		const buttonsInChunks = sliceButtons(buttons);
 		buttonsInChunks.forEach(btn => {
 			// @ts-ignore
-			this.client.sendAdvancedButtons(requester.chatId, caption, btn, title, footer);
+			this.client.sendAdvancedButtons(
+				requester.chatId,
+				signature + caption,
+				btn,
+				title,
+				footer
+			);
 		});
 	}
 
@@ -116,7 +126,7 @@ class Zaplify {
 			quotedMessage.chatId,
 			fileAddress,
 			'',
-			caption || '',
+			signature + caption || '',
 			quotedMessage.id
 		);
 		return fileHasBeenSent;
@@ -221,7 +231,7 @@ class Zaplify {
 			requester.chatId,
 			url,
 			fileName,
-			caption,
+			signature + caption,
 			requester.id
 		);
 	}
@@ -236,7 +246,7 @@ class Zaplify {
 
 	async sendImageFromUrl(url: string, caption: string, requester: Message) {
 		try {
-			this.client.sendFile(requester.chatId, url, 'file', caption);
+			this.client.sendFile(requester.chatId, url, 'file', signature + caption);
 			return;
 		} catch (e) {
 			this.replyAuthor('erro desconhecido', requester);
@@ -251,7 +261,12 @@ class Zaplify {
 	) {
 		try {
 			const base64 = this.getBase64fromBuffer(buffer, mimeType);
-			return this.client.sendFile(requester.chatId, base64, 'file', caption);
+			return this.client.sendFile(
+				requester.chatId,
+				base64,
+				'file',
+				signature + caption
+			);
 		} catch (e) {
 			this.replyAuthor(JSON.stringify(e), requester);
 		}
@@ -263,7 +278,7 @@ class Zaplify {
 				requester.chatId,
 				path,
 				'file',
-				caption,
+				signature + caption,
 				undefined,
 				undefined,
 				undefined,
@@ -277,7 +292,7 @@ class Zaplify {
 	sendVideo(buffer: Buffer, requester: Message, mimeType: Mimetype = 'video/mp4') {
 		const base64 = this.getBase64fromBuffer(buffer, mimeType);
 
-		return this.client.sendFile(requester.chatId, base64, 'file', '');
+		return this.client.sendFile(requester.chatId, base64, 'file', signature);
 	}
 
 	async isAdmin(requester: Message) {
@@ -304,7 +319,7 @@ class Zaplify {
 				requester.chatId,
 				this.getBase64fromBuffer(stickerBuffer, 'image'),
 				'Gramonta-bot',
-				'',
+				signature,
 				requester.id
 			);
 		} catch (e) {
@@ -319,7 +334,7 @@ class Zaplify {
 				requester.to,
 				this.getBase64fromBuffer(stickerBuffer, 'video/mpeg'),
 				'sticker.mp4',
-				'',
+				signature,
 				requester.id
 			);
 		} catch (e) {

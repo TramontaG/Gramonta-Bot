@@ -1,5 +1,6 @@
 import { Message, MessageId, QuoteMap } from '@open-wa/wa-automate';
 import { Args, Module } from '../ModulesRegister';
+import { signature } from '../Zaplify';
 
 class Delete extends Module {
 	constructor() {
@@ -32,6 +33,9 @@ class Delete extends Module {
 
 	isResponseForCommand(quoteMap: QuoteMap, firstMessageId: MessageId) {
 		const maybeResponseForCommand = quoteMap[quoteMap[firstMessageId].quotes!];
+		if (maybeResponseForCommand.body.startsWith(signature)) {
+			return true;
+		}
 		if (!maybeResponseForCommand.quotes) return false;
 		const maybeCommand = quoteMap[maybeResponseForCommand.quotes];
 		return maybeCommand.body.startsWith('!');
