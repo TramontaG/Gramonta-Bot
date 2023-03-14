@@ -31,7 +31,7 @@ const start = async (client: Client) => {
 				banned: string[];
 			};
 
-			if (banned.some(ban => messageObject.author.includes(ban))) {
+			if (banned.some(ban => messageObject.chatId.includes(ban))) {
 				client.reply(messageObject.from, 'Você está bloqueado :)', messageObject.id);
 				return;
 			}
