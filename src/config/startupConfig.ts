@@ -13,7 +13,7 @@ const startup = {
 	deleteSessionDataOnLogout: false,
 	popup: 3012,
 	defaultViewport: null,
-	sessionId: 'TramontaBot',
+	sessionId: process.env.BOT_NAME,
 	headless: true,
 	multiDevice: true,
 	qrTimeout: 0,
